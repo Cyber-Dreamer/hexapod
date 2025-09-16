@@ -1,0 +1,2045 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape https://cad.onshape.com/documents/026f9a33ba6a25a983a9d639/w/b83e0182bd0a887a03df3198/e/e49783848224d44e064e4a49 -->
+<robot name="C:\Users\gata2\OneDrive\Desktop\ros\hexapod">
+  <!-- Link body -->
+  <link name="body">
+    <inertial>
+      <origin xyz="-0.00661516 -0.0927086 -0.111925" rpy="0 0 0"/>
+      <mass value="9.75047"/>
+      <inertia ixx="0.451212" ixy="0.0953495" ixz="-0.0258765" iyy="0.439416" iyz="0.00598595" izz="0.720981"/>
+    </inertial>
+    <!-- Part body -->
+    <visual>
+      <origin xyz="0.00533339 -0.0820554 -0.0654202" rpy="-8.67362e-19 1.39054e-18 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\body.stl"/>
+      </geometry>
+      <material name="body_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00533339 -0.0820554 -0.0654202" rpy="-8.67362e-19 1.39054e-18 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\body.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam -->
+    <visual>
+      <origin xyz="0.312149 -0.297368 0.0109092" rpy="2.09893 3.07747e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.312149 -0.297368 0.0109092" rpy="2.09893 3.07747e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip -->
+    <visual>
+      <origin xyz="0.195519 -0.128552 -0.0388035" rpy="-4.01447e-15 3.05508e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.195519 -0.128552 -0.0388035" rpy="-4.01447e-15 3.05508e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot -->
+    <visual>
+      <origin xyz="0.311905 -0.297011 0.0106572" rpy="-2.09893 -3.90449e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.311905 -0.297011 0.0106572" rpy="-2.09893 -3.90449e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot -->
+    <visual>
+      <origin xyz="0.312149 -0.297368 0.0109092" rpy="-2.09893 -3.92188e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.312149 -0.297368 0.0109092" rpy="-2.09893 -3.92188e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot -->
+    <visual>
+      <origin xyz="0.312291 -0.297576 0.0104773" rpy="-2.09893 -3.79241e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.312291 -0.297576 0.0104773" rpy="-2.09893 -3.79241e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie -->
+    <visual>
+      <origin xyz="0.230092 -0.178148 -0.0543943" rpy="1.1826 -4.18187e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.230092 -0.178148 -0.0543943" rpy="1.1826 -4.18187e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam_2 -->
+    <visual>
+      <origin xyz="-0.379269 -0.0109502 -0.0947067" rpy="0.0611214 3.67164e-16 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_2_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.379269 -0.0109502 -0.0947067" rpy="0.0611214 3.67164e-16 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip_2 -->
+    <visual>
+      <origin xyz="-0.20716 -0.0653569 -0.0388035" rpy="3.78236e-16 -1.73289e-15 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_2_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.20716 -0.0653569 -0.0388035" rpy="3.78236e-16 -1.73289e-15 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_2 -->
+    <visual>
+      <origin xyz="-0.37924 -0.0109596 -0.0942076" rpy="-0.0611214 -7.98869e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37924 -0.0109596 -0.0942076" rpy="-0.0611214 -7.98869e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot_2 -->
+    <visual>
+      <origin xyz="-0.379269 -0.0109502 -0.0947067" rpy="-0.0611214 -3.18593e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.379269 -0.0109502 -0.0947067" rpy="-0.0611214 -3.18593e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot_2 -->
+    <visual>
+      <origin xyz="-0.378794 -0.0111038 -0.0947373" rpy="-0.0611214 -1.21332e-15 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.378794 -0.0111038 -0.0947373" rpy="-0.0611214 -1.21332e-15 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie_2 -->
+    <visual>
+      <origin xyz="-0.266654 -0.0467498 -0.0617749" rpy="1.46044 1.81976e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_2_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.266654 -0.0467498 -0.0617749" rpy="1.46044 1.81976e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam_3 -->
+    <visual>
+      <origin xyz="-0.174501 0.281658 -0.133669" rpy="0.354802 -9.98125e-16 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_3_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.174501 0.281658 -0.133669" rpy="0.354802 -9.98125e-16 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip_3 -->
+    <visual>
+      <origin xyz="-0.0973166 0.106839 -0.0388035" rpy="-2.5368e-16 5.69282e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_3_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0973166 0.106839 -0.0388035" rpy="-2.5368e-16 5.69282e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_3 -->
+    <visual>
+      <origin xyz="-0.174432 0.281499 -0.133201" rpy="-0.354802 -1.05578e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_3_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.174432 0.281499 -0.133201" rpy="-0.354802 -1.05578e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot_3 -->
+    <visual>
+      <origin xyz="-0.174501 0.281658 -0.133669" rpy="-0.354802 1.00864e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.174501 0.281658 -0.133669" rpy="-0.354802 1.00864e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot_3 -->
+    <visual>
+      <origin xyz="-0.174315 0.281228 -0.133843" rpy="-0.354802 1.01268e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.174315 0.281228 -0.133843" rpy="-0.354802 1.01268e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie_3 -->
+    <visual>
+      <origin xyz="-0.122569 0.163499 -0.0698684" rpy="1.75603 9.20326e-16 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_3_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.122569 0.163499 -0.0698684" rpy="1.75603 9.20326e-16 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam_4 -->
+    <visual>
+      <origin xyz="0.101325 -0.263107 -0.221918" rpy="0.655974 7.69288e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_4_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.101325 -0.263107 -0.221918" rpy="0.655974 7.69288e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip_4 -->
+    <visual>
+      <origin xyz="0.103235 -0.272765 -0.0388035" rpy="-2.18492e-16 -1.54453e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_4_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.103235 -0.272765 -0.0388035" rpy="-2.18492e-16 -1.54453e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_4 -->
+    <visual>
+      <origin xyz="0.101228 -0.262818 -0.221522" rpy="-0.655974 -3.22976e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_4_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.101228 -0.262818 -0.221522" rpy="-0.655974 -3.22976e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot_4 -->
+    <visual>
+      <origin xyz="0.101325 -0.263107 -0.221918" rpy="-0.655974 -3.20171e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.101325 -0.263107 -0.221918" rpy="-0.655974 -3.20171e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot_4 -->
+    <visual>
+      <origin xyz="0.1012 -0.262731 -0.222223" rpy="-0.655974 -4.51227e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1012 -0.262731 -0.222223" rpy="-0.655974 -4.51227e-15 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie_4 -->
+    <visual>
+      <origin xyz="0.110522 -0.292736 -0.0886192" rpy="-2.61799 4.94562e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_4_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.110522 -0.292736 -0.0886192" rpy="-2.61799 4.94562e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam_5 -->
+    <visual>
+      <origin xyz="0.158204 0.0956212 -0.251352" rpy="-0.0116834 -9.12958e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_5_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.158204 0.0956212 -0.251352" rpy="-0.0116834 -9.12958e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip_5 -->
+    <visual>
+      <origin xyz="0.134311 0.0817372 -0.0388035" rpy="1.22414e-15 -6.53567e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_5_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.134311 0.0817372 -0.0388035" rpy="1.22414e-15 -6.53567e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_5 -->
+    <visual>
+      <origin xyz="0.158209 0.0956239 -0.250852" rpy="0.0116834 8.73014e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_5_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.158209 0.0956239 -0.250852" rpy="0.0116834 8.73014e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot_5 -->
+    <visual>
+      <origin xyz="0.158204 0.0956212 -0.251352" rpy="0.0116834 8.78193e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.158204 0.0956212 -0.251352" rpy="0.0116834 8.78193e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot_5 -->
+    <visual>
+      <origin xyz="0.157761 0.0953896 -0.251346" rpy="0.0116834 8.60928e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.157761 0.0953896 -0.251346" rpy="0.0116834 8.60928e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie_5 -->
+    <visual>
+      <origin xyz="0.163951 0.0979298 -0.092276" rpy="-3.09682 1.80307e-15 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_5_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.163951 0.0979298 -0.092276" rpy="-3.09682 1.80307e-15 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part weight_beam_6 -->
+    <visual>
+      <origin xyz="-0.143537 -0.362079 -0.239097" rpy="0.387011 -2.26938e-16 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+      <material name="weight_beam_6_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.143537 -0.362079 -0.239097" rpy="0.387011 -2.26938e-16 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\weight_beam.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part hip_6 -->
+    <visual>
+      <origin xyz="-0.098631 -0.270522 -0.0388035" rpy="1.71172e-15 -7.18042e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+      <material name="hip_6_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.098631 -0.270522 -0.0388035" rpy="1.71172e-15 -7.18042e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_6 -->
+    <visual>
+      <origin xyz="-0.143452 -0.36191 -0.238634" rpy="-0.387011 3.69211e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_6_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.143452 -0.36191 -0.238634" rpy="-0.387011 3.69211e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lower_foot_6 -->
+    <visual>
+      <origin xyz="-0.143537 -0.362079 -0.239097" rpy="-0.387011 2.89777e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+      <material name="lower_foot_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.143537 -0.362079 -0.239097" rpy="-0.387011 2.89777e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\lower_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part upper_foot_6 -->
+    <visual>
+      <origin xyz="-0.143328 -0.361665 -0.239285" rpy="-0.387011 3.85282e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+      <material name="upper_foot_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.143328 -0.361665 -0.239285" rpy="-0.387011 3.85282e-16 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\upper_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part tie_6 -->
+    <visual>
+      <origin xyz="-0.11829 -0.310774 -0.0905009" rpy="2.77751 1.85453e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+      <material name="tie_6_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.11829 -0.310774 -0.0905009" rpy="2.77751 1.85453e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket -->
+    <visual>
+      <origin xyz="0.272134 -0.239791 -0.0255013" rpy="2.7534 -4.36739e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.272134 -0.239791 -0.0255013" rpy="2.7534 -4.36739e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1 -->
+    <visual>
+      <origin xyz="0.299015 -0.278111 -0.00222142" rpy="1.5708 0.528134 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.299015 -0.278111 -0.00222142" rpy="1.5708 0.528134 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel -->
+    <visual>
+      <origin xyz="0.314029 -0.250431 -0.0122531" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.314029 -0.250431 -0.0122531" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_2 -->
+    <visual>
+      <origin xyz="0.267352 -0.282266 -0.0122531" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.267352 -0.282266 -0.0122531" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket -->
+    <visual>
+      <origin xyz="0.318881 -0.307239 0.0167224" rpy="-2.61346 6.73986e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.318881 -0.307239 0.0167224" rpy="-2.61346 6.73986e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_2 -->
+    <visual>
+      <origin xyz="0.128121 -0.0812717 -0.0654202" rpy="-1.56441 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.128121 -0.0812717 -0.0654202" rpy="-1.56441 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_2 -->
+    <visual>
+      <origin xyz="0.171821 -0.0962972 -0.0648035" rpy="-3.9899e-15 2.74977e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_2_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.171821 -0.0962972 -0.0648035" rpy="-3.9899e-15 2.74977e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_3 -->
+    <visual>
+      <origin xyz="0.163121 -0.0810483 -0.0368035" rpy="4.17938e-15 -4.45777e-16 -3.13521"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.163121 -0.0810483 -0.0368035" rpy="4.17938e-15 -4.45777e-16 -3.13521"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_4 -->
+    <visual>
+      <origin xyz="0.163121 -0.0810483 -0.0933035" rpy="4.99906e-15 -3.2713e-16 -3.13521"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.163121 -0.0810483 -0.0933035" rpy="4.99906e-15 -3.2713e-16 -3.13521"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_2 -->
+    <visual>
+      <origin xyz="0.195519 -0.128552 -0.0648035" rpy="-0.598559 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.195519 -0.128552 -0.0648035" rpy="-0.598559 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_3 -->
+    <visual>
+      <origin xyz="0.195519 -0.128552 -0.0648035" rpy="3.14159 -4.15342e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.195519 -0.128552 -0.0648035" rpy="3.14159 -4.15342e-15 0.598559"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_3 -->
+    <visual>
+      <origin xyz="0.224577 -0.170062 -0.0568795" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_3_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.224577 -0.170062 -0.0568795" rpy="1.5708 0.388194 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_5 -->
+    <visual>
+      <origin xyz="0.238882 -0.141343 -0.0648035" rpy="1.5708 1.72976e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.238882 -0.141343 -0.0648035" rpy="1.5708 1.72976e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_6 -->
+    <visual>
+      <origin xyz="0.192204 -0.173178 -0.0648035" rpy="1.5708 2.64569e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.192204 -0.173178 -0.0648035" rpy="1.5708 2.64569e-15 2.16936"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_3 -->
+    <visual>
+      <origin xyz="0.245738 -0.201088 -0.0430388" rpy="-2.7534 4.11365e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.245738 -0.201088 -0.0430388" rpy="-2.7534 4.11365e-15 -2.54303"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_4 -->
+    <visual>
+      <origin xyz="-0.342461 -0.0222149 -0.0544551" rpy="3.03124 -1.91208e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.342461 -0.0222149 -0.0544551" rpy="3.03124 -1.91208e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_4 -->
+    <visual>
+      <origin xyz="-0.378098 -0.011329 -0.067982" rpy="1.5708 -1.50967 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_4_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.378098 -0.011329 -0.067982" rpy="1.5708 -1.50967 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_7 -->
+    <visual>
+      <origin xyz="-0.38437 -0.0387293 -0.0506004" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.38437 -0.0387293 -0.0506004" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_8 -->
+    <visual>
+      <origin xyz="-0.366972 0.0150254 -0.0506004" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.366972 0.0150254 -0.0506004" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_4 -->
+    <visual>
+      <origin xyz="-0.379089 -0.0110083 -0.107993" rpy="1.63192 2.32998e-15 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.379089 -0.0110083 -0.107993" rpy="1.63192 2.32998e-15 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_5 -->
+    <visual>
+      <origin xyz="-0.117455 -0.0828391 -0.0654202" rpy="1.57718 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.117455 -0.0828391 -0.0654202" rpy="1.57718 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_5 -->
+    <visual>
+      <origin xyz="-0.168671 -0.0763377 -0.0648035" rpy="2.45057e-16 -1.67738e-15 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_5_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.168671 -0.0763377 -0.0648035" rpy="2.45057e-16 -1.67738e-15 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_9 -->
+    <visual>
+      <origin xyz="-0.152454 -0.0830625 -0.0368035" rpy="-1.19998e-15 -4.4416e-15 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.152454 -0.0830625 -0.0368035" rpy="-1.19998e-15 -4.4416e-15 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_10 -->
+    <visual>
+      <origin xyz="-0.152454 -0.0830625 -0.0933035" rpy="-7.32413e-16 -4.02714e-15 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.152454 -0.0830625 -0.0933035" rpy="-7.32413e-16 -4.02714e-15 0.00638268"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_5 -->
+    <visual>
+      <origin xyz="-0.20716 -0.0653569 -0.0648035" rpy="1.88381 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.20716 -0.0653569 -0.0648035" rpy="1.88381 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_6 -->
+    <visual>
+      <origin xyz="-0.20716 -0.0653569 -0.0648035" rpy="-3.14159 2.66573e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.20716 -0.0653569 -0.0648035" rpy="-3.14159 2.66573e-16 -1.88381"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_6 -->
+    <visual>
+      <origin xyz="-0.257051 -0.049858 -0.0614803" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_6_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.257051 -0.049858 -0.0614803" rpy="1.5708 0.110357 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_11 -->
+    <visual>
+      <origin xyz="-0.249271 -0.0818058 -0.0648035" rpy="1.5708 -3.98004e-17 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.249271 -0.0818058 -0.0648035" rpy="1.5708 -3.98004e-17 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_12 -->
+    <visual>
+      <origin xyz="-0.231874 -0.028051 -0.0648035" rpy="1.5708 2.93267e-16 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.231874 -0.028051 -0.0648035" rpy="1.5708 2.93267e-16 -0.313011"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_6 -->
+    <visual>
+      <origin xyz="-0.295023 -0.0375683 -0.0584709" rpy="-3.03124 -1.85426e-16 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.295023 -0.0375683 -0.0584709" rpy="-3.03124 -1.85426e-16 1.25779"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_7 -->
+    <visual>
+      <origin xyz="-0.153753 0.235381 -0.0860767" rpy="-2.95636 -1.1288e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.153753 0.235381 -0.0860767" rpy="-2.95636 -1.1288e-15 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_7 -->
+    <visual>
+      <origin xyz="-0.170954 0.273481 -0.108445" rpy="1.5708 -1.21599 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_7_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.170954 0.273481 -0.108445" rpy="1.5708 -1.21599 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_13 -->
+    <visual>
+      <origin xyz="-0.193697 0.255552 -0.0925229" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.193697 0.255552 -0.0925229" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_14 -->
+    <visual>
+      <origin xyz="-0.141864 0.278038 -0.0925229" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.141864 0.278038 -0.0925229" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_7 -->
+    <visual>
+      <origin xyz="-0.17596 0.285021 -0.146442" rpy="1.9256 -1.08869e-15 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.17596 0.285021 -0.146442" rpy="1.9256 -1.08869e-15 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_8 -->
+    <visual>
+      <origin xyz="-0.0567394 0.0238903 -0.0654202" rpy="0.529981 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0567394 0.0238903 -0.0654202" rpy="0.529981 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_8 -->
+    <visual>
+      <origin xyz="-0.0801088 0.0707022 -0.0648035" rpy="-2.0201e-16 9.02349e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_8_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0801088 0.0707022 -0.0648035" rpy="-2.0201e-16 9.02349e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_15 -->
+    <visual>
+      <origin xyz="-0.0744325 0.0540889 -0.0368035" rpy="-3.43579e-15 5.94073e-15 -1.04081"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0744325 0.0540889 -0.0368035" rpy="-3.43579e-15 5.94073e-15 -1.04081"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_16 -->
+    <visual>
+      <origin xyz="-0.0744325 0.0540889 -0.0933035" rpy="-3.81289e-15 -1.16821e-16 -1.04081"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0744325 0.0540889 -0.0933035" rpy="-3.81289e-15 -1.16821e-16 -1.04081"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_8 -->
+    <visual>
+      <origin xyz="-0.0973166 0.106839 -0.0648035" rpy="2.73227 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0973166 0.106839 -0.0648035" rpy="2.73227 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_9 -->
+    <visual>
+      <origin xyz="-0.0973166 0.106839 -0.0648035" rpy="3.14159 -4.38016e-16 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0973166 0.106839 -0.0648035" rpy="3.14159 -4.38016e-16 -2.73227"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_9 -->
+    <visual>
+      <origin xyz="-0.11876 0.154719 -0.0666462" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_9_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.11876 0.154719 -0.0666462" rpy="1.5708 -0.185233 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_17 -->
+    <visual>
+      <origin xyz="-0.137499 0.127559 -0.0648035" rpy="1.5708 9.02349e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.137499 0.127559 -0.0648035" rpy="1.5708 9.02349e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_18 -->
+    <visual>
+      <origin xyz="-0.0856661 0.150045 -0.0648035" rpy="1.5708 6.24793e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0856661 0.150045 -0.0648035" rpy="1.5708 6.24793e-16 -1.16148"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_9 -->
+    <visual>
+      <origin xyz="-0.134304 0.19055 -0.0753936" rpy="2.95636 -9.69432e-16 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.134304 0.19055 -0.0753936" rpy="2.95636 -9.69432e-16 0.409318"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_10 -->
+    <visual>
+      <origin xyz="0.0974965 -0.253545 -0.157151" rpy="-1.0472 2.44301e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0974965 -0.253545 -0.157151" rpy="-1.0472 2.44301e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_10 -->
+    <visual>
+      <origin xyz="0.0962798 -0.247928 -0.200473" rpy="1.5708 -0.914822 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_10_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0962798 -0.247928 -0.200473" rpy="1.5708 -0.914822 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_19 -->
+    <visual>
+      <origin xyz="0.119133 -0.227912 -0.187462" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_19_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.119133 -0.227912 -0.187462" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_20 -->
+    <visual>
+      <origin xyz="0.0655169 -0.245732 -0.187462" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_20_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0655169 -0.245732 -0.187462" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_10 -->
+    <visual>
+      <origin xyz="0.103624 -0.270024 -0.233028" rpy="2.22677 -3.8447e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.103624 -0.270024 -0.233028" rpy="2.22677 -3.8447e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_11 -->
+    <visual>
+      <origin xyz="0.0674062 -0.188001 -0.0654202" rpy="-2.61161 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0674062 -0.188001 -0.0654202" rpy="-2.61161 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_11 -->
+    <visual>
+      <origin xyz="0.089286 -0.235249 -0.0648035" rpy="-1.85132e-16 -1.54453e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_11_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.089286 -0.235249 -0.0648035" rpy="-1.85132e-16 -1.54453e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_21 -->
+    <visual>
+      <origin xyz="0.0850993 -0.2182 -0.0368035" rpy="-1.9684e-15 -1.75363e-15 2.10078"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_21_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0850993 -0.2182 -0.0368035" rpy="-1.9684e-15 -1.75363e-15 2.10078"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_22 -->
+    <visual>
+      <origin xyz="0.0850993 -0.2182 -0.0933035" rpy="-2.66611e-15 4.20088e-16 2.10078"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_22_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0850993 -0.2182 -0.0933035" rpy="-2.66611e-15 4.20088e-16 2.10078"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_11 -->
+    <visual>
+      <origin xyz="0.103235 -0.272765 -0.0648035" rpy="-0.320876 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.103235 -0.272765 -0.0648035" rpy="-0.320876 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_12 -->
+    <visual>
+      <origin xyz="0.103235 -0.272765 -0.0648035" rpy="-3.14159 -1.50422e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.103235 -0.272765 -0.0648035" rpy="-3.14159 -1.50422e-16 0.320876"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_12 -->
+    <visual>
+      <origin xyz="0.112483 -0.298635 -0.0806612" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_12_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.112483 -0.298635 -0.0806612" rpy="-1.5708 -1.0472 -1.24992"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_23 -->
+    <visual>
+      <origin xyz="0.14143 -0.296953 -0.0648035" rpy="1.5708 -1.54824e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_23_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.14143 -0.296953 -0.0648035" rpy="1.5708 -1.54824e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_24 -->
+    <visual>
+      <origin xyz="0.0878135 -0.314773 -0.0648035" rpy="1.5708 -1.54824e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_24_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0878135 -0.314773 -0.0648035" rpy="1.5708 -1.54824e-15 1.89167"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_12 -->
+    <visual>
+      <origin xyz="0.105791 -0.278501 -0.1146" rpy="1.0472 2.59627e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.105791 -0.278501 -0.1146" rpy="1.0472 2.59627e-15 -2.82072"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_13 -->
+    <visual>
+      <origin xyz="0.15945 0.0955767 -0.172129" rpy="-1.52603 1.26767e-15 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.15945 0.0955767 -0.172129" rpy="-1.52603 1.26767e-15 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_13 -->
+    <visual>
+      <origin xyz="0.15884 0.0959534 -0.224609" rpy="-1.5708 -1.55911 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_13_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.15884 0.0959534 -0.224609" rpy="-1.5708 -1.55911 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_25 -->
+    <visual>
+      <origin xyz="0.144803 0.120211 -0.207094" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_25_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.144803 0.120211 -0.207094" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_26 -->
+    <visual>
+      <origin xyz="0.170981 0.0701411 -0.207094" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_26_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.170981 0.0701411 -0.207094" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_13 -->
+    <visual>
+      <origin xyz="0.157181 0.0950862 -0.26459" rpy="1.55911 -8.18693e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.157181 0.0950862 -0.26459" rpy="1.55911 -8.18693e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_14 -->
+    <visual>
+      <origin xyz="0.0660487 0.024674 -0.0654202" rpy="-0.517216 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0660487 0.024674 -0.0654202" rpy="-0.517216 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_14 -->
+    <visual>
+      <origin xyz="0.0995139 0.0619596 -0.0648035" rpy="1.40657e-15 -5.48026e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_14_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0995139 0.0619596 -0.0648035" rpy="1.40657e-15 -5.48026e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_27 -->
+    <visual>
+      <origin xyz="0.0833549 0.055096 -0.0368035" rpy="-6.52759e-16 -9.87498e-16 -2.08801"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_27_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0833549 0.055096 -0.0368035" rpy="-6.52759e-16 -9.87498e-16 -2.08801"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_28 -->
+    <visual>
+      <origin xyz="0.0833549 0.055096 -0.0933035" rpy="1.16537e-16 -7.63589e-16 -2.08801"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_28_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0833549 0.055096 -0.0933035" rpy="1.16537e-16 -7.63589e-16 -2.08801"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_14 -->
+    <visual>
+      <origin xyz="0.134311 0.0817372 -0.0648035" rpy="-2.05254 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.134311 0.0817372 -0.0648035" rpy="-2.05254 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_15 -->
+    <visual>
+      <origin xyz="0.134311 0.0817372 -0.0648035" rpy="-3.14159 6.52847e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.134311 0.0817372 -0.0648035" rpy="-3.14159 6.52847e-16 2.05254"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_15 -->
+    <visual>
+      <origin xyz="0.165591 0.0987872 -0.0823488" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_15_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.165591 0.0987872 -0.0823488" rpy="-1.5708 -1.52603 0.481743"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_29 -->
+    <visual>
+      <origin xyz="0.152069 0.123313 -0.0648035" rpy="1.5708 -5.52761e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_29_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.152069 0.123313 -0.0648035" rpy="1.5708 -5.52761e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_30 -->
+    <visual>
+      <origin xyz="0.178246 0.0732437 -0.0648035" rpy="1.5708 -5.52761e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_30_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.178246 0.0732437 -0.0648035" rpy="1.5708 -5.52761e-15 -2.65985"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_15 -->
+    <visual>
+      <origin xyz="0.162761 0.0973077 -0.122246" rpy="1.52603 -2.95012e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.162761 0.0973077 -0.122246" rpy="1.52603 -2.95012e-16 -1.08905"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_16 -->
+    <visual>
+      <origin xyz="-0.130511 -0.334947 -0.165791" rpy="-1.93488 1.41659e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.130511 -0.334947 -0.165791" rpy="-1.93488 1.41659e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_16 -->
+    <visual>
+      <origin xyz="-0.139151 -0.353403 -0.214172" rpy="1.5708 -1.18379 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_16_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.139151 -0.353403 -0.214172" rpy="1.5708 -1.18379 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_31 -->
+    <visual>
+      <origin xyz="-0.110596 -0.358981 -0.198497" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_31_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.110596 -0.358981 -0.198497" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_32 -->
+    <visual>
+      <origin xyz="-0.161018 -0.333489 -0.198497" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_32_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.161018 -0.333489 -0.198497" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_16 -->
+    <visual>
+      <origin xyz="-0.145375 -0.365715 -0.251744" rpy="1.95781 -3.32819e-15 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.145375 -0.365715 -0.251744" rpy="1.95781 -3.32819e-15 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_17 -->
+    <visual>
+      <origin xyz="-0.0553819 -0.188785 -0.0654202" rpy="2.62438 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0553819 -0.188785 -0.0654202" rpy="2.62438 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_17 -->
+    <visual>
+      <origin xyz="-0.0818371 -0.234191 -0.0648035" rpy="1.74073e-15 -7.18042e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_17_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0818371 -0.234191 -0.0648035" rpy="1.74073e-15 -7.18042e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_33 -->
+    <visual>
+      <origin xyz="-0.0726881 -0.219207 -0.0368035" rpy="2.63271e-15 3.95878e-16 1.05358"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_33_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0726881 -0.219207 -0.0368035" rpy="2.63271e-15 3.95878e-16 1.05358"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_34 -->
+    <visual>
+      <origin xyz="-0.0726881 -0.219207 -0.0933035" rpy="3.12703e-15 2.58894e-15 1.05358"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_34_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0726881 -0.219207 -0.0933035" rpy="3.12703e-15 2.58894e-15 1.05358"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_17 -->
+    <visual>
+      <origin xyz="-0.098631 -0.270522 -0.0648035" rpy="0.468089 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.098631 -0.270522 -0.0648035" rpy="0.468089 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_18 -->
+    <visual>
+      <origin xyz="-0.098631 -0.270522 -0.0648035" rpy="-3.14159 1.40841e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.098631 -0.270522 -0.0648035" rpy="-3.14159 1.40841e-15 -0.468089"/>
+      <geometry>
+        <mesh filename="package://meshes\mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_18 -->
+    <visual>
+      <origin xyz="-0.117276 -0.308768 -0.0806563" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+      <material name="part_1_18_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.117276 -0.308768 -0.0806563" rpy="1.5708 -1.20671 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_35 -->
+    <visual>
+      <origin xyz="-0.0888839 -0.314668 -0.0648035" rpy="1.5708 -9.7761e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_35_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0888839 -0.314668 -0.0648035" rpy="1.5708 -9.7761e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_36 -->
+    <visual>
+      <origin xyz="-0.139306 -0.289176 -0.0648035" rpy="1.5708 -9.7761e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_36_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.139306 -0.289176 -0.0648035" rpy="1.5708 -9.7761e-16 1.10271"/>
+      <geometry>
+        <mesh filename="package://meshes\servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_18 -->
+    <visual>
+      <origin xyz="-0.12311 -0.320308 -0.118534" rpy="1.93488 7.23929e-16 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.12311 -0.320308 -0.118534" rpy="1.93488 7.23929e-16 2.6735"/>
+      <geometry>
+        <mesh filename="package://meshes\fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

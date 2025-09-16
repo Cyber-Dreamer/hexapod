@@ -1,0 +1,27 @@
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Ignore virtual environments
+.venv/
+venv/
+
+# Ignore ROS build and devel folders
+build/
+devel/
+install/
+log/
+
+# Ignore catkin tools and colcon logs
+.catkin_tools/
+.colcon/
+
+# Ignore other common system files
+.DS_Store
+Thumbs.db
+
+#security
+.env

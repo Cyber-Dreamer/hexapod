@@ -1,0 +1,16 @@
+
+ros2 pkg create --build-type ament_python  hexapod
+
+python -m onshape-to-robot hexapod 
+
+colcon build
+
+
+docker build -t osrf/ros:jazzy-desktop-nvidia .
+
+bash run.bash ros2 launch hexapod display.launch.py
+
+. install/setup.bash
+
+
+bash run.bash ros2 run rviz2 rviz2
