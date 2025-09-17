@@ -17,6 +17,7 @@ setup(
         (os.path.join('share', package_name, 'launch'), get_files('launch/*')),
         (os.path.join('share', package_name, 'urdf'), get_files('urdf/*')),
         (os.path.join('share', package_name, 'urdf', 'meshes'), get_files('urdf/meshes/*')),
+        (os.path.join('share', package_name, 'rviz'), get_files('rviz/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -27,8 +28,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            # your entry points here
-                'hexapod_joint_slider = hexapod.joint_slider:main',
+            'hexapod_joint_slider = hexapod.joint_slider:main',
         ],
     },
 )
