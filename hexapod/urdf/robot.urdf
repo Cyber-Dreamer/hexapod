@@ -1,0 +1,2269 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape https://cad.onshape.com/documents/026f9a33ba6a25a983a9d639/w/b83e0182bd0a887a03df3198/e/e49783848224d44e064e4a49 -->
+<robot name="hexapod">
+  <!-- Link base_link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.378883 -0.237614 0.154823" rpy="0 0 0"/>
+      <mass value="2.24777"/>
+      <inertia ixx="0.0169961" ixy="-3.37164e-05" ixz="7.57412e-05" iyy="0.0170029" iyz="0.000192289" izz="0.0239802"/>
+    </inertial>
+    <!-- Part mobile_bracket -->
+    <visual>
+      <origin xyz="-0.27238 -0.300704 0.156035" rpy="2.0944 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.27238 -0.300704 0.156035" rpy="2.0944 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_2 -->
+    <visual>
+      <origin xyz="-0.27238 -0.177913 0.156035" rpy="1.0472 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.27238 -0.177913 0.156035" rpy="1.0472 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part bottom_cover -->
+    <visual>
+      <origin xyz="-0.37872 -0.239308 0.121035" rpy="3.14159 5.06521e-16 -2.0944"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/bottom_cover.stl"/>
+      </geometry>
+      <material name="bottom_cover_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37872 -0.239308 0.121035" rpy="3.14159 5.06521e-16 -2.0944"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/bottom_cover.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_3 -->
+    <visual>
+      <origin xyz="-0.37872 -0.116518 0.156035" rpy="1.10589e-16 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37872 -0.116518 0.156035" rpy="1.10589e-16 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part cover -->
+    <visual>
+      <origin xyz="-0.37872 -0.239308 0.191035" rpy="1.60678e-16 3.96758e-17 2.0944"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/cover.stl"/>
+      </geometry>
+      <material name="cover_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37872 -0.239308 0.191035" rpy="1.60678e-16 3.96758e-17 2.0944"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/cover.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_4 -->
+    <visual>
+      <origin xyz="-0.37872 -0.362099 0.156035" rpy="-3.14159 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37872 -0.362099 0.156035" rpy="-3.14159 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_5 -->
+    <visual>
+      <origin xyz="-0.485059 -0.177913 0.156035" rpy="1.0472 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.485059 -0.177913 0.156035" rpy="1.0472 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_6 -->
+    <visual>
+      <origin xyz="-0.485059 -0.300704 0.156035" rpy="2.0944 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.485059 -0.300704 0.156035" rpy="2.0944 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part body -->
+    <visual>
+      <origin xyz="-0.37872 -0.239308 0.156035" rpy="3.14159 -4.30211e-16 2.61799"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/body.stl"/>
+      </geometry>
+      <material name="body_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.37872 -0.239308 0.156035" rpy="3.14159 -4.30211e-16 2.61799"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/body.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link hip_assembly -->
+  <link name="hip_assembly">
+    <inertial>
+      <origin xyz="0.0175757 -0.0202992 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000251996" ixy="7.11329e-05" ixz="-1.37527e-06" iyy="0.000228472" iyz="3.08839e-06" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip -->
+    <visual>
+      <origin xyz="0.03749 -0.0436004 -0.0045" rpy="1.00794e-15 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.03749 -0.0436004 -0.0045" rpy="1.00794e-15 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_7 -->
+    <visual>
+      <origin xyz="0.0371081 -0.0439231 -0.0305" rpy="-5.59099e-16 -1.16799e-15 -2.4401"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0371081 -0.0439231 -0.0305" rpy="-5.59099e-16 -1.16799e-15 -2.4401"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel -->
+    <visual>
+      <origin xyz="1.04083e-16 5.55112e-17 -0.0025" rpy="-3.14159 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.04083e-16 5.55112e-17 -0.0025" rpy="-3.14159 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo -->
+    <visual>
+      <origin xyz="0.0123666 -0.0124615 -0.0305" rpy="-3.14159 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0123666 -0.0124615 -0.0305" rpy="-3.14159 -5.59099e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket -->
+    <visual>
+      <origin xyz="0.0371081 -0.0439231 -0.0305" rpy="-0.701492 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0371081 -0.0439231 -0.0305" rpy="-0.701492 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_2 -->
+    <visual>
+      <origin xyz="8.32667e-17 1.11022e-16 -0.0585" rpy="-3.14159 -4.75187e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="8.32667e-17 1.11022e-16 -0.0585" rpy="-3.14159 -4.75187e-16 2.27229"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly -->
+  <link name="ties_assembly">
+    <inertial>
+      <origin xyz="0.0630476 0.0129059 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.000383983" ixy="-0.000330292" ixz="1.05756e-05" iyy="0.00202124" iyz="2.11682e-06" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_8 -->
+    <visual>
+      <origin xyz="0.154281 0.0279945 -0.0311738" rpy="1.39264 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.154281 0.0279945 -0.0311738" rpy="1.39264 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie -->
+    <visual>
+      <origin xyz="0.0263385 0.00495639 -0.0311738" rpy="-0.178157 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0263385 0.00495639 -0.0311738" rpy="-0.178157 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie -->
+    <visual>
+      <origin xyz="0.0270647 0.00487345 -0.0305" rpy="-0.178157 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0270647 0.00487345 -0.0305" rpy="-0.178157 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_3 -->
+    <visual>
+      <origin xyz="-2.77556e-16 2.77556e-17 -0.0025" rpy="-3.14159 7.67201e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-16 2.77556e-17 -0.0025" rpy="-3.14159 7.67201e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_2 -->
+    <visual>
+      <origin xyz="0.0169741 0.00448348 -0.0305" rpy="-3.14159 3.69287e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_2_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0169741 0.00448348 -0.0305" rpy="-3.14159 3.69287e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_2 -->
+    <visual>
+      <origin xyz="0.0565899 0.0101899 -0.0305" rpy="-1.74895 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0565899 0.0101899 -0.0305" rpy="-1.74895 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_4 -->
+    <visual>
+      <origin xyz="-2.77556e-16 2.77556e-17 -0.0585" rpy="-3.14159 4.49001e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-16 2.77556e-17 -0.0585" rpy="-3.14159 4.49001e-15 -2.96344"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly -->
+  <link name="foot_assembly">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot -->
+    <visual>
+      <origin xyz="-0.04425 1.66533e-16 -0.0305" rpy="3.29899e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 1.66533e-16 -0.0305" rpy="3.29899e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot -->
+    <visual>
+      <origin xyz="-0.04375 -5.55112e-17 -0.03" rpy="1.14854e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -5.55112e-17 -0.03" rpy="1.14854e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_5 -->
+    <visual>
+      <origin xyz="0 5.55112e-17 -0.0025" rpy="3.14159 -1.03545e-18 -4.63719e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 5.55112e-17 -0.0025" rpy="3.14159 -1.03545e-18 -4.63719e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_3 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.5702e-16 -2.803e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_3_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.5702e-16 -2.803e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_3 -->
+    <visual>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_6 -->
+    <visual>
+      <origin xyz="0 0 -0.0585" rpy="3.14159 8.34288e-16 3.57461e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0585" rpy="3.14159 8.34288e-16 3.57461e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly to foot_assembly -->
+  <joint name="foot_1" type="revolute">
+    <origin xyz="0.188727 0.0341971 -0.000790548" rpy="7.80554e-16 1.23733e-15 2.45913"/>
+    <parent link="ties_assembly"/>
+    <child link="foot_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.23378" upper="2.95501"/>
+  </joint>
+  <!-- Joint from hip_assembly to ties_assembly -->
+  <joint name="ties_1" type="revolute">
+    <origin xyz="0.0359262 -0.0907403 -0.0305" rpy="1.5708 5.59099e-16 -0.869304"/>
+    <parent link="hip_assembly"/>
+    <child link="ties_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.92349" upper="1.56717"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly -->
+  <joint name="hip_1" type="revolute">
+    <origin xyz="-0.242069 -0.318204 0.186418" rpy="4.41736e-16 -2.00843e-17 -0.523599"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.701492" upper="2.4401"/>
+  </joint>
+  <!-- Link hip_assembly_2 -->
+  <link name="hip_assembly_2">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_2 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.63678e-16 6.80012e-16 5.11551e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_2_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.63678e-16 6.80012e-16 5.11551e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_9 -->
+    <visual>
+      <origin xyz="-0.0575 0 -0.0305" rpy="9.85323e-16 -4.996e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 0 -0.0305" rpy="9.85323e-16 -4.996e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_7 -->
+    <visual>
+      <origin xyz="-5.55112e-17 1.38778e-17 -0.0025" rpy="-3.14159 -6.38069e-32 9.97878e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 1.38778e-17 -0.0025" rpy="-3.14159 -6.38069e-32 9.97878e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_4 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.8735e-16 3.21238e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_4_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.8735e-16 3.21238e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_4 -->
+    <visual>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_8 -->
+    <visual>
+      <origin xyz="-1.11022e-16 2.77556e-17 -0.0585" rpy="3.14159 -3.11556e-15 3.82586e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 2.77556e-17 -0.0585" rpy="3.14159 -3.11556e-15 3.82586e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_2 -->
+  <link name="ties_assembly_2">
+    <inertial>
+      <origin xyz="0.0229047 0.060141 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.00184964" ixy="-0.000600491" ixz="3.88256e-06" iyy="0.000555575" iyz="1.00623e-05" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_10 -->
+    <visual>
+      <origin xyz="0.059077 0.145245 -0.0311738" rpy="0.387644 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.059077 0.145245 -0.0311738" rpy="0.387644 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_2 -->
+    <visual>
+      <origin xyz="0.0099359 0.024891 -0.0311738" rpy="-1.18315 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_2_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0099359 0.024891 -0.0311738" rpy="-1.18315 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_2 -->
+    <visual>
+      <origin xyz="0.0103952 0.0254596 -0.0305" rpy="-1.18315 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_2_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0103952 0.0254596 -0.0305" rpy="-1.18315 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_9 -->
+    <visual>
+      <origin xyz="2.77556e-17 0 -0.0025" rpy="3.14159 -6.39221e-16 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="2.77556e-17 0 -0.0025" rpy="3.14159 -6.39221e-16 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_5 -->
+    <visual>
+      <origin xyz="0.00531493 0.0167324 -0.0305" rpy="3.14159 3.81092e-16 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_5_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00531493 0.0167324 -0.0305" rpy="3.14159 3.81092e-16 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_5 -->
+    <visual>
+      <origin xyz="0.0217355 0.0532336 -0.0305" rpy="-2.75395 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0217355 0.0532336 -0.0305" rpy="-2.75395 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_10 -->
+    <visual>
+      <origin xyz="0 -8.32667e-17 -0.0585" rpy="3.14159 -2.34729e-15 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -8.32667e-17 -0.0585" rpy="3.14159 -2.34729e-15 -1.95844"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_2 -->
+  <link name="foot_assembly_2">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot_2 -->
+    <visual>
+      <origin xyz="-0.04425 -2.77556e-17 -0.0305" rpy="-7.76746e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -2.77556e-17 -0.0305" rpy="-7.76746e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_2 -->
+    <visual>
+      <origin xyz="-0.04375 -2.77556e-17 -0.03" rpy="-2.04033e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -2.77556e-17 -0.03" rpy="-2.04033e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_11 -->
+    <visual>
+      <origin xyz="-5.55112e-17 -2.77556e-17 -0.0025" rpy="-3.14159 -8.44185e-18 -4.60747e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 -2.77556e-17 -0.0025" rpy="-3.14159 -8.44185e-18 -4.60747e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_6 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.96932e-16 1.32349e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_6_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.96932e-16 1.32349e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_6 -->
+    <visual>
+      <origin xyz="-0.0575 -4.16334e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -4.16334e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_12 -->
+    <visual>
+      <origin xyz="-5.55112e-17 -2.77556e-17 -0.0585" rpy="-3.14159 8.52489e-16 -8.81942e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 -2.77556e-17 -0.0585" rpy="-3.14159 8.52489e-16 -8.81942e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_2 to foot_assembly_2 -->
+  <joint name="foot_2" type="revolute">
+    <origin xyz="0.0723072 0.177648 -0.000790548" rpy="3.49334e-15 -4.3045e-15 2.24033"/>
+    <parent link="ties_assembly_2"/>
+    <child link="foot_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.0099805" upper="4.17881"/>
+  </joint>
+  <!-- Joint from hip_assembly_2 to ties_assembly_2 -->
+  <joint name="ties_2" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -9.85323e-16 -3.14159"/>
+    <parent link="hip_assembly_2"/>
+    <child link="ties_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.92848" upper="0.562177"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_2 -->
+  <joint name="hip_2" type="revolute">
+    <origin xyz="-0.242069 -0.160413 0.186418" rpy="-2.65193e-15 4.96332e-16 -2.2469"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.94189" upper="1.19971"/>
+  </joint>
+  <!-- Link hip_assembly_3 -->
+  <link name="hip_assembly_3">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_3 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="4.30211e-16 3.95517e-16 -3.61773e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_3_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="4.30211e-16 3.95517e-16 -3.61773e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_11 -->
+    <visual>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="8.32667e-16 7.91034e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="8.32667e-16 7.91034e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_13 -->
+    <visual>
+      <origin xyz="1.38778e-17 0 -0.0025" rpy="3.14159 -1.49214e-32 4.47223e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.38778e-17 0 -0.0025" rpy="3.14159 -1.49214e-32 4.47223e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_7 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.10623e-16 -1.19127e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_7_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.10623e-16 -1.19127e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_7 -->
+    <visual>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_14 -->
+    <visual>
+      <origin xyz="1.38778e-17 -5.55112e-17 -0.0585" rpy="-3.14159 7.77156e-16 -1.98676e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.38778e-17 -5.55112e-17 -0.0585" rpy="-3.14159 7.77156e-16 -1.98676e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_3 -->
+  <link name="ties_assembly_3">
+    <inertial>
+      <origin xyz="0.0412593 0.0493887 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.00134199" ixy="-0.000871674" ixz="6.95075e-06" iyy="0.00106323" iyz="8.2469e-06" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_12 -->
+    <visual>
+      <origin xyz="0.103199 0.118052 -0.0311738" rpy="0.719711 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.103199 0.118052 -0.0311738" rpy="0.719711 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_3 -->
+    <visual>
+      <origin xyz="0.0175075 0.0202921 -0.0311738" rpy="-0.851085 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_3_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175075 0.0202921 -0.0311738" rpy="-0.851085 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_3 -->
+    <visual>
+      <origin xyz="0.0181271 0.0206799 -0.0305" rpy="-0.851085 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_3_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0181271 0.0206799 -0.0305" rpy="-0.851085 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_15 -->
+    <visual>
+      <origin xyz="-3.46945e-18 -2.77556e-17 -0.0025" rpy="3.14159 4.28135e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-3.46945e-18 -2.77556e-17 -0.0025" rpy="3.14159 4.28135e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_8 -->
+    <visual>
+      <origin xyz="0.0104793 0.0140857 -0.0305" rpy="3.14159 3.38152e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_8_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0104793 0.0140857 -0.0305" rpy="3.14159 3.38152e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_8 -->
+    <visual>
+      <origin xyz="0.0379021 0.0432398 -0.0305" rpy="-2.42188 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0379021 0.0432398 -0.0305" rpy="-2.42188 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_16 -->
+    <visual>
+      <origin xyz="5.9848e-17 5.55112e-17 -0.0585" rpy="3.14159 1.81866e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="5.9848e-17 5.55112e-17 -0.0585" rpy="3.14159 1.81866e-15 -2.29051"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_3 -->
+  <link name="foot_assembly_3">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot_3 -->
+    <visual>
+      <origin xyz="-0.04425 5.55112e-17 -0.0305" rpy="-6.13073e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 5.55112e-17 -0.0305" rpy="-6.13073e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_3 -->
+    <visual>
+      <origin xyz="-0.04375 5.55112e-17 -0.03" rpy="-5.30421e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_3_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 5.55112e-17 -0.03" rpy="-5.30421e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_17 -->
+    <visual>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 1.44279e-18 -5.55038e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 1.44279e-18 -5.55038e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_9 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.60462e-15 -4.61361e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_9_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.60462e-15 -4.61361e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_9 -->
+    <visual>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_18 -->
+    <visual>
+      <origin xyz="0 0 -0.0585" rpy="3.14159 -2.63888e-15 -4.73683e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0585" rpy="3.14159 -2.63888e-15 -4.73683e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_3 to foot_assembly_3 -->
+  <joint name="foot_3" type="revolute">
+    <origin xyz="0.12627 0.144372 -0.000790548" rpy="1.20553e-14 8.1741e-16 2.33075"/>
+    <parent link="ties_assembly_3"/>
+    <child link="foot_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.432463" upper="3.75633"/>
+  </joint>
+  <!-- Joint from hip_assembly_3 to ties_assembly_3 -->
+  <joint name="ties_3" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -8.32667e-16 3.14159"/>
+    <parent link="hip_assembly_3"/>
+    <child link="ties_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.59641" upper="0.894244"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_3 -->
+  <joint name="hip_3" type="revolute">
+    <origin xyz="-0.37872 -0.0815178 0.187152" rpy="-2.0868e-15 1.31547e-15 -1.61555"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.52605" upper="1.61555"/>
+  </joint>
+  <!-- Link hip_assembly_4 -->
+  <link name="hip_assembly_4">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_4 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.77813e-15 -9.71445e-17 -2.24995e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_4_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.77813e-15 -9.71445e-17 -2.24995e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_13 -->
+    <visual>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="9.71445e-17 -1.31768e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="9.71445e-17 -1.31768e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_19 -->
+    <visual>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="-3.14159 -1.45857e-32 2.98589e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_19_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="-3.14159 -1.45857e-32 2.98589e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_10 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.91434e-16 -5.34443e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_10_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.91434e-16 -5.34443e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_10 -->
+    <visual>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_20 -->
+    <visual>
+      <origin xyz="-5.55112e-17 5.55112e-17 -0.0585" rpy="-3.14159 6.10623e-16 -2.00365e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_20_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 5.55112e-17 -0.0585" rpy="-3.14159 6.10623e-16 -2.00365e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_4 -->
+  <link name="ties_assembly_4">
+    <inertial>
+      <origin xyz="0.0365314 0.0529814 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.00149962" ixy="-0.000831279" ixz="6.16103e-06" iyy="0.000905596" iyz="8.85245e-06" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_14 -->
+    <visual>
+      <origin xyz="0.091879 0.127061 -0.0311738" rpy="0.627409 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.091879 0.127061 -0.0311738" rpy="0.627409 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_4 -->
+    <visual>
+      <origin xyz="0.0155626 0.0218195 -0.0311738" rpy="-0.943388 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_4_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0155626 0.0218195 -0.0311738" rpy="-0.943388 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_4 -->
+    <visual>
+      <origin xyz="0.0161438 0.0222627 -0.0305" rpy="-0.943388 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_4_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0161438 0.0222627 -0.0305" rpy="-0.943388 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_21 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -3.50602e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_21_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -3.50602e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_11 -->
+    <visual>
+      <origin xyz="0.0091364 0.0149916 -0.0305" rpy="3.14159 -2.38808e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_11_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0091364 0.0149916 -0.0305" rpy="3.14159 -2.38808e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_11 -->
+    <visual>
+      <origin xyz="0.0337553 0.0465492 -0.0305" rpy="-2.51418 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0337553 0.0465492 -0.0305" rpy="-2.51418 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_22 -->
+    <visual>
+      <origin xyz="1.11022e-16 -1.11022e-16 -0.0585" rpy="-3.14159 -2.5093e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_22_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.11022e-16 -1.11022e-16 -0.0585" rpy="-3.14159 -2.5093e-15 -2.1982"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_4 -->
+  <link name="foot_assembly_4">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot_4 -->
+    <visual>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-1.23231e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-1.23231e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_4 -->
+    <visual>
+      <origin xyz="-0.04375 1.11022e-16 -0.03" rpy="-7.13657e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_4_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 1.11022e-16 -0.03" rpy="-7.13657e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_23 -->
+    <visual>
+      <origin xyz="0 1.11022e-16 -0.0025" rpy="3.14159 3.0267e-17 2.76226e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_23_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 1.11022e-16 -0.0025" rpy="3.14159 3.0267e-17 2.76226e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_12 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 9.77449e-16 1.03262e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_12_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 9.77449e-16 1.03262e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_12 -->
+    <visual>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_24 -->
+    <visual>
+      <origin xyz="0 1.11022e-16 -0.0585" rpy="-3.14159 4.47979e-16 4.1255e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_24_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 1.11022e-16 -0.0585" rpy="-3.14159 4.47979e-16 4.1255e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_4 to foot_assembly_4 -->
+  <joint name="foot_4" type="revolute">
+    <origin xyz="0.112426 0.155395 -0.000790548" rpy="2.30727e-15 -2.8566e-15 2.31531"/>
+    <parent link="ties_assembly_4"/>
+    <child link="foot_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.324722" upper="3.86407"/>
+  </joint>
+  <!-- Joint from hip_assembly_4 to ties_assembly_4 -->
+  <joint name="ties_4" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -9.71445e-17 -3.14159"/>
+    <parent link="hip_assembly_4"/>
+    <child link="ties_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.68872" upper="0.801941"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_4 -->
+  <joint name="hip_4" type="revolute">
+    <origin xyz="-0.51537 -0.160413 0.187152" rpy="-2.97536e-15 -4.73545e-16 -0.468195"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.6262" upper="1.51539"/>
+  </joint>
+  <!-- Link hip_assembly_5 -->
+  <link name="hip_assembly_5">
+    <inertial>
+      <origin xyz="-0.0268487 0.000325484 -0.0307859" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_5 -->
+    <visual>
+      <origin xyz="-0.0575 0.0005 -0.0565" rpy="-3.14159 2.15106e-16 -1.50245e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_5_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 0.0005 -0.0565" rpy="-3.14159 2.15106e-16 -1.50245e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_15 -->
+    <visual>
+      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="3.14159 9.15934e-16 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="3.14159 9.15934e-16 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_25 -->
+    <visual>
+      <origin xyz="0 -4.16334e-17 -0.0585" rpy="2.26208e-15 -2.28983e-16 -2.91621e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_25_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -4.16334e-17 -0.0585" rpy="2.26208e-15 -2.28983e-16 -2.91621e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_13 -->
+    <visual>
+      <origin xyz="-0.0175 0.00140442 -0.0305" rpy="2.26208e-15 -2.28983e-16 -2.91621e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_13_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 0.00140442 -0.0305" rpy="2.26208e-15 -2.28983e-16 -2.91621e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_13 -->
+    <visual>
+      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_26 -->
+    <visual>
+      <origin xyz="0 -6.93889e-18 -0.0025" rpy="-2.30103e-31 1.05154e-31 8.44036e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_26_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -6.93889e-18 -0.0025" rpy="-2.30103e-31 1.05154e-31 8.44036e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_5 -->
+  <link name="ties_assembly_5">
+    <inertial>
+      <origin xyz="0.0272069 0.0583211 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.00175595" ixy="-0.000687794" ixz="4.60223e-06" iyy="0.000649272" iyz="9.75416e-06" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_16 -->
+    <visual>
+      <origin xyz="0.0694572 0.140577 -0.0311738" rpy="0.460246 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0694572 0.140577 -0.0311738" rpy="0.460246 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_5 -->
+    <visual>
+      <origin xyz="0.0117153 0.0241047 -0.0311738" rpy="-1.11055 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_5_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0117153 0.0241047 -0.0311738" rpy="-1.11055 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_5 -->
+    <visual>
+      <origin xyz="0.0122146 0.0246384 -0.0305" rpy="-1.11055 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_5_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0122146 0.0246384 -0.0305" rpy="-1.11055 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_27 -->
+    <visual>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="3.14159 -2.86725e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_27_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="3.14159 -2.86725e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_14 -->
+    <visual>
+      <origin xyz="0.00651467 0.0163028 -0.0305" rpy="3.14159 -6.38067e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_14_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00651467 0.0163028 -0.0305" rpy="3.14159 -6.38067e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_14 -->
+    <visual>
+      <origin xyz="0.0255397 0.0515167 -0.0305" rpy="-2.68135 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0255397 0.0515167 -0.0305" rpy="-2.68135 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_28 -->
+    <visual>
+      <origin xyz="0 -2.77556e-17 -0.0585" rpy="3.14159 -6.30303e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_28_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -2.77556e-17 -0.0585" rpy="3.14159 -6.30303e-15 -2.03104"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_5 -->
+  <link name="foot_assembly_5">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot_5 -->
+    <visual>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="1.26144e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="1.26144e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_5 -->
+    <visual>
+      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-5.25382e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_5_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-5.25382e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_29 -->
+    <visual>
+      <origin xyz="1.38778e-16 1.11022e-16 -0.0025" rpy="3.14159 -1.17155e-17 -8.48218e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_29_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.38778e-16 1.11022e-16 -0.0025" rpy="3.14159 -1.17155e-17 -8.48218e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_15 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.62797e-15 -1.00162e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_15_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.62797e-15 -1.00162e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_15 -->
+    <visual>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_30 -->
+    <visual>
+      <origin xyz="8.32667e-17 1.11022e-16 -0.0585" rpy="3.14159 4.60622e-15 -5.36079e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_30_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="8.32667e-17 1.11022e-16 -0.0585" rpy="3.14159 4.60622e-15 -5.36079e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_5 to foot_assembly_5 -->
+  <joint name="foot_5" type="revolute">
+    <origin xyz="0.0850031 0.171935 -0.000790548" rpy="2.7886e-15 -1.77715e-15 2.22613"/>
+    <parent link="ties_assembly_5"/>
+    <child link="foot_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.0683837" upper="4.12041"/>
+  </joint>
+  <!-- Joint from hip_assembly_5 to ties_assembly_5 -->
+  <joint name="ties_5" type="revolute">
+    <origin xyz="-0.0925 -0.0311167 -0.0305" rpy="-1.5708 -1.38778e-16 3.14159"/>
+    <parent link="hip_assembly_5"/>
+    <child link="ties_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.85588" upper="0.634779"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_5 -->
+  <joint name="hip_5" type="revolute">
+    <origin xyz="-0.51537 -0.318204 0.125652" rpy="3.14159 1.60733e-15 0.64378"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.45061" upper="1.69098"/>
+  </joint>
+  <!-- Link hip_assembly_6 -->
+  <link name="hip_assembly_6">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_6 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="5.04248e-17 -1.10032e-17 1.50548e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_6_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="5.04248e-17 -1.10032e-17 1.50548e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_17 -->
+    <visual>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.18004e-15 2.26939e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.18004e-15 2.26939e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_31 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -9.22173e-32 -9.30697e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_31_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -9.22173e-32 -9.30697e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_16 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.18548e-17 5.34039e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_16_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.18548e-17 5.34039e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_16 -->
+    <visual>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_32 -->
+    <visual>
+      <origin xyz="5.55112e-17 0 -0.0585" rpy="3.14159 1.18841e-17 -9.30697e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_32_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="5.55112e-17 0 -0.0585" rpy="3.14159 1.18841e-17 -9.30697e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_6 -->
+  <link name="ties_assembly_6">
+    <inertial>
+      <origin xyz="0.0571255 0.0296353 -0.0309356" rpy="0 0 0"/>
+      <mass value="0.589007"/>
+      <inertia ixx="0.000679683" ixy="-0.000711189" ixz="9.59533e-06" iyy="0.00172553" iyz="4.92482e-06" izz="0.0018683"/>
+    </inertial>
+    <!-- Part mobile_bracket_18 -->
+    <visual>
+      <origin xyz="0.140769 0.0690685 -0.0311738" rpy="1.116 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.140769 0.0690685 -0.0311738" rpy="1.116 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_6 -->
+    <visual>
+      <origin xyz="0.0239834 0.0119617 -0.0311738" rpy="-0.4548 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_6_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0239834 0.0119617 -0.0311738" rpy="-0.4548 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_6 -->
+    <visual>
+      <origin xyz="0.0247046 0.0120803 -0.0305" rpy="-0.4548 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_6_material">
+        <color rgba="0.196078 0.439216 0.0784314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0247046 0.0120803 -0.0305" rpy="-0.4548 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_33 -->
+    <visual>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="-3.14159 -4.42224e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_33_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 0 -0.0025" rpy="-3.14159 -4.42224e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_17 -->
+    <visual>
+      <origin xyz="0.0151042 0.0089491 -0.0305" rpy="-3.14159 -4.43373e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_17_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0151042 0.0089491 -0.0305" rpy="-3.14159 -4.43373e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_17 -->
+    <visual>
+      <origin xyz="0.0516551 0.0252587 -0.0305" rpy="-2.0256 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0516551 0.0252587 -0.0305" rpy="-2.0256 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_34 -->
+    <visual>
+      <origin xyz="-1.11022e-16 0 -0.0585" rpy="-3.14159 -4.38503e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_34_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 0 -0.0585" rpy="-3.14159 -4.38503e-15 -2.68679"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_6 -->
+  <link name="foot_assembly_6">
+    <inertial>
+      <origin xyz="-0.0728169 -0.00211214 -0.0306668" rpy="0 0 0"/>
+      <mass value="0.635283"/>
+      <inertia ixx="0.000268517" ixy="-1.64153e-05" ixz="4.3218e-06" iyy="0.0032443" iyz="-2.27229e-07" izz="0.00308124"/>
+    </inertial>
+    <!-- Part foot_6 -->
+    <visual>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-2.3949e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-2.3949e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_6 -->
+    <visual>
+      <origin xyz="-0.04375 -9.99201e-16 -0.03" rpy="4.79272e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_6_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -9.99201e-16 -0.03" rpy="4.79272e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_35 -->
+    <visual>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="-3.14159 1.48106e-18 -6.3734e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_35_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="-3.14159 1.48106e-18 -6.3734e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_18 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -4.72753e-16 -1.7217e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_18_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -4.72753e-16 -1.7217e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_18 -->
+    <visual>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_36 -->
+    <visual>
+      <origin xyz="-1.11022e-16 -1.11022e-16 -0.0585" rpy="-3.14159 -4.72753e-16 -1.7217e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_36_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 -1.11022e-16 -0.0585" rpy="-3.14159 -4.72753e-16 -1.7217e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod/urdf/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_6 to foot_assembly_6 -->
+  <joint name="foot_6" type="revolute">
+    <origin xyz="0.172211 0.0844433 -0.000790548" rpy="-8.41938e-16 3.89144e-15 2.1079"/>
+    <parent link="ties_assembly_6"/>
+    <child link="foot_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-0.605901" upper="3.58289"/>
+  </joint>
+  <!-- Joint from hip_assembly_6 to ties_assembly_6 -->
+  <joint name="ties_6" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -1.18004e-15 -3.14159"/>
+    <parent link="hip_assembly_6"/>
+    <child link="ties_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.20013" upper="1.29053"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_6 -->
+  <joint name="hip_6" type="revolute">
+    <origin xyz="-0.37872 -0.397099 0.186418" rpy="1.19323e-15 -4.1531e-16 1.45631"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.45631" upper="1.68529"/>
+  </joint>
+</robot>
