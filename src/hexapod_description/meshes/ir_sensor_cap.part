@@ -2,12 +2,12 @@
     "configuration": "default",
     "documentId": "026f9a33ba6a25a983a9d639",
     "documentMicroversion": "041f21e44d979eab49548c4b",
-    "elementId": "87ff0d335d42226ffe9a6dcf",
+    "elementId": "5e42db15a36c12539564eb1b",
     "fullConfiguration": "default",
-    "id": "MaeR0vxH92LBhMAjm",
+    "id": "Mo+zdr1B6Qmb8wqJb",
     "isStandardContent": false,
-    "name": "fixed_bracket <1>",
-    "partId": "JHD",
+    "name": "ir_sensor_cap <1>",
+    "partId": "ROCD",
     "suppressed": false,
     "type": "Part"
 }

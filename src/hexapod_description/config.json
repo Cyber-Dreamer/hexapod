@@ -1,7 +1,7 @@
 {
     "url": "https://cad.onshape.com/documents/026f9a33ba6a25a983a9d639/w/b83e0182bd0a887a03df3198/e/e49783848224d44e064e4a49",
-    "packageName": "hexapod",
-    "name": "hexapod",
+    "packageName": "hexapod_description",
+    "name": "hexapod_description",
     "version": "0.1.0",
     "output_format": "urdf",
     "output_filename": "robot",
