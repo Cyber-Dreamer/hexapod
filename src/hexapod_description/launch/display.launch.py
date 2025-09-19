@@ -8,7 +8,7 @@ def generate_launch_description():
     pkg_path = get_package_share_directory('hexapod_description')
 
     # Path to your URDF file
-    urdf_file_path = os.path.join(pkg_path, 'urdf', 'hexapod.urdf')
+    urdf_file_path = os.path.join(pkg_path, 'urdf', 'robot.urdf')
 
     # Read the URDF file
     with open(urdf_file_path, 'r') as infp:
@@ -40,7 +40,7 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         output='screen',
-        arguments=['-d', os.path.join(pkg_path, 'rviz', 'urdf_config.rviz')],
+        arguments=['-d', os.path.join(pkg_path, 'rviz', 'views.rviz')],
     )
 
     # Return the launch description

@@ -8,22 +8,25 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <depend>launch_ros</depend>
   <!-- These are for building and processing the URDF/Xacro files -->
   <depend>urdf</depend>
   <depend>xacro</depend>
 
   <!-- These are for running the launch file and displaying the robot -->
   <depend>launch</depend>
-  <depend>launch_ros</depend>
   <depend>robot_state_publisher</depend>
   <depend>joint_state_publisher_gui</depend>
   <depend>rviz2</depend>
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
   <depend>ament_index_python</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
+  <build_depend>ament_cmake_python</build_depend>
+  <depend>ament_cmake_ros</depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>

@@ -7,10 +7,11 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(urdf REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(ament_cmake_ros REQUIRED)
+find_package(robot_state_publisher REQUIRED)
+find_package(rviz2 REQUIRED)
 find_package(xacro REQUIRED)
-find_package(launch REQUIRED)
-find_package(launch_ros REQUIRED)
 
 # Install the directories containing the description files and launch files
 install(
