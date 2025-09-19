@@ -5,6 +5,6 @@
     "version": "0.1.0",
     "output_format": "urdf",
     "output_filename": "robot",
-    "assets_directory": "/urdf/meshes",
+    "assets_directory": "/meshes",
     "origin_link": "base_link"
 }
