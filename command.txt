@@ -18,10 +18,10 @@ bash run.bash ros2 run rviz2 rviz2
 colcon build --symlink-install
 
 
-onshape-to-robot hexapod 
+onshape-to-robot src/hexapod_description
 source /opt/ros/jazzy/setup.bash
 rm -rf build/ install/ log/
-colcon build --packages-select hexapod
+colcon build --symlink-install --packages-select hexapod_description
 . install/setup.bash
 ros2 launch hexapod display.launch.py
 ros2 launch hexapod gazebo.launch.py

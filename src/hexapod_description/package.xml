@@ -29,5 +29,5 @@
   <depend>ament_cmake_ros</depend>
   <export>
     <build_type>ament_cmake</build_type>
-  </export>
+</export>
 </package>
