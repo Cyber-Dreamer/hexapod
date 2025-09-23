@@ -1,0 +1,14 @@
+/**:
+    ros__parameters:
+        leg_lengths:
+            coxa: 152.017    # Length of the coxa link (base_link middle to first joint) in mm
+            hip: 92.500     # Length of the hip link (first to second joint) in mm
+            femur: 191.8      # Length of the femur link (second to third joint) in mm
+            tibia: 284.969    # Length from the tibia link to the foot tip in mm
+        joint_limits:
+            hip_min: -90   # Degrees
+            hip_max: 90    # Degrees
+            femur_min: -100  # Degrees
+            femur_max: 100   # Degrees
+            tibia_min: -120   # Degrees
+            tibia_max: 120   # Degrees

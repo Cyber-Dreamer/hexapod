@@ -5,13 +5,13 @@
   <!-- Link base_link -->
   <link name="base_link">
     <inertial>
-      <origin xyz="-0.588958 -0.50583 0.355198" rpy="0 0 0"/>
-      <mass value="2.24777"/>
-      <inertia ixx="0.0169759" ixy="2.42972e-05" ixz="-0.000206283" iyy="0.0170231" iyz="-1.262e-05" izz="0.0239802"/>
+      <origin xyz="0.00531951 -0.00413089 -0.000427637" rpy="0 0 0"/>
+      <mass value="2.26596"/>
+      <inertia ixx="0.0152472" ixy="6.11534e-05" ixz="-0.000168484" iyy="0.015875" iyz="8.77712e-06" izz="0.0214935"/>
     </inertial>
     <!-- Part mobile_bracket -->
     <visual>
-      <origin xyz="-0.576789 -0.382643 0.356409" rpy="0.0872665 1.5708 0"/>
+      <origin xyz="0.0172411 0.113434 -0.00314611" rpy="0.0872665 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -20,14 +20,46 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.576789 -0.382643 0.356409" rpy="0.0872665 1.5708 0"/>
+      <origin xyz="0.0172411 0.113434 -0.00314611" rpy="0.0872665 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
+    <!-- Part ultrasound_sensor -->
+    <visual>
+      <origin xyz="-0.0386004 0.0947435 0.0198539" rpy="1.29357e-14 -5.29181e-14 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0386004 0.0947435 0.0198539" rpy="1.29357e-14 -5.29181e-14 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_2 -->
+    <visual>
+      <origin xyz="-0.100547 0.00627507 0.0198539" rpy="-3.14159 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_2_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.100547 0.00627507 0.0198539" rpy="-3.14159 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
     <!-- Part mobile_bracket_2 -->
     <visual>
-      <origin xyz="-0.688075 -0.434537 0.356409" rpy="-0.959931 1.5708 0"/>
+      <origin xyz="0.113096 0.0463158 -0.00314611" rpy="1.13446 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -36,14 +68,46 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.688075 -0.434537 0.356409" rpy="-0.959931 1.5708 0"/>
+      <origin xyz="0.113096 0.0463158 -0.00314611" rpy="1.13446 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
+    <!-- Part camera -->
+    <visual>
+      <origin xyz="-0.102539 0.00644938 -0.0151461" rpy="3.14159 -3.7359e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/camera.stl"/>
+      </geometry>
+      <material name="camera_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.102539 0.00644938 -0.0151461" rpy="3.14159 -3.7359e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/camera.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part camera_2 -->
+    <visual>
+      <origin xyz="0.116624 -0.0127249 -0.0151461" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/camera.stl"/>
+      </geometry>
+      <material name="camera_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.116624 -0.0127249 -0.0151461" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/camera.stl"/>
+      </geometry>
+    </collision>
     <!-- Part bottom_cover -->
     <visual>
-      <origin xyz="-0.587491 -0.504966 0.321409" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
+      <origin xyz="0.00704236 -0.00313775 -0.0381461" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/bottom_cover.stl"/>
       </geometry>
@@ -52,14 +116,46 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.587491 -0.504966 0.321409" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
+      <origin xyz="0.00704236 -0.00313775 -0.0381461" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/bottom_cover.stl"/>
       </geometry>
     </collision>
+    <!-- Part left_speaker -->
+    <visual>
+      <origin xyz="0.0368168 -0.0669892 0.0323062" rpy="1.5708 0.523599 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/left_speaker.stl"/>
+      </geometry>
+      <material name="left_speaker_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0368168 -0.0669892 0.0323062" rpy="1.5708 0.523599 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/left_speaker.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part body_power -->
+    <visual>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.93606e-14 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/body_power.stl"/>
+      </geometry>
+      <material name="body_power_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.93606e-14 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/body_power.stl"/>
+      </geometry>
+    </collision>
     <!-- Part mobile_bracket_3 -->
     <visual>
-      <origin xyz="-0.698777 -0.55686 0.356409" rpy="2.00713 -1.5708 0"/>
+      <origin xyz="0.102897 -0.070256 -0.00314611" rpy="-2.18166 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -68,14 +164,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.698777 -0.55686 0.356409" rpy="2.00713 -1.5708 0"/>
+      <origin xyz="0.102897 -0.070256 -0.00314611" rpy="-2.18166 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part cover -->
     <visual>
-      <origin xyz="-0.587491 -0.504966 0.391409" rpy="1.571e-14 5.22087e-14 -2.18166"/>
+      <origin xyz="0.00704236 -0.00313775 0.0318539" rpy="5.29181e-14 1.29357e-14 -1.13446"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/cover.stl"/>
       </geometry>
@@ -84,14 +180,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.587491 -0.504966 0.391409" rpy="1.571e-14 5.22087e-14 -2.18166"/>
+      <origin xyz="0.00704236 -0.00313775 0.0318539" rpy="5.29181e-14 1.29357e-14 -1.13446"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/cover.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_4 -->
     <visual>
-      <origin xyz="-0.476205 -0.453073 0.356409" rpy="1.13446 1.5708 0"/>
+      <origin xyz="-0.0888124 0.0639805 -0.00314611" rpy="-0.959931 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -100,14 +196,30 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.476205 -0.453073 0.356409" rpy="1.13446 1.5708 0"/>
+      <origin xyz="-0.0888124 0.0639805 -0.00314611" rpy="-0.959931 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
+    <!-- Part ultrasound_sensor_3 -->
+    <visual>
+      <origin xyz="0.0526851 -0.101019 0.0198539" rpy="-1.29357e-14 5.29181e-14 -2.70526"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_3_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0526851 -0.101019 0.0198539" rpy="-1.29357e-14 5.29181e-14 -2.70526"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
     <!-- Part mobile_bracket_5 -->
     <visual>
-      <origin xyz="-0.598193 -0.62729 0.356409" rpy="3.05433 -1.5708 0"/>
+      <origin xyz="-0.00315634 -0.11971 -0.00314611" rpy="3.05433 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -116,14 +228,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.598193 -0.62729 0.356409" rpy="3.05433 -1.5708 0"/>
+      <origin xyz="-0.00315634 -0.11971 -0.00314611" rpy="3.05433 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_6 -->
     <visual>
-      <origin xyz="-0.486907 -0.575396 0.356409" rpy="-2.18166 -1.5708 0"/>
+      <origin xyz="-0.0990111 -0.0525913 -0.00314611" rpy="2.00713 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -132,25 +244,89 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.486907 -0.575396 0.356409" rpy="-2.18166 -1.5708 0"/>
+      <origin xyz="-0.0990111 -0.0525913 -0.00314611" rpy="2.00713 -1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
-    <!-- Part body -->
+    <!-- Part body_brain -->
     <visual>
-      <origin xyz="-0.587491 -0.504966 0.356409" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.97096e-14 3.7359e-14 -1.65806"/>
       <geometry>
-        <mesh filename="package://hexapod_description/meshes/body.stl"/>
+        <mesh filename="package://hexapod_description/meshes/body_brain.stl"/>
       </geometry>
-      <material name="body_material">
+      <material name="body_brain_material">
         <color rgba="0.282353 0.54902 0.160784 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.587491 -0.504966 0.356409" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.97096e-14 3.7359e-14 -1.65806"/>
       <geometry>
-        <mesh filename="package://hexapod_description/meshes/body.stl"/>
+        <mesh filename="package://hexapod_description/meshes/body_brain.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_4 -->
+    <visual>
+      <origin xyz="0.0689886 0.0853307 0.0198539" rpy="3.14159 1.52565e-14 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_4_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0689886 0.0853307 0.0198539" rpy="3.14159 1.52565e-14 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_5 -->
+    <visual>
+      <origin xyz="0.114631 -0.0125506 0.0198539" rpy="3.14159 -3.76617e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_5_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.114631 -0.0125506 0.0198539" rpy="3.14159 -3.76617e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part left_speaker_2 -->
+    <visual>
+      <origin xyz="0.0474521 0.0545734 0.0323062" rpy="1.5708 0.523599 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/left_speaker.stl"/>
+      </geometry>
+      <material name="left_speaker_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0474521 0.0545734 0.0323062" rpy="1.5708 0.523599 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/left_speaker.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_6 -->
+    <visual>
+      <origin xyz="-0.0549039 -0.0916062 0.0198539" rpy="-3.14159 -1.52565e-14 -0.610865"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_6_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0549039 -0.0916062 0.0198539" rpy="-3.14159 -1.52565e-14 -0.610865"/>
+      <geometry>
+        <mesh filename="package://hexapod_description/meshes/ultrasound_sensor.stl"/>
       </geometry>
     </collision>
   </link>
@@ -163,7 +339,7 @@
     </inertial>
     <!-- Part hip -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="6.85426e-16 -4.86762e-16 -3.14159"/>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-3.5793e-17 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -172,14 +348,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="6.85426e-16 -4.86762e-16 -3.14159"/>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-3.5793e-17 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_7 -->
     <visual>
-      <origin xyz="0.0575 -1.11022e-16 -0.0305" rpy="-7.28949e-15 -5.6326e-15 -1.5708"/>
+      <origin xyz="0.0575 -8.67362e-19 -0.0305" rpy="-3.25123e-15 -2.14293e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -188,14 +364,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 -1.11022e-16 -0.0305" rpy="-7.28949e-15 -5.6326e-15 -1.5708"/>
+      <origin xyz="0.0575 -8.67362e-19 -0.0305" rpy="-3.25123e-15 -2.14293e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel -->
     <visual>
-      <origin xyz="5.55112e-17 1.11022e-16 -0.0025" rpy="-3.14159 -1.16706e-15 3.14159"/>
+      <origin xyz="2.77556e-17 2.60209e-18 -0.0025" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -204,14 +380,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="5.55112e-17 1.11022e-16 -0.0025" rpy="-3.14159 -1.16706e-15 3.14159"/>
+      <origin xyz="2.77556e-17 2.60209e-18 -0.0025" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.19766e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -220,14 +396,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.19766e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket -->
     <visual>
-      <origin xyz="0.0575 -1.11022e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -8.67362e-19 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -236,14 +412,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 -1.11022e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -8.67362e-19 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_2 -->
     <visual>
-      <origin xyz="0 1.11022e-16 -0.0585" rpy="-3.14159 -1.16706e-15 -3.14159"/>
+      <origin xyz="-5.55112e-17 5.20417e-18 -0.0585" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -252,7 +428,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 1.11022e-16 -0.0585" rpy="-3.14159 -1.16706e-15 -3.14159"/>
+      <origin xyz="-5.55112e-17 5.20417e-18 -0.0585" rpy="3.14159 -3.2709e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -315,7 +491,7 @@
     </collision>
     <!-- Part servo_wheel_3 -->
     <visual>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0025" rpy="-3.14159 -2.23646e-16 -2.61799"/>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -1.07536e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -324,14 +500,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0025" rpy="-3.14159 -2.23646e-16 -2.61799"/>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 -1.07536e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_2 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -2.2339e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 -1.07578e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -340,7 +516,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -2.2339e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 -1.07578e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -363,7 +539,7 @@
     </collision>
     <!-- Part servo_wheel_4 -->
     <visual>
-      <origin xyz="-1.11022e-15 -7.21645e-16 -0.0585" rpy="-3.14159 -2.85252e-14 -2.61799"/>
+      <origin xyz="-3.88578e-16 -2.42861e-16 -0.0585" rpy="3.14159 -1.06389e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -372,7 +548,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.11022e-15 -7.21645e-16 -0.0585" rpy="-3.14159 -2.85252e-14 -2.61799"/>
+      <origin xyz="-3.88578e-16 -2.42861e-16 -0.0585" rpy="3.14159 -1.06389e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -387,7 +563,7 @@
     </inertial>
     <!-- Part foot -->
     <visual>
-      <origin xyz="-0.04425 -5.89806e-17 -0.0305" rpy="-3.12558e-17 1.5708 0"/>
+      <origin xyz="-0.04425 -5.55112e-17 -0.0305" rpy="8.65203e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -396,14 +572,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -5.89806e-17 -0.0305" rpy="-3.12558e-17 1.5708 0"/>
+      <origin xyz="-0.04425 -5.55112e-17 -0.0305" rpy="8.65203e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap -->
     <visual>
-      <origin xyz="-0.04425 3.81639e-17 -0.0305" rpy="-7.51938e-17 1.5708 0"/>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="-5.10534e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -412,14 +588,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 3.81639e-17 -0.0305" rpy="-7.51938e-17 1.5708 0"/>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="-5.10534e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot -->
     <visual>
-      <origin xyz="-0.04375 1.61052e-14 -0.03" rpy="-7.6652e-14 1.5708 0"/>
+      <origin xyz="-0.04375 5.55112e-17 -0.03" rpy="-3.4853e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -428,14 +604,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 1.61052e-14 -0.03" rpy="-7.6652e-14 1.5708 0"/>
+      <origin xyz="-0.04375 5.55112e-17 -0.03" rpy="-3.4853e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_5 -->
     <visual>
-      <origin xyz="0 2.08167e-17 -0.0025" rpy="-3.14159 1.32541e-18 -3.00419e-17"/>
+      <origin xyz="-3.46945e-17 0 -0.0025" rpy="-3.14159 -4.38496e-18 2.50406e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -444,14 +620,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 2.08167e-17 -0.0025" rpy="-3.14159 1.32541e-18 -3.00419e-17"/>
+      <origin xyz="-3.46945e-17 0 -0.0025" rpy="-3.14159 -4.38496e-18 2.50406e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_3 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.50748e-18 -6.71605e-18"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -3.68514e-18 -3.9689e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -460,14 +636,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.50748e-18 -6.71605e-18"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -3.68514e-18 -3.9689e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_3 -->
     <visual>
-      <origin xyz="-0.0575 -5.89806e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -476,14 +652,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -5.89806e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_6 -->
     <visual>
-      <origin xyz="-5.55112e-17 3.46945e-18 -0.0585" rpy="3.14159 -5.21805e-17 -2.42553e-17"/>
+      <origin xyz="-6.31439e-16 -5.55112e-17 -0.0585" rpy="-3.14159 -1.84192e-16 -1.34699e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -492,7 +668,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 3.46945e-18 -0.0585" rpy="3.14159 -5.21805e-17 -2.42553e-17"/>
+      <origin xyz="-6.31439e-16 -5.55112e-17 -0.0585" rpy="-3.14159 -1.84192e-16 -1.34699e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -500,7 +676,7 @@
   </link>
   <!-- Joint from ties_assembly to foot_assembly -->
   <joint name="foot_1" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="2.04167e-16 7.25873e-16 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="1.05854e-17 1.13313e-14 1.91986"/>
     <parent link="ties_assembly"/>
     <child link="foot_assembly"/>
     <axis xyz="0 0 1"/>
@@ -508,7 +684,7 @@
   </joint>
   <!-- Joint from hip_assembly to ties_assembly -->
   <joint name="ties_1" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 7.28949e-15 7.80449e-15"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 3.25123e-15 3.22165e-16"/>
     <parent link="hip_assembly"/>
     <child link="ties_assembly"/>
     <axis xyz="0 0 1"/>
@@ -516,7 +692,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly -->
   <joint name="hip_1" type="revolute">
-    <origin xyz="-0.573739 -0.347776 0.386792" rpy="-3.98192e-14 -3.78648e-14 1.48353"/>
+    <origin xyz="0.0202915 0.148301 0.0272372" rpy="-3.93428e-14 -3.97183e-14 1.48353"/>
     <parent link="base_link"/>
     <child link="hip_assembly"/>
     <axis xyz="0 0 1"/>
@@ -531,7 +707,7 @@
     </inertial>
     <!-- Part hip_2 -->
     <visual>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.80502e-16 2.7401e-29 1.23512e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="1.05049e-16 -1.89327e-29 -2.47243e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -540,14 +716,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.80502e-16 2.7401e-29 1.23512e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="1.05049e-16 -1.89327e-29 -2.47243e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_9 -->
     <visual>
-      <origin xyz="-0.0575 -2.22045e-16 -0.0305" rpy="1.20123e-27 -5.50704e-17 1.5708"/>
+      <origin xyz="-0.0575 2.68882e-17 -0.0305" rpy="-3.50154e-15 -5.7739e-15 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -556,14 +732,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -2.22045e-16 -0.0305" rpy="1.20123e-27 -5.50704e-17 1.5708"/>
+      <origin xyz="-0.0575 2.68882e-17 -0.0305" rpy="-3.50154e-15 -5.7739e-15 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_7 -->
     <visual>
-      <origin xyz="-1.66533e-16 0 -0.0025" rpy="3.14159 2.1575e-30 3.25683e-17"/>
+      <origin xyz="0 -8.67362e-19 -0.0025" rpy="3.14159 -6.31089e-30 -8.9275e-19"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -572,14 +748,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.66533e-16 0 -0.0025" rpy="3.14159 2.1575e-30 3.25683e-17"/>
+      <origin xyz="0 -8.67362e-19 -0.0025" rpy="3.14159 -6.31089e-30 -8.9275e-19"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_4 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 6.21109e-29 2.69968e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.52435e-29 -3.79069e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -588,14 +764,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 6.21109e-29 2.69968e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.52435e-29 -3.79069e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_4 -->
     <visual>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 2.68882e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -604,14 +780,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 2.68882e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_8 -->
     <visual>
-      <origin xyz="-1.11022e-16 1.11022e-16 -0.0585" rpy="3.14159 1.47793e-29 3.10124e-16"/>
+      <origin xyz="-8.32667e-17 3.46945e-17 -0.0585" rpy="-3.14159 -3.78653e-29 -4.44982e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -620,7 +796,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.11022e-16 1.11022e-16 -0.0585" rpy="3.14159 1.47793e-29 3.10124e-16"/>
+      <origin xyz="-8.32667e-17 3.46945e-17 -0.0585" rpy="-3.14159 -3.78653e-29 -4.44982e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -683,7 +859,7 @@
     </collision>
     <!-- Part servo_wheel_9 -->
     <visual>
-      <origin xyz="-1.44329e-15 1.66533e-16 -0.0025" rpy="-3.14159 1.01795e-14 -2.61799"/>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -1.03168e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -692,14 +868,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.44329e-15 1.66533e-16 -0.0025" rpy="-3.14159 1.01795e-14 -2.61799"/>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -1.03168e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_5 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 1.01493e-14 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 -3.50198e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -708,7 +884,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 1.01493e-14 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 -3.50198e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -731,7 +907,7 @@
     </collision>
     <!-- Part servo_wheel_10 -->
     <visual>
-      <origin xyz="-9.99201e-16 3.88578e-16 -0.0585" rpy="-3.14159 1.0806e-14 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.21864e-16 -0.0585" rpy="3.14159 1.38491e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -740,7 +916,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-9.99201e-16 3.88578e-16 -0.0585" rpy="-3.14159 1.0806e-14 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.21864e-16 -0.0585" rpy="3.14159 1.38491e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -755,7 +931,7 @@
     </inertial>
     <!-- Part foot_2 -->
     <visual>
-      <origin xyz="-0.04425 2.22045e-16 -0.0305" rpy="-8.29462e-17 1.5708 0"/>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-1.91543e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -764,14 +940,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 2.22045e-16 -0.0305" rpy="-8.29462e-17 1.5708 0"/>
+      <origin xyz="-0.04425 0 -0.0305" rpy="-1.91543e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_2 -->
     <visual>
-      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="-2.74351e-17 1.5708 0"/>
+      <origin xyz="-0.04425 5.55112e-17 -0.0305" rpy="1.00727e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -780,14 +956,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="-2.74351e-17 1.5708 0"/>
+      <origin xyz="-0.04425 5.55112e-17 -0.0305" rpy="1.00727e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_2 -->
     <visual>
-      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-4.49744e-17 1.5708 0"/>
+      <origin xyz="-0.04375 -1.11022e-16 -0.03" rpy="7.92901e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -796,14 +972,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-4.49744e-17 1.5708 0"/>
+      <origin xyz="-0.04375 -1.11022e-16 -0.03" rpy="7.92901e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_11 -->
     <visual>
-      <origin xyz="5.55112e-17 2.22045e-16 -0.0025" rpy="-3.14159 8.00934e-18 2.74351e-17"/>
+      <origin xyz="3.46945e-17 0 -0.0025" rpy="3.14159 -3.41361e-18 -1.41083e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -812,14 +988,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="5.55112e-17 2.22045e-16 -0.0025" rpy="-3.14159 8.00934e-18 2.74351e-17"/>
+      <origin xyz="3.46945e-17 0 -0.0025" rpy="3.14159 -3.41361e-18 -1.41083e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_6 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 8.00934e-18 2.74351e-17"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 9.48615e-18 -4.81095e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -828,14 +1004,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 8.00934e-18 2.74351e-17"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 9.48615e-18 -4.81095e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_6 -->
     <visual>
-      <origin xyz="-0.0575 2.22045e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -844,14 +1020,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 2.22045e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_12 -->
     <visual>
-      <origin xyz="-2.77556e-17 3.33067e-16 -0.0585" rpy="-3.14159 6.61784e-17 1.55997e-16"/>
+      <origin xyz="-2.98372e-16 0 -0.0585" rpy="-3.14159 1.91167e-15 4.86746e-18"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -860,7 +1036,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.77556e-17 3.33067e-16 -0.0585" rpy="-3.14159 6.61784e-17 1.55997e-16"/>
+      <origin xyz="-2.98372e-16 0 -0.0585" rpy="-3.14159 1.91167e-15 4.86746e-18"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -868,7 +1044,7 @@
   </link>
   <!-- Joint from ties_assembly_2 to foot_assembly_2 -->
   <joint name="foot_2" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="1.74534e-16 -7.20665e-17 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-1.18413e-16 1.60207e-15 1.91986"/>
     <parent link="ties_assembly_2"/>
     <child link="foot_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -876,7 +1052,7 @@
   </joint>
   <!-- Joint from hip_assembly_2 to ties_assembly_2 -->
   <joint name="ties_2" type="revolute">
-    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -1.19807e-27 -3.14159"/>
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 3.50154e-15 3.14159"/>
     <parent link="hip_assembly_2"/>
     <child link="ties_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -884,7 +1060,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_2 -->
   <joint name="hip_2" type="revolute">
-    <origin xyz="-0.716746 -0.414461 0.386792" rpy="5.13858e-14 -1.55159e-14 -0.610865"/>
+    <origin xyz="0.144817 0.0611074 0.0272372" rpy="-1.39309e-14 5.38714e-14 -2.70526"/>
     <parent link="base_link"/>
     <child link="hip_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -899,7 +1075,7 @@
     </inertial>
     <!-- Part hip_3 -->
     <visual>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-7.17961e-15 -1.63347e-15 -1.44093e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="3.04166e-16 -8.3994e-16 9.29433e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -908,14 +1084,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-7.17961e-15 -1.63347e-15 -1.44093e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="3.04166e-16 -8.3994e-16 9.29433e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_11 -->
     <visual>
-      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="6.31089e-30 5.5948e-14 1.5708"/>
+      <origin xyz="-0.0575 -2.01662e-17 -0.0305" rpy="8.53508e-17 -1.30826e-17 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -924,14 +1100,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="6.31089e-30 5.5948e-14 1.5708"/>
+      <origin xyz="-0.0575 -2.01662e-17 -0.0305" rpy="8.53508e-17 -1.30826e-17 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_13 -->
     <visual>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0025" rpy="-3.14159 1.26218e-29 -7.31844e-17"/>
+      <origin xyz="0 -4.55365e-18 -0.0025" rpy="3.14159 2.62092e-30 7.0779e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -940,14 +1116,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0025" rpy="-3.14159 1.26218e-29 -7.31844e-17"/>
+      <origin xyz="0 -4.55365e-18 -0.0025" rpy="3.14159 2.62092e-30 7.0779e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_7 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 6.12323e-17 -1.94156e-15"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 5.77636e-30 6.60557e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -956,14 +1132,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 6.12323e-17 -1.94156e-15"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 5.77636e-30 6.60557e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_7 -->
     <visual>
-      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -2.01662e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -972,14 +1148,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -2.01662e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_14 -->
     <visual>
-      <origin xyz="0 2.498e-16 -0.0585" rpy="3.14159 6.12323e-17 -1.83744e-15"/>
+      <origin xyz="-5.55112e-17 -2.81893e-17 -0.0585" rpy="-3.14159 1.54695e-16 8.61339e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -988,7 +1164,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 2.498e-16 -0.0585" rpy="3.14159 6.12323e-17 -1.83744e-15"/>
+      <origin xyz="-5.55112e-17 -2.81893e-17 -0.0585" rpy="-3.14159 1.54695e-16 8.61339e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1051,7 +1227,7 @@
     </collision>
     <!-- Part servo_wheel_15 -->
     <visual>
-      <origin xyz="-2.22045e-16 -1.66533e-16 -0.0025" rpy="3.14159 -4.69348e-16 -2.61799"/>
+      <origin xyz="-5.55112e-17 4.33681e-19 -0.0025" rpy="3.14159 6.86081e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1060,14 +1236,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.22045e-16 -1.66533e-16 -0.0025" rpy="3.14159 -4.69348e-16 -2.61799"/>
+      <origin xyz="-5.55112e-17 4.33681e-19 -0.0025" rpy="3.14159 6.86081e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_8 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -1.44984e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 1.34159e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1076,7 +1252,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -1.44984e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 1.34159e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1099,7 +1275,7 @@
     </collision>
     <!-- Part servo_wheel_16 -->
     <visual>
-      <origin xyz="2.22045e-16 -3.33067e-16 -0.0585" rpy="3.14159 4.06543e-17 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.30104e-17 -0.0585" rpy="-3.14159 1.60882e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1108,7 +1284,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.22045e-16 -3.33067e-16 -0.0585" rpy="3.14159 4.06543e-17 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.30104e-17 -0.0585" rpy="-3.14159 1.60882e-14 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1123,7 +1299,7 @@
     </inertial>
     <!-- Part foot_3 -->
     <visual>
-      <origin xyz="-0.04425 0 -0.0305" rpy="1.67473e-16 1.5708 0"/>
+      <origin xyz="-0.04425 1.66533e-16 -0.0305" rpy="1.32822e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -1132,14 +1308,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 0 -0.0305" rpy="1.67473e-16 1.5708 0"/>
+      <origin xyz="-0.04425 1.66533e-16 -0.0305" rpy="1.32822e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_3 -->
     <visual>
-      <origin xyz="-0.04425 -3.77476e-15 -0.0305" rpy="2.12212e-14 1.5708 0"/>
+      <origin xyz="-0.04425 -1.05471e-15 -0.0305" rpy="7.16486e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -1148,14 +1324,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -3.77476e-15 -0.0305" rpy="2.12212e-14 1.5708 0"/>
+      <origin xyz="-0.04425 -1.05471e-15 -0.0305" rpy="7.16486e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_3 -->
     <visual>
-      <origin xyz="-0.04375 -4.21885e-15 -0.03" rpy="1.96991e-14 1.5708 0"/>
+      <origin xyz="-0.04375 -2.33147e-15 -0.03" rpy="1.07884e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -1164,14 +1340,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 -4.21885e-15 -0.03" rpy="1.96991e-14 1.5708 0"/>
+      <origin xyz="-0.04375 -2.33147e-15 -0.03" rpy="1.07884e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_17 -->
     <visual>
-      <origin xyz="-2.42861e-17 -2.22045e-16 -0.0025" rpy="-3.14159 2.06853e-17 9.73618e-18"/>
+      <origin xyz="6.93889e-18 0 -0.0025" rpy="-3.14159 -2.05429e-17 -9.73839e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1180,14 +1356,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.42861e-17 -2.22045e-16 -0.0025" rpy="-3.14159 2.06853e-17 9.73618e-18"/>
+      <origin xyz="6.93889e-18 0 -0.0025" rpy="-3.14159 -2.05429e-17 -9.73839e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_9 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -4.32956e-16 -1.88983e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.77245e-14 -2.16009e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1196,14 +1372,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -4.32956e-16 -1.88983e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.77245e-14 -2.16009e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_9 -->
     <visual>
-      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -1212,14 +1388,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_18 -->
     <visual>
-      <origin xyz="-5.89806e-17 2.22045e-16 -0.0585" rpy="-3.14159 -4.46757e-16 -2.8029e-16"/>
+      <origin xyz="-5.55112e-17 -5.55112e-17 -0.0585" rpy="3.14159 1.77008e-14 -1.41501e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1228,7 +1404,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.89806e-17 2.22045e-16 -0.0585" rpy="-3.14159 -4.46757e-16 -2.8029e-16"/>
+      <origin xyz="-5.55112e-17 -5.55112e-17 -0.0585" rpy="3.14159 1.77008e-14 -1.41501e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1236,7 +1412,7 @@
   </link>
   <!-- Joint from ties_assembly_3 to foot_assembly_3 -->
   <joint name="foot_3" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="1.44039e-15 7.27652e-16 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-2.99398e-16 -1.37685e-16 1.91986"/>
     <parent link="ties_assembly_3"/>
     <child link="foot_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1244,7 +1420,7 @@
   </joint>
   <!-- Joint from hip_assembly_3 to ties_assembly_3 -->
   <joint name="ties_3" type="revolute">
-    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -3.15544e-29 -3.14159"/>
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -8.53508e-17 -3.14159"/>
     <parent link="hip_assembly_3"/>
     <child link="ties_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1252,7 +1428,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_3 -->
   <joint name="hip_3" type="revolute">
-    <origin xyz="-0.730498 -0.571652 0.387526" rpy="1.1508e-14 -5.35395e-14 0.436332"/>
+    <origin xyz="0.131567 -0.0903312 0.0279706" rpy="-5.21664e-14 1.54145e-14 2.53073"/>
     <parent link="base_link"/>
     <child link="hip_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1267,7 +1443,7 @@
     </inertial>
     <!-- Part hip_4 -->
     <visual>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-6.57173e-16 1.50582e-16 5.5187e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.06741e-15 1.97865e-15 -4.13872e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -1276,14 +1452,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-6.57173e-16 1.50582e-16 5.5187e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="2.06741e-15 1.97865e-15 -4.13872e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_13 -->
     <visual>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="3.33266e-16 1.95667e-16 1.5708"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.87979e-15 4.53065e-16 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -1292,14 +1468,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="3.33266e-16 1.95667e-16 1.5708"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.87979e-15 4.53065e-16 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_19 -->
     <visual>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 -6.69997e-30 8.0896e-18"/>
+      <origin xyz="0 8.67362e-19 -0.0025" rpy="3.14159 4.33975e-30 2.4618e-18"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1308,14 +1484,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 -6.69997e-30 8.0896e-18"/>
+      <origin xyz="0 8.67362e-19 -0.0025" rpy="3.14159 4.33975e-30 2.4618e-18"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_10 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 2.3496e-16 9.78762e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -1.97114e-30 1.67218e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1324,14 +1500,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 2.3496e-16 9.78762e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -1.97114e-30 1.67218e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_10 -->
     <visual>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -1340,14 +1516,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_20 -->
     <visual>
-      <origin xyz="0 0 -0.0585" rpy="3.14159 3.02703e-16 1.31833e-15"/>
+      <origin xyz="0 0 -0.0585" rpy="-3.14159 1.87979e-15 1.25202e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1356,7 +1532,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0585" rpy="3.14159 3.02703e-16 1.31833e-15"/>
+      <origin xyz="0 0 -0.0585" rpy="-3.14159 1.87979e-15 1.25202e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1419,7 +1595,7 @@
     </collision>
     <!-- Part servo_wheel_21 -->
     <visual>
-      <origin xyz="1.11022e-16 0 -0.0025" rpy="3.14159 3.75396e-16 -2.61799"/>
+      <origin xyz="0 -2.1684e-18 -0.0025" rpy="3.14159 -2.9101e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1428,14 +1604,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 0 -0.0025" rpy="3.14159 3.75396e-16 -2.61799"/>
+      <origin xyz="0 -2.1684e-18 -0.0025" rpy="3.14159 -2.9101e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_11 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 8.39626e-17 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -6.25631e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1444,7 +1620,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 8.39626e-17 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -6.25631e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1467,7 +1643,7 @@
     </collision>
     <!-- Part servo_wheel_22 -->
     <visual>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0585" rpy="-3.14159 3.0015e-16 -2.61799"/>
+      <origin xyz="-8.32667e-17 -5.33427e-17 -0.0585" rpy="-3.14159 -6.25096e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1476,7 +1652,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 5.55112e-17 -0.0585" rpy="-3.14159 3.0015e-16 -2.61799"/>
+      <origin xyz="-8.32667e-17 -5.33427e-17 -0.0585" rpy="-3.14159 -6.25096e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1491,7 +1667,7 @@
     </inertial>
     <!-- Part foot_4 -->
     <visual>
-      <origin xyz="-0.04425 -2.22045e-16 -0.0305" rpy="2.35311e-16 1.5708 0"/>
+      <origin xyz="-0.04425 0 -0.0305" rpy="4.264e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -1500,14 +1676,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -2.22045e-16 -0.0305" rpy="2.35311e-16 1.5708 0"/>
+      <origin xyz="-0.04425 0 -0.0305" rpy="4.264e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_4 -->
     <visual>
-      <origin xyz="-0.04425 -2.22045e-16 -0.0305" rpy="1.70464e-15 1.5708 0"/>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="4.66809e-18 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -1516,14 +1692,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -2.22045e-16 -0.0305" rpy="1.70464e-15 1.5708 0"/>
+      <origin xyz="-0.04425 1.11022e-16 -0.0305" rpy="4.66809e-18 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_4 -->
     <visual>
-      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-1.66075e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.9984e-15 -0.03" rpy="-8.86065e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -1532,14 +1708,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 2.22045e-16 -0.03" rpy="-1.66075e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.9984e-15 -0.03" rpy="-8.86065e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_23 -->
     <visual>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 1.96172e-18 -1.09463e-16"/>
+      <origin xyz="4.16334e-17 0 -0.0025" rpy="3.14159 -2.57829e-18 3.04105e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1548,14 +1724,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 1.96172e-18 -1.09463e-16"/>
+      <origin xyz="4.16334e-17 0 -0.0025" rpy="3.14159 -2.57829e-18 3.04105e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_12 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.32307e-14 -2.40379e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.1312e-15 1.06354e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1564,14 +1740,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.32307e-14 -2.40379e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.1312e-15 1.06354e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_12 -->
     <visual>
-      <origin xyz="-0.0575 -2.22045e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -1580,14 +1756,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -2.22045e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 0 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_24 -->
     <visual>
-      <origin xyz="-8.32667e-17 -2.22045e-16 -0.0585" rpy="3.14159 -1.32362e-14 -1.3225e-16"/>
+      <origin xyz="6.93889e-18 -5.55112e-17 -0.0585" rpy="-3.14159 1.13403e-15 8.30283e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1596,7 +1772,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-8.32667e-17 -2.22045e-16 -0.0585" rpy="3.14159 -1.32362e-14 -1.3225e-16"/>
+      <origin xyz="6.93889e-18 -5.55112e-17 -0.0585" rpy="-3.14159 1.13403e-15 8.30283e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1604,7 +1780,7 @@
   </link>
   <!-- Joint from ties_assembly_4 to foot_assembly_4 -->
   <joint name="foot_4" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-6.20588e-15 -8.9332e-15 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="1.4637e-15 1.68038e-16 1.91986"/>
     <parent link="ties_assembly_4"/>
     <child link="foot_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1612,7 +1788,7 @@
   </joint>
   <!-- Joint from hip_assembly_4 to ties_assembly_4 -->
   <joint name="ties_4" type="revolute">
-    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -3.33266e-16 -3.14159"/>
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -1.87979e-15 -3.14159"/>
     <parent link="hip_assembly_4"/>
     <child link="ties_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1620,7 +1796,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_4 -->
   <joint name="hip_4" type="revolute">
-    <origin xyz="-0.601244 -0.662156 0.387526" rpy="-4.00013e-14 -3.73115e-14 1.48353"/>
+    <origin xyz="-0.0062068 -0.154576 0.0279706" rpy="-3.88964e-14 -3.72989e-14 1.48353"/>
     <parent link="base_link"/>
     <child link="hip_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1635,7 +1811,7 @@
     </inertial>
     <!-- Part hip_5 -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-4.00617e-16 4.99454e-16 -3.14159"/>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.13633e-15 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -1644,14 +1820,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-4.00617e-16 4.99454e-16 -3.14159"/>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.13633e-15 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_15 -->
     <visual>
-      <origin xyz="0.0575 1.11022e-16 -0.0305" rpy="7.65103e-16 2.54331e-16 -1.5708"/>
+      <origin xyz="0.0575 -5.46438e-17 -0.0305" rpy="-2.88289e-16 -5.02371e-15 -1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -1660,14 +1836,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.11022e-16 -0.0305" rpy="7.65103e-16 2.54331e-16 -1.5708"/>
+      <origin xyz="0.0575 -5.46438e-17 -0.0305" rpy="-2.88289e-16 -5.02371e-15 -1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_25 -->
     <visual>
-      <origin xyz="0 2.22045e-16 -0.0025" rpy="-3.14159 5.59458e-14 -3.14159"/>
+      <origin xyz="5.55112e-17 -7.80626e-18 -0.0025" rpy="-3.14159 -2.88289e-16 3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1676,14 +1852,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 2.22045e-16 -0.0025" rpy="-3.14159 5.59458e-14 -3.14159"/>
+      <origin xyz="5.55112e-17 -7.80626e-18 -0.0025" rpy="-3.14159 -2.88289e-16 3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_13 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 5.75594e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1692,14 +1868,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 5.75594e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_13 -->
     <visual>
-      <origin xyz="0.0575 1.11022e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -5.46438e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -1708,14 +1884,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.11022e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -5.46438e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_26 -->
     <visual>
-      <origin xyz="2.08167e-17 3.33067e-16 -0.0585" rpy="3.14159 5.36659e-16 -3.14159"/>
+      <origin xyz="5.55112e-17 -6.93889e-17 -0.0585" rpy="-3.14159 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1724,7 +1900,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.08167e-17 3.33067e-16 -0.0585" rpy="3.14159 5.36659e-16 -3.14159"/>
+      <origin xyz="5.55112e-17 -6.93889e-17 -0.0585" rpy="-3.14159 -2.88289e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1787,7 +1963,7 @@
     </collision>
     <!-- Part servo_wheel_27 -->
     <visual>
-      <origin xyz="9.71445e-17 0 -0.0025" rpy="3.14159 -8.86587e-16 -2.61799"/>
+      <origin xyz="0 1.9082e-17 -0.0025" rpy="3.14159 5.404e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1796,14 +1972,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="9.71445e-17 0 -0.0025" rpy="3.14159 -8.86587e-16 -2.61799"/>
+      <origin xyz="0 1.9082e-17 -0.0025" rpy="3.14159 5.404e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_14 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 3.71966e-14 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 4.56824e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1812,7 +1988,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="-3.14159 3.71966e-14 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 4.56824e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1835,7 +2011,7 @@
     </collision>
     <!-- Part servo_wheel_28 -->
     <visual>
-      <origin xyz="1.17961e-16 5.55112e-17 -0.0585" rpy="3.14159 -1.05312e-15 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.19696e-16 -0.0585" rpy="3.14159 2.71135e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1844,7 +2020,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.17961e-16 5.55112e-17 -0.0585" rpy="3.14159 -1.05312e-15 -2.61799"/>
+      <origin xyz="-5.55112e-17 1.19696e-16 -0.0585" rpy="3.14159 2.71135e-15 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1859,7 +2035,7 @@
     </inertial>
     <!-- Part foot_5 -->
     <visual>
-      <origin xyz="-0.04425 -1.11022e-16 -0.0305" rpy="-1.66181e-16 1.5708 0"/>
+      <origin xyz="-0.04425 -5.55112e-17 -0.0305" rpy="-6.03496e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -1868,14 +2044,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -1.11022e-16 -0.0305" rpy="-1.66181e-16 1.5708 0"/>
+      <origin xyz="-0.04425 -5.55112e-17 -0.0305" rpy="-6.03496e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_5 -->
     <visual>
-      <origin xyz="-0.04425 5.66214e-15 -0.0305" rpy="-3.2437e-14 1.5708 0"/>
+      <origin xyz="-0.04425 -1.66533e-16 -0.0305" rpy="3.07469e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -1884,14 +2060,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 5.66214e-15 -0.0305" rpy="-3.2437e-14 1.5708 0"/>
+      <origin xyz="-0.04425 -1.66533e-16 -0.0305" rpy="3.07469e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_5 -->
     <visual>
-      <origin xyz="-0.04375 6.88338e-15 -0.03" rpy="-3.29921e-14 1.5708 0"/>
+      <origin xyz="-0.04375 1.66533e-16 -0.03" rpy="-1.82546e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -1900,14 +2076,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 6.88338e-15 -0.03" rpy="-3.29921e-14 1.5708 0"/>
+      <origin xyz="-0.04375 1.66533e-16 -0.03" rpy="-1.82546e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_29 -->
     <visual>
-      <origin xyz="0 0 -0.0025" rpy="-3.14159 1.89118e-17 1.01272e-16"/>
+      <origin xyz="-1.38778e-17 -5.55112e-17 -0.0025" rpy="-3.14159 -1.51171e-17 4.36756e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1916,14 +2092,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0025" rpy="-3.14159 1.89118e-17 1.01272e-16"/>
+      <origin xyz="-1.38778e-17 -5.55112e-17 -0.0025" rpy="-3.14159 -1.51171e-17 4.36756e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_15 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.94034e-17 1.59676e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.33714e-16 4.93372e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -1932,14 +2108,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.94034e-17 1.59676e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 6.33714e-16 4.93372e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_15 -->
     <visual>
-      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -1948,14 +2124,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -5.55112e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -1.11022e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_30 -->
     <visual>
-      <origin xyz="0 -5.55112e-17 -0.0585" rpy="-3.14159 -3.40141e-16 -3.13705e-16"/>
+      <origin xyz="2.08167e-17 -1.11022e-16 -0.0585" rpy="-3.14159 6.34667e-16 5.21766e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1964,7 +2140,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -5.55112e-17 -0.0585" rpy="-3.14159 -3.40141e-16 -3.13705e-16"/>
+      <origin xyz="2.08167e-17 -1.11022e-16 -0.0585" rpy="-3.14159 6.34667e-16 5.21766e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -1972,7 +2148,7 @@
   </link>
   <!-- Joint from ties_assembly_5 to foot_assembly_5 -->
   <joint name="foot_5" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="1.02679e-15 1.24004e-16 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-3.9985e-15 -5.62892e-15 1.91986"/>
     <parent link="ties_assembly_5"/>
     <child link="foot_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -1980,7 +2156,7 @@
   </joint>
   <!-- Joint from hip_assembly_5 to ties_assembly_5 -->
   <joint name="ties_5" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 -7.65103e-16 -1.70903e-16"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 2.88289e-16 1.53604e-15"/>
     <parent link="hip_assembly_5"/>
     <child link="ties_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -1988,7 +2164,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_5 -->
   <joint name="hip_5" type="revolute">
-    <origin xyz="-0.458237 -0.595471 0.387526" rpy="5.12814e-14 -1.59069e-14 -0.610865"/>
+    <origin xyz="-0.130732 -0.0673829 0.0279706" rpy="-1.23219e-14 5.33622e-14 -2.70526"/>
     <parent link="base_link"/>
     <child link="hip_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -2003,7 +2179,7 @@
     </inertial>
     <!-- Part hip_6 -->
     <visual>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="8.33396e-16 -1.4225e-15 5.68213e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="1.73648e-16 -1.50931e-16 -3.8329e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
@@ -2012,14 +2188,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="8.33396e-16 -1.4225e-15 5.68213e-16"/>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="1.73648e-16 -1.50931e-16 -3.8329e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_17 -->
     <visual>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="-1.35775e-15 -1.36122e-15 1.5708"/>
+      <origin xyz="-0.0575 1.4962e-17 -0.0305" rpy="-1.00974e-28 -9.94783e-15 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
@@ -2028,14 +2204,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.11022e-16 -0.0305" rpy="-1.35775e-15 -1.36122e-15 1.5708"/>
+      <origin xyz="-0.0575 1.4962e-17 -0.0305" rpy="-1.00974e-28 -9.94783e-15 1.5708"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_31 -->
     <visual>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 -1.53074e-30 -4.69946e-17"/>
+      <origin xyz="0 7.58942e-18 -0.0025" rpy="3.14159 -9.46633e-30 -2.89926e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2044,14 +2220,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0025" rpy="3.14159 -1.53074e-30 -4.69946e-17"/>
+      <origin xyz="0 7.58942e-18 -0.0025" rpy="3.14159 -9.46633e-30 -2.89926e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_16 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.75961e-16 4.472e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.52435e-29 -3.49008e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -2060,14 +2236,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -2.75961e-16 4.472e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.52435e-29 -3.49008e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_16 -->
     <visual>
-      <origin xyz="-0.0575 2.77556e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.4962e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
@@ -2076,14 +2252,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 2.77556e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.4962e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_32 -->
     <visual>
-      <origin xyz="0 0 -0.0585" rpy="-3.14159 -3.43781e-16 -6.21211e-16"/>
+      <origin xyz="2.77556e-17 -9.75782e-18 -0.0585" rpy="-3.14159 6.31089e-29 -1.47108e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2092,7 +2268,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0585" rpy="-3.14159 -3.43781e-16 -6.21211e-16"/>
+      <origin xyz="2.77556e-17 -9.75782e-18 -0.0585" rpy="-3.14159 6.31089e-29 -1.47108e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2155,7 +2331,7 @@
     </collision>
     <!-- Part servo_wheel_33 -->
     <visual>
-      <origin xyz="2.77556e-16 0 -0.0025" rpy="3.14159 1.77948e-15 -2.61799"/>
+      <origin xyz="-2.77556e-17 -1.30104e-18 -0.0025" rpy="-3.14159 -6.6442e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2164,14 +2340,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-16 0 -0.0025" rpy="3.14159 1.77948e-15 -2.61799"/>
+      <origin xyz="-2.77556e-17 -1.30104e-18 -0.0025" rpy="-3.14159 -6.6442e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_17 -->
     <visual>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 3.72592e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -7.72448e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -2180,7 +2356,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 3.72592e-16 -2.61799"/>
+      <origin xyz="0.0144532 0.00996626 -0.0305" rpy="3.14159 -7.72448e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -2203,7 +2379,7 @@
     </collision>
     <!-- Part servo_wheel_34 -->
     <visual>
-      <origin xyz="3.88578e-16 -1.66533e-16 -0.0585" rpy="3.14159 1.92156e-16 -2.61799"/>
+      <origin xyz="-1.22125e-15 -7.02997e-16 -0.0585" rpy="3.14159 -6.08909e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2212,7 +2388,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="3.88578e-16 -1.66533e-16 -0.0585" rpy="3.14159 1.92156e-16 -2.61799"/>
+      <origin xyz="-1.22125e-15 -7.02997e-16 -0.0585" rpy="3.14159 -6.08909e-16 -2.61799"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2227,7 +2403,7 @@
     </inertial>
     <!-- Part foot_6 -->
     <visual>
-      <origin xyz="-0.04425 -2.77556e-17 -0.0305" rpy="-4.38605e-17 1.5708 0"/>
+      <origin xyz="-0.04425 -1.11022e-16 -0.0305" rpy="3.91202e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
@@ -2236,14 +2412,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -2.77556e-17 -0.0305" rpy="-4.38605e-17 1.5708 0"/>
+      <origin xyz="-0.04425 -1.11022e-16 -0.0305" rpy="3.91202e-17 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_6 -->
     <visual>
-      <origin xyz="-0.04425 -1.94289e-16 -0.0305" rpy="5.17038e-16 1.5708 0"/>
+      <origin xyz="-0.04425 -4.55191e-15 -0.0305" rpy="1.9598e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
@@ -2252,14 +2428,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -1.94289e-16 -0.0305" rpy="5.17038e-16 1.5708 0"/>
+      <origin xyz="-0.04425 -4.55191e-15 -0.0305" rpy="1.9598e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_6 -->
     <visual>
-      <origin xyz="-0.04375 -8.32667e-17 -0.03" rpy="1.16506e-17 1.5708 0"/>
+      <origin xyz="-0.04375 -5.55112e-17 -0.03" rpy="2.96423e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
@@ -2268,14 +2444,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 -8.32667e-17 -0.03" rpy="1.16506e-17 1.5708 0"/>
+      <origin xyz="-0.04375 -5.55112e-17 -0.03" rpy="2.96423e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_35 -->
     <visual>
-      <origin xyz="-2.22045e-16 2.77556e-17 -0.0025" rpy="-3.14159 -1.58904e-18 2.75781e-17"/>
+      <origin xyz="-6.93889e-18 0 -0.0025" rpy="3.14159 1.0086e-17 2.12798e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2284,14 +2460,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.22045e-16 2.77556e-17 -0.0025" rpy="-3.14159 -1.58904e-18 2.75781e-17"/>
+      <origin xyz="-6.93889e-18 0 -0.0025" rpy="3.14159 1.0086e-17 2.12798e-17"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_18 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.50175e-17 2.99536e-18"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.61656e-15 6.89209e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -2300,7 +2476,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.50175e-17 2.99536e-18"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.61656e-15 6.89209e-16"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo.stl"/>
       </geometry>
@@ -2323,7 +2499,7 @@
     </collision>
     <!-- Part servo_wheel_36 -->
     <visual>
-      <origin xyz="6.66134e-16 2.77556e-17 -0.0585" rpy="-3.14159 -1.53385e-17 5.88864e-18"/>
+      <origin xyz="-2.08167e-16 -5.55112e-17 -0.0585" rpy="3.14159 -9.71686e-16 1.02445e-15"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2332,7 +2508,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="6.66134e-16 2.77556e-17 -0.0585" rpy="-3.14159 -1.53385e-17 5.88864e-18"/>
+      <origin xyz="-2.08167e-16 -5.55112e-17 -0.0585" rpy="3.14159 -9.71686e-16 1.02445e-15"/>
       <geometry>
         <mesh filename="package://hexapod_description/meshes/servo_wheel.stl"/>
       </geometry>
@@ -2340,7 +2516,7 @@
   </link>
   <!-- Joint from ties_assembly_6 to foot_assembly_6 -->
   <joint name="foot_6" type="revolute">
-    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-5.03397e-15 -1.50916e-14 1.91986"/>
+    <origin xyz="0.165999 0.0960821 -0.000790548" rpy="-6.52802e-17 -1.18702e-16 1.91986"/>
     <parent link="ties_assembly_6"/>
     <child link="foot_assembly_6"/>
     <axis xyz="0 0 1"/>
@@ -2348,7 +2524,7 @@
   </joint>
   <!-- Joint from hip_assembly_6 to ties_assembly_6 -->
   <joint name="ties_6" type="revolute">
-    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 1.35775e-15 3.14159"/>
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 1.0413e-28 3.14159"/>
     <parent link="hip_assembly_6"/>
     <child link="ties_assembly_6"/>
     <axis xyz="0 0 1"/>
@@ -2356,7 +2532,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_6 -->
   <joint name="hip_6" type="revolute">
-    <origin xyz="-0.444485 -0.438281 0.386792" rpy="-1.15359e-14 5.31115e-14 -2.70526"/>
+    <origin xyz="-0.117483 0.0840557 0.0272372" rpy="5.19508e-14 -1.48406e-14 -0.610865"/>
     <parent link="base_link"/>
     <child link="hip_assembly_6"/>
     <axis xyz="0 0 1"/>
