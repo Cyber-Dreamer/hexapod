@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "026f9a33ba6a25a983a9d639",
+    "documentMicroversion": "e7423086ddd225ef4e9e7959",
+    "elementId": "17b254142a6d71a1c26193cb",
+    "fullConfiguration": "default",
+    "id": "MflFBsdaw19fdMckL",
+    "isStandardContent": false,
+    "name": "servo_wheel <2>",
+    "partId": "JHD",
+    "suppressed": false,
+    "type": "Part"
+}

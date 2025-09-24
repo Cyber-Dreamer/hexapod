@@ -22,10 +22,10 @@ log/
 COLCON_IGNORE
 
 # Ignore ROS 2 packages that are dependencies
-src/control_msgs/
-src/action_demo_py/
-src/service_demo_py/
-src/topic_demo_py/
+src/control_msgs/*
+src/action_demo_py/*
+src/service_demo_py/*
+src/topic_demo_py/*
 
 # Ignore other common system files
 .DS_Store
@@ -33,3 +33,4 @@ Thumbs.db
 
 #security
 .env
+src/control_msgs

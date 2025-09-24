@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "026f9a33ba6a25a983a9d639",
+    "documentMicroversion": "e7423086ddd225ef4e9e7959",
+    "elementId": "bd8a6eaf511c46ecca2ab303",
+    "fullConfiguration": "default",
+    "id": "MzpZmcDztGXMC5P9z",
+    "isStandardContent": false,
+    "name": "ultrasound sensor <7>",
+    "partId": "JHD",
+    "suppressed": false,
+    "type": "Part"
+}

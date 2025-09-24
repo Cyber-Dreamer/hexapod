@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'hexapod_locomotion'
+package_name = 'hexapod_kinematics'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'gait_demo = hexapod_locomotion.gait_demo:main',
+            'inverse_kinematics_service = hexapod_kinematics.inverse_kinematics_service:main',
         ],
     },
 )

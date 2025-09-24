@@ -1,0 +1,2541 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape https://cad.onshape.com/documents/026f9a33ba6a25a983a9d639/w/b83e0182bd0a887a03df3198/e/e49783848224d44e064e4a49 -->
+<robot name="hexapod_simulation">
+  <!-- Link base_link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.00531299 -0.00419177 -0.000347686" rpy="0 0 0"/>
+      <mass value="2.22661"/>
+      <inertia ixx="0.0150766" ixy="5.73371e-05" ixz="-0.000168681" iyy="0.0155665" iyz="8.33979e-06" izz="0.021033"/>
+    </inertial>
+    <!-- Part mobile_bracket -->
+    <visual>
+      <origin xyz="0.0172411 0.113434 -0.00314611" rpy="0.0872665 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0172411 0.113434 -0.00314611" rpy="0.0872665 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor -->
+    <visual>
+      <origin xyz="-0.0386004 0.0947435 0.0168539" rpy="1.29357e-14 -5.29181e-14 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0386004 0.0947435 0.0168539" rpy="1.29357e-14 -5.29181e-14 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_2 -->
+    <visual>
+      <origin xyz="-0.100547 0.00627507 0.0168539" rpy="-3.14159 3.75701e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_2_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.100547 0.00627507 0.0168539" rpy="-3.14159 3.75701e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_2 -->
+    <visual>
+      <origin xyz="0.113096 0.0463158 -0.00314611" rpy="1.13446 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.113096 0.0463158 -0.00314611" rpy="1.13446 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part camera -->
+    <visual>
+      <origin xyz="-0.102539 0.00644938 -0.0151461" rpy="3.14159 -3.7359e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/camera.stl"/>
+      </geometry>
+      <material name="camera_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.102539 0.00644938 -0.0151461" rpy="3.14159 -3.7359e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/camera.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part camera_2 -->
+    <visual>
+      <origin xyz="0.116624 -0.0127249 -0.0151461" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/camera.stl"/>
+      </geometry>
+      <material name="camera_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.116624 -0.0127249 -0.0151461" rpy="-3.14159 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/camera.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part bottom_cover -->
+    <visual>
+      <origin xyz="0.00704236 -0.00313775 -0.0381461" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/bottom_cover.stl"/>
+      </geometry>
+      <material name="bottom_cover_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00704236 -0.00313775 -0.0381461" rpy="-3.14159 -3.97096e-14 -0.0872665"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/bottom_cover.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part left_speaker -->
+    <visual>
+      <origin xyz="0.0368168 -0.0669892 0.0323062" rpy="1.5708 0.523599 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/left_speaker.stl"/>
+      </geometry>
+      <material name="left_speaker_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0368168 -0.0669892 0.0323062" rpy="1.5708 0.523599 0.436332"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/left_speaker.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part body_power -->
+    <visual>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.93606e-14 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/body_power.stl"/>
+      </geometry>
+      <material name="body_power_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.93606e-14 3.76617e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/body_power.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_3 -->
+    <visual>
+      <origin xyz="0.102897 -0.070256 -0.00314611" rpy="-2.18166 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.102897 -0.070256 -0.00314611" rpy="-2.18166 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part cover -->
+    <visual>
+      <origin xyz="0.00704236 -0.00313775 0.0318539" rpy="5.29181e-14 1.29357e-14 -1.13446"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/cover.stl"/>
+      </geometry>
+      <material name="cover_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00704236 -0.00313775 0.0318539" rpy="5.29181e-14 1.29357e-14 -1.13446"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/cover.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_4 -->
+    <visual>
+      <origin xyz="-0.0888124 0.0639805 -0.00314611" rpy="-0.959931 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0888124 0.0639805 -0.00314611" rpy="-0.959931 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_3 -->
+    <visual>
+      <origin xyz="0.0526851 -0.101019 0.0168539" rpy="-1.30709e-14 5.29779e-14 -2.70526"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_3_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0526851 -0.101019 0.0168539" rpy="-1.30709e-14 5.29779e-14 -2.70526"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_5 -->
+    <visual>
+      <origin xyz="-0.00315634 -0.11971 -0.00314611" rpy="3.05433 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00315634 -0.11971 -0.00314611" rpy="3.05433 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_6 -->
+    <visual>
+      <origin xyz="-0.0990111 -0.0525913 -0.00314611" rpy="2.00713 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0990111 -0.0525913 -0.00314611" rpy="2.00713 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part body_brain -->
+    <visual>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.97096e-14 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/body_brain.stl"/>
+      </geometry>
+      <material name="body_brain_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.00704236 -0.00313775 -0.00314611" rpy="3.97096e-14 3.7359e-14 -1.65806"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/body_brain.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_4 -->
+    <visual>
+      <origin xyz="0.0689886 0.0853307 0.0168539" rpy="3.14159 1.52565e-14 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_4_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0689886 0.0853307 0.0168539" rpy="3.14159 1.52565e-14 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_5 -->
+    <visual>
+      <origin xyz="0.114631 -0.0125506 0.0168539" rpy="3.14159 -3.82927e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_5_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.114631 -0.0125506 0.0168539" rpy="3.14159 -3.82927e-14 1.48353"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part left_speaker_2 -->
+    <visual>
+      <origin xyz="0.0474521 0.0545734 0.0323062" rpy="1.5708 0.523599 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/left_speaker.stl"/>
+      </geometry>
+      <material name="left_speaker_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0474521 0.0545734 0.0323062" rpy="1.5708 0.523599 2.53073"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/left_speaker.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ultrasound_sensor_6 -->
+    <visual>
+      <origin xyz="-0.0549039 -0.0916062 0.0168539" rpy="-3.14159 -1.52565e-14 -0.610865"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+      <material name="ultrasound_sensor_6_material">
+        <color rgba="0.701961 0.701961 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0549039 -0.0916062 0.0168539" rpy="-3.14159 -1.52565e-14 -0.610865"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ultrasound_sensor.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link hip_assembly -->
+  <link name="hip_assembly">
+    <inertial>
+      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip -->
+    <visual>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-3.22773e-16 -9.39821e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-3.22773e-16 -9.39821e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_7 -->
+    <visual>
+      <origin xyz="0.0575 1.9082e-16 -0.0305" rpy="-2.34065e-15 -4.32729e-15 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 1.9082e-16 -0.0305" rpy="-2.34065e-15 -4.32729e-15 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel -->
+    <visual>
+      <origin xyz="-2.77556e-17 8.67362e-18 -0.0025" rpy="3.14159 -9.01655e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 8.67362e-18 -0.0025" rpy="3.14159 -9.01655e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 7.27529e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 7.27529e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket -->
+    <visual>
+      <origin xyz="0.0575 1.9082e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 1.9082e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_2 -->
+    <visual>
+      <origin xyz="-2.77556e-17 4.33681e-18 -0.0585" rpy="-3.14159 -8.74456e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 4.33681e-18 -0.0585" rpy="-3.14159 -8.74456e-16 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly -->
+  <link name="ties_assembly">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_8 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-4.80911e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-4.80911e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie -->
+    <visual>
+      <origin xyz="0.0275 -2.38524e-17 -0.0305" rpy="-4.80911e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 -2.38524e-17 -0.0305" rpy="-4.80911e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_3 -->
+    <visual>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 -1.72342e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 -1.72342e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_2 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.71247e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_2_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.71247e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_2 -->
+    <visual>
+      <origin xyz="0.0575 -1.04083e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 -1.04083e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_4 -->
+    <visual>
+      <origin xyz="-1.38778e-16 -4.33681e-19 -0.0585" rpy="3.14159 -1.50558e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.38778e-16 -4.33681e-19 -0.0585" rpy="3.14159 -1.50558e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly -->
+  <link name="foot_assembly">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot -->
+    <visual>
+      <origin xyz="-0.04425 7.37257e-18 -0.0305" rpy="-1.11022e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 7.37257e-18 -0.0305" rpy="-1.11022e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap -->
+    <visual>
+      <origin xyz="-0.04425 -2.19876e-16 -0.0305" rpy="1.22125e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -2.19876e-16 -0.0305" rpy="1.22125e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot -->
+    <visual>
+      <origin xyz="-0.04375 -2.75821e-16 -0.03" rpy="1.22346e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -2.75821e-16 -0.03" rpy="1.22346e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_5 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 4.18455e-18 4.19082e-31"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="-3.14159 4.18455e-18 4.19082e-31"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_3 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.29613e-16 -2.22045e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_3_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.29613e-16 -2.22045e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_3 -->
+    <visual>
+      <origin xyz="-0.0575 6.50521e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 6.50521e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_6 -->
+    <visual>
+      <origin xyz="1.11022e-16 -1.38778e-17 -0.0585" rpy="3.14159 6.47147e-16 -5.55112e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.11022e-16 -1.38778e-17 -0.0585" rpy="3.14159 6.47147e-16 -5.55112e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly to foot_assembly -->
+  <joint name="foot_1" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-2.10829e-15 -2.78793e-15 -3.14159"/>
+    <parent link="ties_assembly"/>
+    <child link="foot_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly to ties_assembly -->
+  <joint name="ties_1" type="revolute">
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 2.34065e-15 4.18974e-15"/>
+    <parent link="hip_assembly"/>
+    <child link="ties_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly -->
+  <joint name="hip_1" type="revolute">
+    <origin xyz="0.0202915 0.148301 0.0272372" rpy="-3.93428e-14 -3.97183e-14 1.48353"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+  <!-- Link hip_assembly_2 -->
+  <link name="hip_assembly_2">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_2 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.24429e-15 -3.3468e-16 1.35831e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.24429e-15 -3.3468e-16 1.35831e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_9 -->
+    <visual>
+      <origin xyz="-0.0575 3.38271e-17 -0.0305" rpy="-6.78487e-16 -1.0573e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 3.38271e-17 -0.0305" rpy="-6.78487e-16 -1.0573e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_7 -->
+    <visual>
+      <origin xyz="0 -3.46945e-18 -0.0025" rpy="-3.14159 -4.85165e-31 5.14862e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -3.46945e-18 -0.0025" rpy="-3.14159 -4.85165e-31 5.14862e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_4 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -1.1556e-15 3.58833e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_4_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -1.1556e-15 3.58833e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_4 -->
+    <visual>
+      <origin xyz="-0.0575 3.38271e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 3.38271e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_8 -->
+    <visual>
+      <origin xyz="5.55112e-17 1.01481e-16 -0.0585" rpy="-3.14159 -1.04443e-15 1.31303e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="5.55112e-17 1.01481e-16 -0.0585" rpy="-3.14159 -1.04443e-15 1.31303e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_2 -->
+  <link name="ties_assembly_2">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_10 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_2 -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-3.26837e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-3.26837e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_2 -->
+    <visual>
+      <origin xyz="0.0275 8.91648e-16 -0.0305" rpy="-3.26837e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 8.91648e-16 -0.0305" rpy="-3.26837e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_9 -->
+    <visual>
+      <origin xyz="0 -4.33681e-19 -0.0025" rpy="-3.14159 -6.8753e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -4.33681e-19 -0.0025" rpy="-3.14159 -6.8753e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_5 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -6.70706e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_5_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -6.70706e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_5 -->
+    <visual>
+      <origin xyz="0.0575 1.87133e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_5_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 1.87133e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_10 -->
+    <visual>
+      <origin xyz="2.77556e-17 -4.33681e-19 -0.0585" rpy="-3.14159 -6.98632e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="2.77556e-17 -4.33681e-19 -0.0585" rpy="-3.14159 -6.98632e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_2 -->
+  <link name="foot_assembly_2">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot_2 -->
+    <visual>
+      <origin xyz="-0.04425 6.50521e-18 -0.0305" rpy="2.90301e-27 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 6.50521e-18 -0.0305" rpy="2.90301e-27 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap_2 -->
+    <visual>
+      <origin xyz="-0.04425 -2.40693e-16 -0.0305" rpy="1.43971e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_2_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -2.40693e-16 -0.0305" rpy="1.43971e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_2 -->
+    <visual>
+      <origin xyz="-0.04375 7.54605e-17 -0.03" rpy="-1.04493e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_2_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 7.54605e-17 -0.03" rpy="-1.04493e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_11 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 -1.96972e-17 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 -1.96972e-17 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_6 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -6.92834e-16 -9.34011e-28"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_6_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -6.92834e-16 -9.34011e-28"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_6 -->
+    <visual>
+      <origin xyz="-0.0575 7.80626e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 7.80626e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_12 -->
+    <visual>
+      <origin xyz="0 4.33681e-19 -0.0585" rpy="3.14159 -2.54049e-16 -1.79229e-27"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 4.33681e-19 -0.0585" rpy="3.14159 -2.54049e-16 -1.79229e-27"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_2 to foot_assembly_2 -->
+  <joint name="foot_2" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="2.69393e-15 -7.22227e-15 -3.14159"/>
+    <parent link="ties_assembly_2"/>
+    <child link="foot_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly_2 to ties_assembly_2 -->
+  <joint name="ties_2" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 6.78487e-16 3.14159"/>
+    <parent link="hip_assembly_2"/>
+    <child link="ties_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_2 -->
+  <joint name="hip_2" type="revolute">
+    <origin xyz="0.144817 0.0611074 0.0272372" rpy="-1.42889e-14 5.46584e-14 -2.70526"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+  <!-- Link hip_assembly_3 -->
+  <link name="hip_assembly_3">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_3 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.71813e-15 4.91134e-15 -1.99081e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.71813e-15 4.91134e-15 -1.99081e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_11 -->
+    <visual>
+      <origin xyz="-0.0575 -3.46945e-18 -0.0305" rpy="8.44496e-15 9.01927e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -3.46945e-18 -0.0305" rpy="8.44496e-15 9.01927e-15 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_13 -->
+    <visual>
+      <origin xyz="0 1.51788e-18 -0.0025" rpy="3.14159 2.67006e-31 -3.2531e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 1.51788e-18 -0.0025" rpy="3.14159 2.67006e-31 -3.2531e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_7 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.55252e-15 -3.37159e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_7_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.55252e-15 -3.37159e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_7 -->
+    <visual>
+      <origin xyz="-0.0575 -3.46945e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -3.46945e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_14 -->
+    <visual>
+      <origin xyz="0 -9.32414e-18 -0.0585" rpy="3.14159 7.80157e-15 -1.41216e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -9.32414e-18 -0.0585" rpy="3.14159 7.80157e-15 -1.41216e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_3 -->
+  <link name="ties_assembly_3">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_12 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_3 -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="8.37069e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="8.37069e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_3 -->
+    <visual>
+      <origin xyz="0.0275 -2.3679e-16 -0.0305" rpy="8.37069e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 -2.3679e-16 -0.0305" rpy="8.37069e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_15 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 3.82581e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 3.82581e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_8 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.81479e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_8_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.81479e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_8 -->
+    <visual>
+      <origin xyz="0.0575 -4.88758e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 -4.88758e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_16 -->
+    <visual>
+      <origin xyz="0 -4.33681e-19 -0.0585" rpy="3.14159 4.80139e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -4.33681e-19 -0.0585" rpy="3.14159 4.80139e-15 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_3 -->
+  <link name="foot_assembly_3">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot_3 -->
+    <visual>
+      <origin xyz="-0.04425 -7.93636e-17 -0.0305" rpy="-2.27596e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -7.93636e-17 -0.0305" rpy="-2.27596e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap_3 -->
+    <visual>
+      <origin xyz="-0.04425 1.85615e-16 -0.0305" rpy="-4.60577e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_3_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 1.85615e-16 -0.0305" rpy="-4.60577e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_3 -->
+    <visual>
+      <origin xyz="-0.04375 -3.93782e-16 -0.03" rpy="-7.77156e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_3_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -3.93782e-16 -0.03" rpy="-7.77156e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_17 -->
+    <visual>
+      <origin xyz="0 4.33681e-19 -0.0025" rpy="3.14159 1.4775e-17 5.44807e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 4.33681e-19 -0.0025" rpy="3.14159 1.4775e-17 5.44807e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_9 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -2.78168e-16 1.94289e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_9_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -2.78168e-16 1.94289e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_9 -->
+    <visual>
+      <origin xyz="-0.0575 -1.0842e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -1.0842e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_18 -->
+    <visual>
+      <origin xyz="-5.55112e-17 2.42861e-17 -0.0585" rpy="3.14159 -2.98523e-15 1.94289e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 2.42861e-17 -0.0585" rpy="3.14159 -2.98523e-15 1.94289e-15"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_3 to foot_assembly_3 -->
+  <joint name="foot_3" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-3.79287e-15 5.88685e-15 3.14159"/>
+    <parent link="ties_assembly_3"/>
+    <child link="foot_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly_3 to ties_assembly_3 -->
+  <joint name="ties_3" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -8.44496e-15 3.14159"/>
+    <parent link="hip_assembly_3"/>
+    <child link="ties_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_3 -->
+  <joint name="hip_3" type="revolute">
+    <origin xyz="0.131567 -0.0903312 0.0279706" rpy="-5.21026e-14 1.54133e-14 2.53073"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+  <!-- Link hip_assembly_4 -->
+  <link name="hip_assembly_4">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_4 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.39294e-15 -3.74584e-30 -1.95562e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-1.39294e-15 -3.74584e-30 -1.95562e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_13 -->
+    <visual>
+      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="1.57073e-16 4.69506e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -1.38778e-16 -0.0305" rpy="1.57073e-16 4.69506e-16 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_19 -->
+    <visual>
+      <origin xyz="0 2.60209e-18 -0.0025" rpy="3.14159 2.56504e-30 -4.56773e-19"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_19_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 2.60209e-18 -0.0025" rpy="3.14159 2.56504e-30 -4.56773e-19"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_10 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -3.74584e-30 -1.72722e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_10_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -3.74584e-30 -1.72722e-18"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_10 -->
+    <visual>
+      <origin xyz="-0.0575 8.67362e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_10_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 8.67362e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_20 -->
+    <visual>
+      <origin xyz="1.66533e-16 -2.77556e-17 -0.0585" rpy="3.14159 4.31478e-16 5.3696e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_20_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.66533e-16 -2.77556e-17 -0.0585" rpy="3.14159 4.31478e-16 5.3696e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_4 -->
+  <link name="ties_assembly_4">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_14 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_4 -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.16307e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.16307e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_4 -->
+    <visual>
+      <origin xyz="0.0275 -1.47451e-16 -0.0305" rpy="-1.16307e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 -1.47451e-16 -0.0305" rpy="-1.16307e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_21 -->
+    <visual>
+      <origin xyz="-3.88578e-16 -1.4138e-16 -0.0025" rpy="3.14159 -3.84493e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_21_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-3.88578e-16 -1.4138e-16 -0.0025" rpy="3.14159 -3.84493e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_11 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.15642e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_11_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.15642e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_11 -->
+    <visual>
+      <origin xyz="0.0575 -3.42608e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 -3.42608e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_22 -->
+    <visual>
+      <origin xyz="-3.33067e-16 -1.40513e-16 -0.0585" rpy="-3.14159 -2.14127e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_22_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-3.33067e-16 -1.40513e-16 -0.0585" rpy="-3.14159 -2.14127e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_4 -->
+  <link name="foot_assembly_4">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot_4 -->
+    <visual>
+      <origin xyz="-0.04425 6.50521e-18 -0.0305" rpy="1.98251e-28 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 6.50521e-18 -0.0305" rpy="1.98251e-28 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap_4 -->
+    <visual>
+      <origin xyz="-0.04425 -1.04083e-17 -0.0305" rpy="8.29418e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_4_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -1.04083e-17 -0.0305" rpy="8.29418e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_4 -->
+    <visual>
+      <origin xyz="-0.04375 -2.86229e-16 -0.03" rpy="4.996e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_4_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -2.86229e-16 -0.03" rpy="4.996e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_23 -->
+    <visual>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 -1.50813e-17 3.69779e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_23_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 -1.50813e-17 3.69779e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_12 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.81166e-14 -2.78567e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_12_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.81166e-14 -2.78567e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_12 -->
+    <visual>
+      <origin xyz="-0.0575 -1.20563e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -1.20563e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_24 -->
+    <visual>
+      <origin xyz="-1.11022e-16 4.33681e-19 -0.0585" rpy="-3.14159 4.81093e-14 -2.78567e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_24_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.11022e-16 4.33681e-19 -0.0585" rpy="-3.14159 4.81093e-14 -2.78567e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_4 to foot_assembly_4 -->
+  <joint name="foot_4" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-4.61349e-16 -1.38317e-14 3.14159"/>
+    <parent link="ties_assembly_4"/>
+    <child link="foot_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly_4 to ties_assembly_4 -->
+  <joint name="ties_4" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -1.57073e-16 -3.14159"/>
+    <parent link="hip_assembly_4"/>
+    <child link="ties_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_4 -->
+  <joint name="hip_4" type="revolute">
+    <origin xyz="-0.0062068 -0.154576 0.0279706" rpy="-3.9315e-14 -3.78053e-14 1.48353"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+  <!-- Link hip_assembly_5 -->
+  <link name="hip_assembly_5">
+    <inertial>
+      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_5 -->
+    <visual>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-4.7743e-15 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 0.0005 -0.0045" rpy="-4.7743e-15 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_15 -->
+    <visual>
+      <origin xyz="0.0575 1.37911e-16 -0.0305" rpy="5.17634e-17 2.86469e-14 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 1.37911e-16 -0.0305" rpy="5.17634e-17 2.86469e-14 -1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_25 -->
+    <visual>
+      <origin xyz="-2.77556e-17 -2.48065e-16 -0.0025" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_25_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 -2.48065e-16 -0.0025" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_13 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_13_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_13 -->
+    <visual>
+      <origin xyz="0.0575 1.51788e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 1.51788e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_26 -->
+    <visual>
+      <origin xyz="-2.77556e-17 -2.3332e-16 -0.0585" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_26_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 -2.3332e-16 -0.0585" rpy="3.14159 5.17634e-17 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_5 -->
+  <link name="ties_assembly_5">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_16 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_5 -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-2.58324e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-2.58324e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_5 -->
+    <visual>
+      <origin xyz="0.0275 1.92034e-15 -0.0305" rpy="-2.58324e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 1.92034e-15 -0.0305" rpy="-2.58324e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_27 -->
+    <visual>
+      <origin xyz="1.08247e-15 9.80986e-16 -0.0025" rpy="-3.14159 -1.64892e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_27_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="1.08247e-15 9.80986e-16 -0.0025" rpy="-3.14159 -1.64892e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_14 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.69923e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_14_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.69923e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_14 -->
+    <visual>
+      <origin xyz="0.0575 2.4928e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 2.4928e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_28 -->
+    <visual>
+      <origin xyz="9.71445e-16 9.82287e-16 -0.0585" rpy="-3.14159 -1.67672e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_28_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="9.71445e-16 9.82287e-16 -0.0585" rpy="-3.14159 -1.67672e-15 -3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_5 -->
+  <link name="foot_assembly_5">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot_5 -->
+    <visual>
+      <origin xyz="-0.04425 5.20417e-18 -0.0305" rpy="5.55112e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 5.20417e-18 -0.0305" rpy="5.55112e-17 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap_5 -->
+    <visual>
+      <origin xyz="-0.04425 2.10856e-15 -0.0305" rpy="-1.26814e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_5_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 2.10856e-15 -0.0305" rpy="-1.26814e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_5 -->
+    <visual>
+      <origin xyz="-0.04375 2.86967e-15 -0.03" rpy="-1.35447e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_5_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 2.86967e-15 -0.03" rpy="-1.35447e-14 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_29 -->
+    <visual>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 -5.93214e-17 -3.52522e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_29_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 -5.93214e-17 -3.52522e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_15 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -6.9945e-16 4.44089e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_15_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -6.9945e-16 4.44089e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_15 -->
+    <visual>
+      <origin xyz="-0.0575 2.21177e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 2.21177e-16 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_30 -->
+    <visual>
+      <origin xyz="0 4.33681e-17 -0.0585" rpy="3.14159 -7.15053e-16 4.44089e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_30_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 4.33681e-17 -0.0585" rpy="3.14159 -7.15053e-16 4.44089e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_5 to foot_assembly_5 -->
+  <joint name="foot_5" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="3.05282e-15 -8.87362e-16 -3.14159"/>
+    <parent link="ties_assembly_5"/>
+    <child link="foot_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly_5 to ties_assembly_5 -->
+  <joint name="ties_5" type="revolute">
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 -5.17634e-17 7.74489e-15"/>
+    <parent link="hip_assembly_5"/>
+    <child link="ties_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_5 -->
+  <joint name="hip_5" type="revolute">
+    <origin xyz="-0.130732 -0.0673829 0.0279706" rpy="-1.23219e-14 5.33622e-14 -2.70526"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+  <!-- Link hip_assembly_6 -->
+  <link name="hip_assembly_6">
+    <inertial>
+      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
+      <mass value="0.365356"/>
+      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+    </inertial>
+    <!-- Part hip_6 -->
+    <visual>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-2.91315e-17 1.6208e-16 -8.34807e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+      <material name="hip_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-2.91315e-17 1.6208e-16 -8.34807e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/hip.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mobile_bracket_17 -->
+    <visual>
+      <origin xyz="-0.0575 4.55365e-17 -0.0305" rpy="1.6208e-16 -3.94201e-14 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 4.55365e-17 -0.0305" rpy="1.6208e-16 -3.94201e-14 1.5708"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_31 -->
+    <visual>
+      <origin xyz="-2.77556e-17 6.93889e-18 -0.0025" rpy="-3.14159 -5.20433e-30 1.19819e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_31_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.77556e-17 6.93889e-18 -0.0025" rpy="-3.14159 -5.20433e-30 1.19819e-17"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_16 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.6208e-16 -8.34839e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_16_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.6208e-16 -8.34839e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_16 -->
+    <visual>
+      <origin xyz="-0.0575 4.55365e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 4.55365e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_32 -->
+    <visual>
+      <origin xyz="-2.22045e-16 -1.8735e-16 -0.0585" rpy="-3.14159 4.5549e-28 -4.04969e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_32_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-2.22045e-16 -1.8735e-16 -0.0585" rpy="-3.14159 4.5549e-28 -4.04969e-16"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link ties_assembly_6 -->
+  <link name="ties_assembly_6">
+    <inertial>
+      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
+      <mass value="0.589115"/>
+      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+    </inertial>
+    <!-- Part mobile_bracket_18 -->
+    <visual>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+      <material name="mobile_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/mobile_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part low_tie_6 -->
+    <visual>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="6.08252e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+      <material name="low_tie_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="6.08252e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/low_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part top_tie_6 -->
+    <visual>
+      <origin xyz="0.0275 -2.38524e-17 -0.0305" rpy="6.08252e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+      <material name="top_tie_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0275 -2.38524e-17 -0.0305" rpy="6.08252e-16 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/top_tie.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_33 -->
+    <visual>
+      <origin xyz="2.77556e-17 -4.33681e-19 -0.0025" rpy="-3.14159 -1.17685e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_33_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="2.77556e-17 -4.33681e-19 -0.0025" rpy="-3.14159 -1.17685e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_17 -->
+    <visual>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.17744e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_17_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.17744e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_17 -->
+    <visual>
+      <origin xyz="0.0575 -4.25007e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0575 -4.25007e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_34 -->
+    <visual>
+      <origin xyz="-7.49401e-16 0 -0.0585" rpy="3.14159 -1.18157e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_34_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-7.49401e-16 0 -0.0585" rpy="3.14159 -1.18157e-14 3.14159"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link foot_assembly_6 -->
+  <link name="foot_assembly_6">
+    <inertial>
+      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
+      <mass value="0.633745"/>
+      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+    </inertial>
+    <!-- Part foot_6 -->
+    <visual>
+      <origin xyz="-0.04425 6.07153e-18 -0.0305" rpy="-1.57772e-29 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+      <material name="foot_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 6.07153e-18 -0.0305" rpy="-1.57772e-29 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part ir_sensor_cap_6 -->
+    <visual>
+      <origin xyz="-0.04425 -8.26162e-16 -0.0305" rpy="4.57824e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+      <material name="ir_sensor_cap_6_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04425 -8.26162e-16 -0.0305" rpy="4.57824e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/ir_sensor_cap.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part rubber_foot_6 -->
+    <visual>
+      <origin xyz="-0.04375 -8.91648e-16 -0.03" rpy="4.23423e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+      <material name="rubber_foot_6_material">
+        <color rgba="0.262745 0.282353 0.301961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.04375 -8.91648e-16 -0.03" rpy="4.23423e-15 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/rubber_foot.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_35 -->
+    <visual>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -3.19561e-17 1.10441e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_35_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -3.19561e-17 1.10441e-29"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_18 -->
+    <visual>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.83565e-17 1.57772e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+      <material name="servo_18_material">
+        <color rgba="0.109804 0.109804 0.105882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 4.83565e-17 1.57772e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part fixed_bracket_18 -->
+    <visual>
+      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+      <material name="fixed_bracket_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/fixed_bracket.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part servo_wheel_36 -->
+    <visual>
+      <origin xyz="-1.66533e-16 0 -0.0585" rpy="3.14159 6.48962e-17 -1.57772e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+      <material name="servo_wheel_36_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.66533e-16 0 -0.0585" rpy="3.14159 6.48962e-17 -1.57772e-30"/>
+      <geometry>
+        <mesh filename="package://hexapod_simulation/meshes/servo_wheel.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from ties_assembly_6 to foot_assembly_6 -->
+  <joint name="foot_6" type="revolute">
+    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="2.16175e-16 -3.19561e-17 -3.14159"/>
+    <parent link="ties_assembly_6"/>
+    <child link="foot_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-2.0944" upper="2.0944"/>
+  </joint>
+  <!-- Joint from hip_assembly_6 to ties_assembly_6 -->
+  <joint name="ties_6" type="revolute">
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -1.6208e-16 3.14159"/>
+    <parent link="hip_assembly_6"/>
+    <child link="ties_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.74533" upper="1.74533"/>
+  </joint>
+  <!-- Joint from base_link to hip_assembly_6 -->
+  <joint name="hip_6" type="revolute">
+    <origin xyz="-0.117483 0.0840557 0.0272372" rpy="5.19838e-14 -1.50414e-14 -0.610865"/>
+    <parent link="base_link"/>
+    <child link="hip_assembly_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+  </joint>
+</robot>
