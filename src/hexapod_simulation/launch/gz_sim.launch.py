@@ -4,7 +4,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription, AppendEnvironmentVariable, LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 
 
 def generate_launch_description():
@@ -43,11 +43,29 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_launch_path),
             launch_arguments={
-                'gz_args': '-r empty.sdf',  # Use an empty world with a ground plane
+                'gz_args': '-r empty.sdf --render-engine ogre',  # Use an empty world with a ground plane
                 'on_exit_shutdown': 'True'
             }.items(),
         ),
 
+        # Bridge ROS 2 topics to Gazebo
+        Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            arguments=[
+                # Forward joint commands from ROS 2 /joint_states to Gazebo /model/hexapod/joint_state
+                '/joint_states@sensor_msgs/msg/JointState]@/model/hexapod/joint_state@gz.msgs.JointState',
+            ],
+            output='screen'
+        ),
+
+        # Robot State Publisher to publish TF transforms
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': robot_description_content}],
+        ),
         # Spawn the robot in Gazebo
         Node(
             package='ros_gz_sim',
