@@ -3,11 +3,15 @@
 <package format="3">
   <name>hexapod_bringup</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Launch files to bring up the hexapod robot.</description>
   <maintainer email="gata23laroche@gmail.com">cyberdreamer</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>launch_ros</depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <exec_depend>hexapod_locomotion</exec_depend>
+  <exec_depend>hexapod_simulation</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

@@ -48,13 +48,18 @@ def generate_launch_description():
             }.items(),
         ),
 
-        # Bridge ROS 2 topics to Gazebo
+        # Bridge to send joint commands from ROS 2 to Gazebo
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             arguments=[
-                # Forward joint commands from ROS 2 /joint_states to Gazebo /model/hexapod/joint_state
-                '/joint_states@sensor_msgs/msg/JointState]@/model/hexapod/joint_state@gz.msgs.JointState',
+                # Clock (Gazebo -> ROS 2). Necessary for many ROS nodes.
+                '/clock@rosgraph_msgs/msg/Clock]gz.msgs.Clock',
+                # Joint Commands (ROS 2 -> Gazebo).
+                # This bridges ROS 2 /joint_states messages to the Gazebo topic
+                # that sets the joint positions of a model.
+                '/joint_states@sensor_msgs/msg/JointState' +
+                '[gz.msgs.Model@/model/hexapod/set_joint_state',
             ],
             output='screen'
         ),
@@ -66,6 +71,7 @@ def generate_launch_description():
             output='screen',
             parameters=[{'robot_description': robot_description_content}],
         ),
+
         # Spawn the robot in Gazebo
         Node(
             package='ros_gz_sim',

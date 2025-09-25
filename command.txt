@@ -24,3 +24,4 @@ rm -rf build/ install/ log/
 colcon build --symlink-install --packages-select hexapod_simulation
 . install/setup.bash
 ros2 launch hexapod_simulation display.launch.py
+
