@@ -5,9 +5,9 @@
   <!-- Link base_link -->
   <link name="base_link">
     <inertial>
-      <origin xyz="0.00531299 -0.00419177 -0.000347686" rpy="0 0 0"/>
-      <mass value="2.22661"/>
-      <inertia ixx="0.0150766" ixy="5.73371e-05" ixz="-0.000168681" iyy="0.0155665" iyz="8.33979e-06" izz="0.021033"/>
+      <origin xyz="0.00644606 -0.00413593 -0.00149776" rpy="0 0 0"/>
+      <mass value="2.54608"/>
+      <inertia ixx="0.0165947" ixy="0.00018723" ixz="-2.81446e-05" iyy="0.0185951" iyz="-6.91083e-07" izz="0.0250551"/>
     </inertial>
     <!-- Part mobile_bracket -->
     <visual>

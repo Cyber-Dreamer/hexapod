@@ -6,5 +6,6 @@
     "output_format": "urdf",
     "output_filename": "robot",
     "assets_directory": "/meshes",
-    "origin_link": "base_link"
+    "origin_link": "base_link",
+    "merge_fixed_joints": true
 }

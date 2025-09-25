@@ -41,14 +41,6 @@ class GaitDemoGUI(Node):
         self.root = tk.Tk()
         self.root.title("Hexapod Control")
 
-        # Initialize Tkinter variables and locomotion AFTER root is created
-        self.gait_type_var = tk.StringVar(value='tripod')
-        self.locomotion = HexapodLocomotion(self, gait_type=self.gait_type_var.get())
-
-        # --- GUI Setup ---
-        self.root = tk.Tk()
-        self.root.title("Hexapod Control")
-
         # Main frame to hold everything
         main_frame = tk.Frame(self.root)
         main_frame.pack(padx=10, pady=10, fill="both", expand=True)
@@ -140,13 +132,10 @@ class GaitDemoGUI(Node):
         self.start_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
         self.apply_body_pose_button.config(state=tk.DISABLED) # Disable body pose control during gait
-        self.gait_thread = threading.Thread(target=self.run_gait_loop)
-        self.gait_thread.start()
+        self.run_gait_loop()
 
     def stop_gait(self):
         self.running = False
-        if hasattr(self, 'gait_thread') and self.gait_thread.is_alive():
-            self.gait_thread.join()
         self.start_button.config(state=tk.NORMAL)
         self.stop_button.config(state=tk.DISABLED)
         self.apply_body_pose_button.config(state=tk.NORMAL) # Enable body pose control after gait
@@ -155,6 +144,14 @@ class GaitDemoGUI(Node):
         self.locomotion.knee_direction *= -1
         direction = "Up" if self.locomotion.knee_direction == 1 else "Down"
         self.get_logger().info(f"Knee direction set to: {direction}")
+        joint_angles_list = self.locomotion.update_knee_direction(self.locomotion.knee_direction)
+        if all(angles is not None for angles in joint_angles_list):
+            joint_positions = [angle for leg_angles in joint_angles_list for angle in leg_angles]
+            msg = JointState()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.name = self.joint_names
+            msg.position = joint_positions
+            self.publisher_.publish(msg)
 
     def switch_gait_type(self):
         # Stop current gait if running
@@ -166,8 +163,6 @@ class GaitDemoGUI(Node):
         self.locomotion = HexapodLocomotion(self, gait_type=new_gait_type)
         # Reset gait phase and state for the new gait
         self.locomotion.gait_phase = 0.0
-        self.locomotion.state = "SHIFT"
-        self.locomotion._initialize_gait_legs() # Re-initialize swing/stance legs
 
     def apply_body_pose(self):
         if self.running:
@@ -198,34 +193,37 @@ class GaitDemoGUI(Node):
             self.get_logger().error("Failed to apply body pose: Unreachable or invalid joint angles.")
 
     def run_gait_loop(self):
-        while self.running and rclpy.ok():
-            # Update parameters from sliders
-            standoff = self.standoff_slider.get()
-            body_height = self.body_height_slider.get()
-            self.set_parameters([
-                Parameter('standoff_distance', Parameter.Type.DOUBLE, standoff),
-                Parameter('body_height', Parameter.Type.DOUBLE, body_height)
-            ])
-
-            vx = self.vx_slider.get()
-            vy = self.vy_slider.get()
-            omega = self.omega_slider.get()
-
-            joint_angles_list = self.locomotion.run_gait(vx, vy, omega)
+        if not self.running or not rclpy.ok():
+            return
             
-            if all(angles is not None for angles in joint_angles_list):
-                joint_positions = [angle for leg_angles in joint_angles_list for angle in leg_angles]
+        # Update parameters from sliders
+        standoff = self.standoff_slider.get()
+        body_height = self.body_height_slider.get()
+        self.set_parameters([
+            Parameter('standoff_distance', Parameter.Type.DOUBLE, standoff),
+            Parameter('body_height', Parameter.Type.DOUBLE, body_height)
+        ])
 
-                msg = JointState()
-                msg.header.stamp = self.get_clock().now().to_msg()
-                msg.name = self.joint_names
-                msg.position = joint_positions
-                self.publisher_.publish(msg)
-            
-            self.root.after(20) # ~50 Hz
+        vx = self.vx_slider.get()
+        vy = self.vy_slider.get()
+        omega = self.omega_slider.get()
+
+        joint_angles_list = self.locomotion.run_gait(vx, vy, omega)
+        
+        if all(angles is not None for angles in joint_angles_list):
+            joint_positions = [angle for leg_angles in joint_angles_list for angle in leg_angles]
+
+            msg = JointState()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.name = self.joint_names
+            msg.position = joint_positions
+            self.publisher_.publish(msg)
+        
+        self.root.after(20, self.run_gait_loop) # ~50 Hz
 
     def on_closing(self):
         self.stop_gait()
+        self.destroy_node()
         self.root.destroy()
         rclpy.shutdown()
 

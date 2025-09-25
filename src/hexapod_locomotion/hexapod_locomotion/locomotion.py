@@ -12,7 +12,6 @@ as a state machine that alternates between shifting the body and lifting the leg
 
 import numpy as np
 from hexapod_kinematics.kinematics import HexapodKinematics
-from rcl_interfaces.msg import ParameterDescriptor
 
 class HexapodLocomotion:
     """
@@ -20,7 +19,7 @@ class HexapodLocomotion:
     It generates foot trajectories for a given gait and uses inverse kinematics
     to translate these into joint angles.
     """
-    def __init__(self, node, step_height=0.04, step_length=0.08, knee_direction=-1, gait_type='tripod'):
+    def __init__(self, node, step_height=0.05, step_length=0.1, knee_direction=-1, gait_type='tripod'):
         """
         Initializes the HexapodLocomotion object.
 
@@ -32,12 +31,7 @@ class HexapodLocomotion:
         """
         self.node = node
         
-        # Declare parameters
-        
-
         # --- Robot Dimensions ---
-        # Symmetrical leg positions for a standard hexapod layout.
-        # The order is: Front-Right, Middle-Right, Rear-Right, Front-Left, Middle-Left, Rear-Left
         leg_positions = [
             [ 0.13163, -0.07600853, 0.0],  # Leg 0: Front-Right
             [ 0.0,     -0.15201706, 0.0],  # Leg 1: Middle-Right
@@ -62,195 +56,117 @@ class HexapodLocomotion:
         self.knee_direction = knee_direction
         self.gait_type = gait_type
 
-        # Tripod gait definition (group of legs that move together)
-        # Tripod 1: FR, RR, ML
-        # Tripod 2: FL, RL, MR
-        self.tripod1 = [0, 2, 4]
-        self.tripod2 = [3, 5, 1]
-        
-        # Ripple gait definition (legs move sequentially)
-        self.ripple_sequence = [0, 1, 2, 3, 4, 5] # Example sequence
+        # Gait definitions
+        self.tripod_legs_1 = [0, 2, 4] # FR, RR, ML
+        self.tripod_legs_2 = [1, 3, 5] # MR, FL, RL
+        self.ripple_sequence = [0, 3, 1, 4, 2, 5] # FR, FL, MR, ML, RR, RL
 
-        self.swing_legs = []
-        self.stance_legs = []
-        self._initialize_gait_legs()
-
-        # --- State Machine ---
-        self.gait_phase = 0.0  # 0.0 to 1.0 for a full sub-cycle (lift or shift)
-        self.state = "SHIFT"
+        self.gait_phase = 0.0  # Overall gait phase (0 to 1)
+        self.leg_phases = np.zeros(6)
 
         self.recalculate_stance()
-
-    def _initialize_gait_legs(self):
-        if self.gait_type == 'tripod':
-            self.swing_legs = self.tripod1
-            self.stance_legs = self.tripod2
-        elif self.gait_type == 'ripple':
-            # For ripple, initially all legs are stance, one will lift first
-            self.swing_legs = []
-            self.stance_legs = list(range(6))
-        else:
-            self.node.get_logger().warn(f"Unknown gait type: {self.gait_type}. Defaulting to tripod.")
-            self.gait_type = 'tripod'
-            self.swing_legs = self.tripod1
-            self.stance_legs = self.tripod2
 
     def set_body_pose(self, translation, rotation):
         """
-        Calculates joint angles to achieve a desired body pose (translation and rotation)
-        while keeping the foot positions fixed on the ground.
-
-        :param translation: Desired [x, y, z] translation of the body in the world frame.
-        :param rotation: Desired [roll, pitch, yaw] rotation of the body.
-        :return: A list of lists, where each inner list contains the joint angles
-                 for a leg, or None if the pose is unreachable.
+        Calculates joint angles to achieve a desired body pose.
         """
-        # Ensure foot_positions are up-to-date for the current stance
         self.recalculate_stance() 
         return self.kinematics.body_ik(translation, rotation, self.foot_positions, self.knee_direction)
 
-    def _run_tripod_gait(self, vx, vy, omega, speed):
+    def run_gait(self, vx, vy, omega, speed=0.02):
         """
-        Generates joint angles for the tripod gait using a state machine.
-
-        :param vx: Forward velocity command (e.g., from -1 to 1).
-        :param vy: Sideways velocity command.
-        :param omega: Angular velocity command.
-        :param speed: The speed of the gait cycle.
-        :return: A list of lists, containing the joint angles for each leg.
+        Generates joint angles based on the selected gait type.
         """
-        # Recalculate stance if parameters have changed
-        self.recalculate_stance()
-
         self.gait_phase = (self.gait_phase + speed) % 1.0
 
-        if self.state == "SHIFT":
-            # --- Body Shifting Phase ---
-            translation = np.array([-vx, -vy, 0]) * self.step_length * 0.5
-            rotation = np.array([0, 0, -omega]) * self.step_length * 0.5
+        if self.gait_type == 'tripod':
+            return self._run_tripod_gait(vx, vy, omega)
+        elif self.gait_type == 'ripple':
+            return self._run_ripple_gait(vx, vy, omega)
+        else:
+            self.node.get_logger().error(f"Unsupported gait type: {self.gait_type}")
+            return [None] * 6
 
-            current_translation = translation * self.gait_phase
-            current_rotation = rotation * self.gait_phase
+    def _run_tripod_gait(self, vx, vy, omega):
+        """
+        Tripod Gait: 3 legs move at a time.
+        """
+        joint_angles = [None] * 6
+        
+        # Phase for each tripod group (0 to 1)
+        phase_1 = self.gait_phase
+        phase_2 = (self.gait_phase + 0.5) % 1.0
 
-            joint_angles = self.kinematics.body_ik(current_translation, current_rotation, self.default_foot_positions, self.knee_direction)
+        # Move Tripod 1
+        for leg_idx in self.tripod_legs_1:
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_1, vx, vy, omega)
 
-            if self.gait_phase >= 0.99:
-                self.gait_phase = 0.0
-                self.state = "LIFT"
-                for i in self.stance_legs:
-                    self.foot_positions[i] = self.default_foot_positions[i] - translation
-
-        elif self.state == "LIFT":
-            # --- Leg Lifting Phase ---
-            joint_angles = []
-            body_height = self.node.get_parameter('body_height').get_parameter_value().double_value
-            for i in range(6):
-                if i in self.swing_legs:
-                    z = self.step_height * (1 - (2 * self.gait_phase - 1)**2)
-                    start_pos = self.foot_positions[i]
-                    end_pos = self.default_foot_positions[i]
-                    x = start_pos[0] + (end_pos[0] - start_pos[0]) * self.gait_phase
-                    y = start_pos[1] + (end_pos[1] - start_pos[1]) * self.gait_phase
-                    target_pos = np.array([x, y, -body_height + z])
-                    v_foot_local = target_pos - self.kinematics.leg_positions[i]
-                    angles = self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
-                    joint_angles.append(angles)
-                else: # Stance leg
-                    target_pos = self.foot_positions[i]
-                    v_foot_local = target_pos - self.kinematics.leg_positions[i]
-                    angles = self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
-                    joint_angles.append(angles)
-
-            if self.gait_phase >= 0.99:
-                self.gait_phase = 0.0
-                self.state = "SHIFT"
-                self.swing_legs, self.stance_legs = self.stance_legs, self.swing_legs
-
+        # Move Tripod 2
+        for leg_idx in self.tripod_legs_2:
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_2, vx, vy, omega)
+            
         return joint_angles
 
-    def _run_ripple_gait(self, vx, vy, omega, speed):
+    def _run_ripple_gait(self, vx, vy, omega):
         """
-        Generates joint angles for a ripple gait.
-        Moves one leg at a time in a sequence.
-
-        :param vx: Forward velocity command.
-        :param vy: Sideways velocity command.
-        :param omega: Angular velocity command.
-        :param speed: The speed of the gait cycle.
-        :return: A list of lists, containing the joint angles for each leg.
+        Ripple Gait: 3 legs on the ground at a time, moving in a sequence.
         """
-        self.recalculate_stance()
-
         joint_angles = [None] * 6
+        num_legs = len(self.ripple_sequence)
+        
+        for i, leg_idx in enumerate(self.ripple_sequence):
+            # Each leg is offset in phase
+            phase = (self.gait_phase + (i / num_legs)) % 1.0
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase, vx, vy, omega)
+            
+        return joint_angles
+
+    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega):
+        """
+        Calculates the IK for a single leg based on its phase in the gait cycle.
+        """
         body_height = self.node.get_parameter('body_height').get_parameter_value().double_value
 
-        # Determine which leg is currently swinging
-        # The gait phase will cycle through 0 to 1 for each leg in the ripple sequence
-        leg_cycle_duration = 1.0 / len(self.ripple_sequence)
-        current_leg_index_in_sequence = int(self.gait_phase / leg_cycle_duration)
-        current_leg_id = self.ripple_sequence[current_leg_index_in_sequence]
+        # Swing phase (leg is in the air)
+        if phase < 0.5:
+            swing_phase = phase * 2
+            z = self.step_height * (1 - (2 * swing_phase - 1)**2)
+            
+            # Move foot from back to front
+            x_swing = -self.step_length / 2 * (1 - swing_phase)
+            y_swing = 0 # Simplified, no sideways swing for now
 
-        # Calculate phase for the current leg's movement (0 to 1)
-        leg_phase = (self.gait_phase % leg_cycle_duration) / leg_cycle_duration
+            target_pos = self.default_foot_positions[leg_idx] + np.array([x_swing, y_swing, 0])
+            target_pos[2] = -body_height + z
 
-        # All legs are stance except the current swinging leg
-        self.swing_legs = [current_leg_id]
-        self.stance_legs = [i for i in range(6) if i != current_leg_id]
+        # Stance phase (leg is on the ground)
+        else:
+            stance_phase = (phase - 0.5) * 2
+            
+            # Move foot from front to back
+            x_stance = self.step_length / 2 * (1 - stance_phase)
+            y_stance = 0
 
-        # --- Body Shift (continuous for stance legs) ---
-        # The body continuously shifts based on velocity commands
-        # This is a simplified continuous shift, more advanced gaits might have discrete shifts
-        translation_body_shift = np.array([-vx, -vy, 0]) * self.step_length * 0.5
-        rotation_body_shift = np.array([0, 0, -omega]) * self.step_length * 0.5
+            # Incorporate velocity commands into stance movement
+            x_stance -= vx * self.step_length * stance_phase
+            y_stance -= vy * self.step_length * stance_phase
+            
+            # Incorporate rotation command (omega)
+            # This requires rotating the foot position around the body center
+            if abs(omega) > 0.01:
+                rot_z = -omega * self.step_length * stance_phase
+                start_pos = self.default_foot_positions[leg_idx]
+                c, s = np.cos(rot_z), np.sin(rot_z)
+                rot_matrix = np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
+                rotated_pos = rot_matrix @ start_pos
+                x_stance += rotated_pos[0] - start_pos[0]
+                y_stance += rotated_pos[1] - start_pos[1]
 
-        # Apply body shift to all stance legs
-        for i in self.stance_legs:
-            # For stance legs, their foot position in the world frame is fixed.
-            # The body moves, so the relative position of the foot to the body changes.
-            # We need to calculate the new foot position relative to the body's new pose.
-            # This is implicitly handled by body_ik if we pass the current foot_positions
-            # and the body's desired translation/rotation.
-            # For now, just calculate IK for stance legs based on their current foot_positions.
-            target_pos = self.foot_positions[i] # Foot position in world frame
-            v_foot_local = target_pos - self.kinematics.leg_positions[i]
-            angles = self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
-            joint_angles[i] = angles
+            target_pos = self.default_foot_positions[leg_idx] + np.array([x_stance, y_stance, 0])
+            target_pos[2] = -body_height
 
-        # --- Leg Lifting and Swinging Phase (for current_leg_id) ---
-        if current_leg_id in self.swing_legs:
-            # Lift phase (first half of leg_phase)
-            if leg_phase < 0.5:
-                z = self.step_height * (leg_phase * 2) # Linear lift up
-            # Lower phase (second half of leg_phase)
-            else:
-                z = self.step_height * (1 - (leg_phase - 0.5) * 2) # Linear lower down
-
-            # Swing phase (move foot forward/sideways)
-            # The foot moves from its current position to a new target position
-            # For simplicity, let's assume it moves from its current foot_position
-            # to a point slightly ahead/sideways based on vx, vy, omega
-            # This is a very basic swing trajectory.
-            start_pos = self.foot_positions[current_leg_id]
-            # Target position for the foot after the swing
-            # This should be relative to the body's movement
-            end_pos = self.default_foot_positions[current_leg_id] + np.array([vx, vy, 0]) * self.step_length
-
-            x = start_pos[0] + (end_pos[0] - start_pos[0]) * leg_phase
-            y = start_pos[1] + (end_pos[1] - start_pos[1]) * leg_phase
-            target_pos_swing = np.array([x, y, -body_height + z])
-
-            v_foot_local = target_pos_swing - self.kinematics.leg_positions[current_leg_id]
-            angles = self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
-            joint_angles[current_leg_id] = angles
-
-            # Update foot position after the leg completes its swing
-            if leg_phase >= 0.99:
-                self.foot_positions[current_leg_id] = end_pos # Update foot position in world frame
-
-        # Advance gait phase for the next iteration
-        self.gait_phase = (self.gait_phase + speed) % 1.0
-
-        return joint_angles
+        v_foot_local = target_pos - self.kinematics.leg_positions[leg_idx]
+        return self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
 
     def recalculate_stance(self):
         """
@@ -259,8 +175,6 @@ class HexapodLocomotion:
         standoff_distance = self.node.get_parameter('standoff_distance').get_parameter_value().double_value
         body_height = self.node.get_parameter('body_height').get_parameter_value().double_value
 
-        # --- Foot Positions ---
-        # Calculate a stable default stance position for the feet
         self.default_foot_positions = []
         for pos in self.kinematics.leg_positions:
             v = np.array([pos[0], pos[1], 0])
@@ -272,20 +186,10 @@ class HexapodLocomotion:
             self.default_foot_positions.append(np.array([default_pos_xy[0], default_pos_xy[1], -body_height]))
         self.foot_positions = np.array(self.default_foot_positions)
 
-    def run_gait(self, vx, vy, omega, speed=0.02):
+    def update_knee_direction(self, new_direction):
         """
-        Generates joint angles based on the selected gait type.
-
-        :param vx: Forward velocity command (e.g., from -1 to 1).
-        :param vy: Sideways velocity command.
-        :param omega: Angular velocity command.
-        :param speed: The speed of the gait cycle.
-        :return: A list of lists, containing the joint angles for each leg.
+        Updates the knee direction and recalculates the current pose.
         """
-        if self.gait_type == 'tripod':
-            return self._run_tripod_gait(vx, vy, omega, speed)
-        elif self.gait_type == 'ripple':
-            return self._run_ripple_gait(vx, vy, omega, speed)
-        else:
-            self.node.get_logger().error(f"Unsupported gait type: {self.gait_type}")
-            return None
+        self.knee_direction = new_direction
+        # Recalculate the current stance with the new knee direction
+        return self.set_body_pose([0,0,0], [0,0,0])
