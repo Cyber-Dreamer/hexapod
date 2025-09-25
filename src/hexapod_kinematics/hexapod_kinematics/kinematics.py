@@ -92,6 +92,20 @@ class HexapodKinematics:
         # theta2 is angle of femur from horizontal.
         theta2 = phi - knee_direction * alpha
 
+        # --- Joint Limit Checks ---
+        # Limits provided in degrees: Coxa +/-90, Femur +/-100, Tibia +/-120
+        # Convert to radians
+        COXA_LIMIT = np.deg2rad(90)
+        FEMUR_LIMIT = np.deg2rad(100)
+        TIBIA_LIMIT = np.deg2rad(120)
+
+        if not (-COXA_LIMIT <= theta1 <= COXA_LIMIT):
+            return None
+        if not (-FEMUR_LIMIT <= theta2 <= FEMUR_LIMIT):
+            return None
+        if not (-TIBIA_LIMIT <= theta3 <= TIBIA_LIMIT):
+            return None
+
         return [theta1, theta2, theta3]
 
     def body_ik(self, translation, rotation, foot_positions, knee_direction=1):

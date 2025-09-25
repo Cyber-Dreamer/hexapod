@@ -20,7 +20,7 @@ class HexapodLocomotion:
     It generates foot trajectories for a given gait and uses inverse kinematics
     to translate these into joint angles.
     """
-    def __init__(self, node, step_height=0.04, step_length=0.08, knee_direction=1):
+    def __init__(self, node, step_height=0.04, step_length=0.08, knee_direction=-1):
         """
         Initializes the HexapodLocomotion object.
 
@@ -32,31 +32,29 @@ class HexapodLocomotion:
         self.node = node
         
         # Declare parameters
-        self.node.declare_parameter('standoff_distance', 0.3, ParameterDescriptor(description='Standoff distance for the feet from the body.'))
-        self.node.declare_parameter('body_height', 0.15, ParameterDescriptor(description='Height of the body from the ground.'))
+        self.node.declare_parameter('standoff_distance', 0.25, ParameterDescriptor(description='Standoff distance for the feet from the body.'))
+        self.node.declare_parameter('body_height', 0.20, ParameterDescriptor(description='Height of the body from the ground.'))
 
         # --- Robot Dimensions ---
         # Symmetrical leg positions for a standard hexapod layout.
         # The order is: Front-Right, Middle-Right, Rear-Right, Front-Left, Middle-Left, Rear-Left
         leg_positions = [
-            [ 0.13, -0.08, 0.027],  # Leg 0: Front-Right
-            [ 0.0,  -0.15, 0.027],  # Leg 1: Middle-Right
-            [-0.13, -0.08, 0.027],  # Leg 2: Rear-Right
-            [ 0.13,  0.08, 0.027],  # Leg 3: Front-Left
-            [ 0.0,   0.15, 0.027],  # Leg 4: Middle-Left
-            [-0.13,  0.08, 0.027]   # Leg 5: Rear-Left
+            [ 0.13163, -0.07600853, 0.0],  # Leg 0: Front-Right
+            [ 0.0,     -0.15201706, 0.0],  # Leg 1: Middle-Right
+            [-0.13163, -0.07600853, 0.0],  # Leg 2: Rear-Right
+            [ 0.13163,  0.07600853, 0.0],  # Leg 3: Front-Left
+            [ 0.0,      0.15201706, 0.0],  # Leg 4: Middle-Left
+            [-0.13163,  0.07600853, 0.0]   # Leg 5: Rear-Left
         ]
         leg_lengths = [0.078346, 0.19180174, 0.28496869]  # [coxa, femur, tibia]
 
-        coxa_initial_rpys = [
-            [-1.42889e-14, 5.46584e-14, -2.70526],  # Leg 0: Front-Right (from hip_2 in URDF)
-            [-5.21026e-14, 1.54133e-14, 2.53073],   # Leg 1: Middle-Right (from hip_3 in URDF)
-            [-3.9315e-14, -3.78053e-14, 1.48353],   # Leg 2: Rear-Right (from hip_4 in URDF)
-            [-3.93428e-14, -3.97183e-14, 1.48353],  # Leg 3: Front-Left (from hip_1 in URDF)
-            [5.19838e-14, -1.50414e-14, -0.610865], # Leg 4: Middle-Left (from hip_6 in URDF)
-            [-1.23219e-14, 5.33622e-14, -2.70526]   # Leg 5: Rear-Left (from hip_5 in URDF)
-        ]
-        self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, leg_positions=leg_positions, coxa_initial_rpys=coxa_initial_rpys)
+        calculated_coxa_initial_rpys = []
+        for pos in leg_positions:
+            x, y, _ = pos
+            yaw = np.arctan2(y, x)
+            calculated_coxa_initial_rpys.append([0.0, 0.0, yaw])
+        
+        self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, leg_positions=leg_positions, coxa_initial_rpys=calculated_coxa_initial_rpys)
 
         # --- Gait Parameters ---
         self.step_height = step_height
