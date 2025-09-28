@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "026f9a33ba6a25a983a9d639",
+    "documentMicroversion": "5554063c3ab9d660994d0edb",
+    "elementId": "5e42db15a36c12539564eb1b",
+    "fullConfiguration": "default",
+    "id": "Mo+zdr1B6Qmb8wqJb",
+    "isStandardContent": false,
+    "name": "ir_sensor_cap <1>",
+    "partId": "ROCD",
+    "suppressed": false,
+    "type": "Part"
+}
