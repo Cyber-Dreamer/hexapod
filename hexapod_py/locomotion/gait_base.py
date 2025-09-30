@@ -24,36 +24,37 @@ class Gait:
         self.knee_direction = knee_direction
         self.gait_phase = 0.0
 
-    def run(self, vx, vy, omega, pitch, speed, default_foot_positions):
+    def run(self, vx, vy, omega, pitch, speed, default_foot_positions, body_height, step_height):
         raise NotImplementedError("The 'run' method must be implemented by the gait subclass.")
 
-    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, pitch, default_foot_positions, step_length, body_height):
-        # Swing phase (leg is in the air)
+    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, pitch, default_foot_positions, step_length, body_height, step_height):
+        # Determine the movement vector for this step
+        step_dir = np.array([vx, vy, 0])
+        
+        # Swing phase (leg is in the air, moving to the start of the next step)
         if phase < 0.5:
             swing_phase = phase * 2
-            z = self.step_height * (1 - (2 * swing_phase - 1)**2)
-            x_swing = -step_length / 2 * (1 - swing_phase)
-            y_swing = 0
-            target_pos = default_foot_positions[leg_idx] + np.array([x_swing, y_swing, 0])
-            target_pos[2] = -body_height + z
+            # Parabolic trajectory for the foot lift
+            z_swing = step_height * (1 - (2 * swing_phase - 1)**2)
+            
+            # Foot moves from its end-point to its start-point (against movement direction)
+            swing_offset = -step_dir * step_length * (1 - swing_phase)
+            
+            target_pos = default_foot_positions[leg_idx] + swing_offset
+            target_pos[2] = -body_height + z_swing
+        # Stance phase (leg is on the ground, pushing the body)
         else:
             stance_phase = (phase - 0.5) * 2
-            x_stance = step_length / 2 * (1 - stance_phase)
-            y_stance = 0
-            x_stance -= vx * step_length * stance_phase
-            y_stance -= vy * step_length * stance_phase
-            if abs(omega) > 0.01:
-                rot_z = -omega * step_length * stance_phase
-                start_pos = default_foot_positions[leg_idx]
-                c, s = np.cos(rot_z), np.sin(rot_z)
-                rot_matrix = np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
-                rotated_pos = rot_matrix @ start_pos
-                x_stance += rotated_pos[0] - start_pos[0]
-                y_stance += rotated_pos[1] - start_pos[1]
-            target_pos = default_foot_positions[leg_idx] + np.array([x_stance, y_stance, 0])
+            
+            # Foot moves from its start-point to its end-point (with movement direction)
+            stance_offset = step_dir * step_length * (1 - stance_phase)
+            
+            target_pos = default_foot_positions[leg_idx] + stance_offset
             target_pos[2] = -body_height
+
         if abs(pitch) > 0.001:
             Ry = np.array([[np.cos(pitch), 0, np.sin(pitch)], [0, 1, 0], [-np.sin(pitch), 0, np.cos(pitch)]])
             target_pos = Ry @ target_pos
+
         v_foot_local = target_pos - self.kinematics.leg_positions[leg_idx]
         return self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)

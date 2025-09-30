@@ -2,12 +2,12 @@
     "configuration": "default",
     "documentId": "026f9a33ba6a25a983a9d639",
     "documentMicroversion": "27436683194f076ebb0aeadb",
-    "elementId": "5e42db15a36c12539564eb1b",
+    "elementId": "bd8a6eaf511c46ecca2ab303",
     "fullConfiguration": "default",
-    "id": "Mo+zdr1B6Qmb8wqJb",
+    "id": "MIIs0Dx8YcxMzHjRJ",
     "isStandardContent": false,
-    "name": "ir_sensor_cap <1>",
-    "partId": "ROCD",
+    "name": "u_sensor_holder <1>",
+    "partId": "JOD",
     "suppressed": false,
     "type": "Part"
 }

@@ -13,16 +13,23 @@ from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
     def __init__(self, step_height=0.05, step_length=0.1, knee_direction=-1, gait_type='tripod', body_height=0.20, standoff_distance=0.25):
-        # --- Robot Dimensions ---
+        # --- Robot Dimensions and Logical Leg Order ---
+        # This is the internal, logical representation of the hexapod.
+        # All gait and kinematics calculations are based on this 0-5 indexing.
+        # We define the body as a hexagon.
+        front_x = 0.12  # Distance from center to front/rear legs along X
+        middle_y = 0.16 # Y distance from center to middle legs
+        y_dist = 0.15   # Distance from center to legs along Y
+
         leg_positions = [
-            [ 0.13163, -0.07600853, 0.0],  # Leg 0: Front-Right
-            [ 0.0,     -0.15201706, 0.0],  # Leg 1: Middle-Right
-            [-0.13163, -0.07600853, 0.0],  # Leg 2: Rear-Right
-            [ 0.13163,  0.07600853, 0.0],  # Leg 3: Front-Left
-            [ 0.0,      0.15201706, 0.0],  # Leg 4: Middle-Left
-            [-0.13163,  0.07600853, 0.0]   # Leg 5: Rear-Left
+            [ front_x, -y_dist, 0.0],    # Index 0: Front-Right Leg (URDF hip_3)
+            [ 0.0,     -middle_y, 0.0],  # Index 1: Middle-Right Leg (URDF hip_4)
+            [-front_x, -y_dist, 0.0],    # Index 2: Rear-Right Leg (URDF hip_5)
+            [ front_x,  y_dist, 0.0],    # Index 3: Front-Left Leg (URDF hip_2)
+            [ 0.0,      middle_y, 0.0],  # Index 4: Middle-Left Leg (URDF hip_1)
+            [-front_x,  y_dist, 0.0]     # Index 5: Rear-Left Leg (URDF hip_6)
         ]
-        leg_lengths = [0.078346, 0.19180174, 0.28496869]  # [coxa, femur, tibia]
+        leg_lengths = [0.078, 0.192, 0.285]  # [coxa, femur, tibia]
         calculated_coxa_initial_rpys = []
         for pos in leg_positions:
             x, y, _ = pos
@@ -36,6 +43,7 @@ class HexapodLocomotion:
         }
         self.set_gait(gait_type)
         self.body_height = body_height
+        self.step_height = step_height
         self.standoff_distance = standoff_distance
         self.recalculate_stance()
 
@@ -58,7 +66,7 @@ class HexapodLocomotion:
     def run_gait(self, vx, vy, omega, pitch=0.0, speed=0.02):
         if self.current_gait:
             self.recalculate_stance()
-            return self.current_gait.run(vx, vy, omega, pitch, speed, self.default_foot_positions, self.body_height)
+            return self.current_gait.run(vx, vy, omega, pitch, speed, self.default_foot_positions, self.body_height, self.step_height)
         else:
             return [None] * 6
 
