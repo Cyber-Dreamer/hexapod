@@ -56,5 +56,5 @@ class Gait:
             Ry = np.array([[np.cos(pitch), 0, np.sin(pitch)], [0, 1, 0], [-np.sin(pitch), 0, np.cos(pitch)]])
             target_pos = Ry @ target_pos
 
-        v_foot_local = target_pos - self.kinematics.leg_positions[leg_idx]
+        v_foot_local = target_pos - self.kinematics.hip_positions[leg_idx]
         return self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)

@@ -13,29 +13,31 @@ from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
     def __init__(self, step_height=0.05, step_length=0.1, knee_direction=-1, gait_type='tripod', body_height=0.20, standoff_distance=0.25):
-        # --- Robot Dimensions and Logical Leg Order ---
-        # This is the internal, logical representation of the hexapod.
-        # All gait and kinematics calculations are based on this 0-5 indexing.
-        # We define the body as a hexagon.
-        front_x = 0.12  # Distance from center to front/rear legs along X
-        middle_y = 0.16 # Y distance from center to middle legs
-        y_dist = 0.15   # Distance from center to legs along Y
-
-        leg_positions = [
-            [ front_x, -y_dist, 0.0],    # Index 0: Front-Right Leg (URDF hip_3)
-            [ 0.0,     -middle_y, 0.0],  # Index 1: Middle-Right Leg (URDF hip_4)
-            [-front_x, -y_dist, 0.0],    # Index 2: Rear-Right Leg (URDF hip_5)
-            [ front_x,  y_dist, 0.0],    # Index 3: Front-Left Leg (URDF hip_2)
-            [ 0.0,      middle_y, 0.0],  # Index 4: Middle-Left Leg (URDF hip_1)
-            [-front_x,  y_dist, 0.0]     # Index 5: Rear-Left Leg (URDF hip_6)
+        
+        # Measure of the joint in mm
+        center_to_HipJoint = 152.024
+        hipJoint_to_femurJoint = 92.5
+        femurJoint_to_tibiaJoint = 191.8
+        tibiaJoint_to_tipFoot = 284.969
+        
+        hip_angles = np.deg2rad([30, 90, 150, 210, 270, 330])
+        hip_positions = [
+            tuple(coord) 
+            for coord in np.column_stack(
+                (center_to_HipJoint * np.cos(hip_angles),
+                 center_to_HipJoint * np.sin(hip_angles),
+                 np.zeros_like(hip_angles))).tolist()
         ]
-        leg_lengths = [0.078, 0.192, 0.285]  # [coxa, femur, tibia]
-        calculated_coxa_initial_rpys = []
-        for pos in leg_positions:
-            x, y, _ = pos
-            yaw = np.arctan2(y, x)
-            calculated_coxa_initial_rpys.append([0.0, 0.0, yaw])
-        self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, leg_positions=leg_positions, coxa_initial_rpys=calculated_coxa_initial_rpys)
+        
+        leg_lengths = [
+            hipJoint_to_femurJoint,
+            femurJoint_to_tibiaJoint,
+            tibiaJoint_to_tipFoot
+        ]
+        
+
+
+        self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, hip_positions= hip_positions)
         self.knee_direction = knee_direction
         self.available_gaits = {
             'tripod': TripodGait(self.kinematics, step_height, step_length, knee_direction),
@@ -72,7 +74,7 @@ class HexapodLocomotion:
 
     def recalculate_stance(self):
         self.default_foot_positions = []
-        for pos in self.kinematics.leg_positions:
+        for pos in self.kinematics.hip_positions:
             v = np.array([pos[0], pos[1], 0])
             if np.linalg.norm(v) > 0:
                 v_norm = v / np.linalg.norm(v)

@@ -1,93 +1,62 @@
-
 import numpy as np
 
 class HexapodKinematics:
-    """
-    The HexapodKinematics class encapsulates the kinematic calculations for a
-    hexapod robot. It requires the leg segment lengths (coxa, femur, tibia)
-    and the initial positions of the leg attachments to the body.
-    """
-    def __init__(self, leg_lengths, leg_positions, coxa_initial_rpys=None):
-        """
-        Initializes the HexapodKinematics object.
 
-        :param leg_lengths: A list or tuple of the leg segment lengths
-                            [coxa, femur, tibia].
-        :param leg_positions: A list of tuples, where each tuple is the (x, y, z)
-                              position of the coxa joint attachment in the body frame.
-        :param coxa_initial_rpys: A list of [roll, pitch, yaw] for each coxa joint's
-                                  initial orientation relative to the body frame.
-        """
+    def __init__(self, leg_lengths, hip_positions):
+
         self.leg_lengths = leg_lengths
-        self.leg_positions = leg_positions
-        self.coxa_initial_rpys = coxa_initial_rpys if coxa_initial_rpys is not None else [[0.0, 0.0, 0.0]] * len(leg_positions)
-
-    def inverse_kinematics(self, foot_pos_local, knee_direction=1):
+        self.hip_positions = hip_positions
+        self.optimal_stance = np.deg2rad([0.0, 0.0, -120.0])
+        
+    def inverse_kinematics(self, P_target, flip_factor=-1):
         """
-        Calculates the inverse kinematics for a single leg in its local frame.
-        Uses a standard Z-up, CCW angle convention.
-
-        :param foot_pos_local: The desired (x, y, z) position of the foot
-                               relative to the coxa joint.
-        :param knee_direction: The desired direction of the knee bend.
-                               1 for up/forward, -1 for down/backward.
-        :return: A list of the three joint angles [coxa, femur, tibia] in radians,
-                 or None if the position is unreachable.
+        Calculates optimized 3-DOF hexapod leg IK, prioritizing a posture close to theta_home.
         """
-        coxa_len, femur_len, tibia_len = self.leg_lengths
-        x, y, z = foot_pos_local
-
-        # Coxa angle (theta1) - Top-down view, CCW from x-axis
+        L1, L2, L3 = self.leg_lengths
+        x, y, z = P_target
+        
+        # 1. Solve for Hip/Coxa Joint (theta1) and planar distance
+        r_hip = np.sqrt(x**2 + y**2)
+        if r_hip < L1: return None # Unreachable: target inside Coxa length
         theta1 = np.arctan2(y, x)
-
-        # Solve for femur and tibia angles in the leg's 2D plane
-        # Project foot position onto the leg's vertical plane
-        l1 = np.sqrt(x**2 + y**2)
-        l_eff = l1 - coxa_len  # Effective horizontal distance from femur joint
-
-        # Distance from femur joint to foot
-        l3_sq = l_eff**2 + z**2
-        l3 = np.sqrt(l3_sq)
-
-        # Check if the target is reachable
-        if l3 > femur_len + tibia_len or l3 < abs(femur_len - tibia_len):
-            return None  # Position is unreachable
-
-        # Angle of the tibia joint (theta3) using Law of Cosines
-        # beta is the angle at the knee, inside the femur-tibia-l3 triangle
-        cos_beta = (femur_len**2 + tibia_len**2 - l3_sq) / (2 * femur_len * tibia_len)
-        beta = np.arccos(np.clip(cos_beta, -1.0, 1.0))
-
-        # theta3 is angle of tibia relative to femur. 0 is straight.
-        # A positive value corresponds to a "knee-up" bend.
-        theta3 = knee_direction * (np.pi - beta)
-
-        # Angle of the femur joint (theta2)
-        # alpha is the angle between the femur link and the line to the foot
-        cos_alpha = (femur_len**2 + l3_sq - tibia_len**2) / (2 * femur_len * l3)
-        alpha = np.arccos(np.clip(cos_alpha, -1.0, 1.0))
-
-        # phi is the angle of the foot position vector in the leg plane
-        phi = np.arctan2(z, l_eff)
-
-        # theta2 is angle of femur from horizontal.
-        theta2 = phi - knee_direction * alpha
-
-        # --- Joint Limit Checks ---
-        # Limits provided in degrees: Coxa +/-90, Femur +/-100, Tibia +/-120
-        # Convert to radians
-        COXA_LIMIT = np.deg2rad(90)
-        FEMUR_LIMIT = np.deg2rad(100)
-        TIBIA_LIMIT = np.deg2rad(120)
-
-        if not (-COXA_LIMIT <= theta1 <= COXA_LIMIT):
-            return None
-        if not (-FEMUR_LIMIT <= theta2 <= FEMUR_LIMIT):
-            return None
-        if not (-TIBIA_LIMIT <= theta3 <= TIBIA_LIMIT):
-            return None
-
-        return [theta1, theta2, theta3]
+        x_prime = r_hip - L1
+        z_prime = z
+        
+        # 2. Planar IK Setup
+        D_sq = x_prime**2 + z_prime**2
+        D = np.sqrt(D_sq)
+        if D > L2 + L3 or D < abs(L2 - L3): return None # Unreachable: target too far or too close
+        
+        # 3. Calculate internal angles (Law of Cosines)
+        cos_B = np.clip((L2**2 + L3**2 - D_sq) / (2 * L2 * L3), -1, 1)
+        beta_ik = np.arccos(cos_B)
+        cos_A = np.clip((D_sq + L2**2 - L3**2) / (2 * D * L2), -1, 1)
+        alpha_ik = np.arccos(cos_A)
+        gamma = np.arctan2(z_prime, x_prime)
+        
+        # 4. Generate two solutions (Knee-Down and Knee-Up)
+        solutions = []
+        solutions.append((theta1, gamma - alpha_ik, -(np.pi - beta_ik))) # Solution 1: Knee-Down
+        solutions.append((theta1, gamma + alpha_ik, (np.pi - beta_ik)))  # Solution 2: Knee-Up
+        
+        # 5. Optimize with cost function (selecting the solution closest to theta_home)
+        best_cost = float('inf')
+        t1_h, t2_h, t3_h = self.optimal_stance
+        w2, w3 = 1.0, 2.0 # Weights for Femur (t2) and Tibia (t3)
+        
+        # Apply flip_factor to theta_home to prioritize the correct posture when robot is upside down
+        t2_h_effective = t2_h * flip_factor
+        t3_h_effective = t3_h * flip_factor
+        
+        for t1, t2, t3 in solutions:
+            d2 = (t2 - t2_h_effective + np.pi) % (2 * np.pi) - np.pi
+            d3 = (t3 - t3_h_effective + np.pi) % (2 * np.pi) - np.pi
+            cost = w2 * (d2**2) + w3 * (d3**2)
+            if cost < best_cost:
+                best_cost = cost
+                best_solution = (t1, t2, t3)
+                
+        return best_solution
 
     def body_ik(self, translation, rotation, foot_positions, knee_direction=1):
         """
@@ -112,17 +81,11 @@ class HexapodKinematics:
         R = Rz @ Ry @ Rx
         T = np.array(translation)
         for i in range(6):
-            p_coxa_body = np.array(self.leg_positions[i])
+            p_coxa_body = np.array(self.hip_positions[i])
             p_coxa_world = R @ p_coxa_body + T
             v_foot_world = np.array(foot_positions[i]) - p_coxa_world
             v_foot_local = R.T @ v_foot_world
-            roll_offset, pitch_offset, yaw_offset = self.coxa_initial_rpys[i]
-            Rx_inv = np.array([[1, 0, 0], [0, np.cos(-roll_offset), -np.sin(-roll_offset)], [0, np.sin(-roll_offset), np.cos(-roll_offset)]])
-            Ry_inv = np.array([[np.cos(-pitch_offset), 0, np.sin(-pitch_offset)], [0, 1, 0], [-np.sin(-pitch_offset), 0, np.cos(-pitch_offset)]])
-            Rz_inv = np.array([[np.cos(-yaw_offset), -np.sin(-yaw_offset), 0], [np.sin(-yaw_offset), np.cos(-yaw_offset), 0], [0, 0, 1]])
-            R_coxa_inv = Rx_inv @ Ry_inv @ Rz_inv
-            v_foot_local_adjusted = R_coxa_inv @ v_foot_local
-            joint_angles = self.inverse_kinematics(v_foot_local_adjusted, knee_direction)
+            joint_angles = self.inverse_kinematics(v_foot_local, knee_direction)
             joint_angles_list.append(joint_angles)
         return joint_angles_list
 
@@ -136,7 +99,7 @@ class HexapodKinematics:
         """
         coxa_len, femur_len, tibia_len = self.leg_lengths
         theta1, theta2, theta3 = joint_angles
-        coxa_pos = self.leg_positions[leg_index]
+        coxa_pos = self.hip_positions[leg_index]
         l_horiz = femur_len * np.cos(theta2) + tibia_len * np.cos(theta2 + theta3)
         l_total = coxa_len + l_horiz
         x_local = l_total * np.cos(theta1)
