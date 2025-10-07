@@ -10,7 +10,8 @@ class HexapodKinematics:
         
     import numpy as np
 
-    def leg_ik(point, l_coxa, l_femur, l_tibia):
+    @staticmethod
+    def leg_ik(point, l_coxa, l_femur, l_tibia, knee_direction=-1):
         """
         Calculates the inverse kinematics for a single hexapod leg.
 
@@ -21,6 +22,8 @@ class HexapodKinematics:
             l_coxa (float): The length of the coxa link.
             l_femur (float): The length of the femur link.
             l_tibia (float): The length of the tibia link.
+            knee_direction (int): The desired knee bend direction. -1 for "down" (standard),
+                                  1 for "up".
 
         Returns:
             tuple[float, float, float] | None: A tuple containing the calculated
@@ -29,6 +32,12 @@ class HexapodKinematics:
         """
         x, y, z = point
         
+        # --- Define Joint Angle Limits in Radians ---
+        # Coxa: ±90°, Femur: ±110°, Tibia: ±120°
+        gamma_limit = np.deg2rad(90)
+        alpha_limit = np.deg2rad(110)
+        beta_limit = np.deg2rad(120)
+
         # --- Calculate Coxa Angle (gamma) ---
         # Top-down view
         gamma = np.arctan2(y, x)
@@ -46,8 +55,8 @@ class HexapodKinematics:
         l_hyp = np.sqrt(x_prime**2 + z**2)
 
         # Check if the target is reachable
-        if l_hyp >= (l_femur + l_tibia) or l_hyp <= abs(l_femur - l_tibia):
-            # print("Warning: Target point is unreachable.")
+        # Use a small tolerance for floating point issues at full extension
+        if l_hyp > (l_femur + l_tibia) or l_hyp < abs(l_femur - l_tibia):
             return None
 
         # Angle of the hypotenuse 'l_hyp' from the horizontal plane
@@ -56,19 +65,30 @@ class HexapodKinematics:
         # Use the Law of Cosines to find the angle at the knee (femur-tibia joint)
         # and the angle at the femur joint.
         cos_beta_arg = (l_femur**2 + l_tibia**2 - l_hyp**2) / (2 * l_femur * l_tibia)
-        # The angle inside the triangle at the tibia joint
+        # Clip to handle floating point inaccuracies at the boundaries
         beta_inner = np.arccos(np.clip(cos_beta_arg, -1.0, 1.0))
-        # The final tibia angle is typically measured from the extension of the femur
-        beta = np.pi - beta_inner
+        # The angle inside the triangle at the tibia joint
+        # The final tibia angle is measured from the extension of the femur.
+        # For a standard "knee down" bend (knee_direction=-1), this angle is negative.
+        # The formula is beta = beta_inner - pi.
+        beta = (beta_inner - np.pi) * knee_direction
 
         cos_alpha_arg = (l_hyp**2 + l_femur**2 - l_tibia**2) / (2 * l_hyp * l_femur)
-        # The angle inside the triangle at the femur joint
+        # Clip to handle floating point inaccuracies at the boundaries
         alpha_inner = np.arccos(np.clip(cos_alpha_arg, -1.0, 1.0))
+        # The angle inside the triangle at the femur joint
         # The final femur angle is the sum of the hypotenuse angle and this inner angle
-        alpha = phi + alpha_inner
+        alpha = phi + (alpha_inner * knee_direction)
+
+        # --- Check Joint Limits ---
+        # Note: The beta angle from this calculation is always positive (0 to pi).
+        # If your servo can bend both ways, you might need a different convention.
+        if not (abs(gamma) <= gamma_limit and abs(alpha) <= alpha_limit and abs(beta) <= beta_limit):
+            return None
 
         return (gamma, alpha, beta)
 
+    @staticmethod
     def body_ik(translation, rotation, coxa_positions, default_foot_positions):
         """
         Calculates the new foot tip coordinates for all six legs to achieve
@@ -83,8 +103,8 @@ class HexapodKinematics:
                                         position of a coxa joint relative to the
                                         body's center.
             default_foot_positions (np.ndarray): A 6x3 array where each row is the
-                                                default (x, y, z) position of a
-                                                foot tip relative to its coxa joint.
+                                                default (x, y, z) world position of a
+                                                foot tip when the body is at origin.
 
         Returns:
             np.ndarray: A 6x3 array containing the new target coordinates (x, y, z)
@@ -110,18 +130,14 @@ class HexapodKinematics:
         new_foot_positions = np.zeros_like(default_foot_positions)
 
         for i in range(6):
-            # Calculate the total vector from the body center to the foot tip in the default state
-            total_vector = coxa_positions[i] + default_foot_positions[i]
-            
-            # Apply the inverse transformation to find the new foot position relative to the transformed body
-            # Equation: P_new = R.T * (P_old - T)
-            # where P_new is the new position relative to the new body frame,
-            # P_old is the old position relative to the old body frame,
-            # R is the rotation matrix, and T is the translation vector.
-            
-            new_total_vector = R.T @ (total_vector - translation)
-            
-            # The new foot position relative to the coxa is the difference
-            new_foot_positions[i] = new_total_vector - coxa_positions[i]
+            # The goal is to find the new foot position vector relative to the *new* hip position.
+            # 1. Get the default foot position in the world frame.
+            foot_pos_world = default_foot_positions[i]
+
+            # 2. Calculate the new position of the hip joint after body transformation.
+            hip_pos_new = R @ coxa_positions[i] + translation
+
+            # 3. The new foot target vector relative to the body center is the difference.
+            new_foot_positions[i] = foot_pos_world - hip_pos_new
             
         return new_foot_positions
