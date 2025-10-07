@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=0.05, step_length=0.1, knee_direction=1, gait_type='tripod', body_height=0.20, standoff_distance=0.25):
+    def __init__(self, step_height=40, step_length=100, knee_direction=1, gait_type='tripod', body_height=200, standoff_distance=350):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -79,14 +79,17 @@ class HexapodLocomotion:
         # coordinates for the feet to stay planted on.
         return self.kinematics.body_ik(translation, rotation, self.kinematics.hip_positions, self.default_foot_positions)
 
-    def run_gait(self, vx, vy, omega, pitch=0.0, speed=0.02, step_height=None):
+    def run_gait(self, vx, vy, omega, roll=0.0, pitch=0.0, speed=0.02, step_height=None, step_length=None):
         if self.current_gait:
-            # Update step height if a new value is provided from the UI
+            # Update gait parameters if new values are provided from the UI
             if step_height is not None:
                 self.current_gait.step_height = step_height
+            if step_length is not None:
+                self.current_gait.step_length = step_length
+
             # Note: recalculate_stance() is intentionally not called here for performance.
             # It's only called when standoff or body_height are changed.
-            return self.current_gait.run(vx, vy, omega, pitch, speed, self.default_foot_positions, self.body_height, self.step_height)
+            return self.current_gait.run(vx, vy, omega, roll, pitch, speed, self.default_foot_positions, self.body_height, self.current_gait.step_height)
         else:
             return [None] * 6
 
