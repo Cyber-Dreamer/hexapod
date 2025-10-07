@@ -21,8 +21,15 @@ def test_leg_fk_interactive_2d():
     L_TIBIA = 284.969  # tibiaJoint_to_tipFoot
 
     fig = plt.figure(figsize=(14, 7))
+
+    # Use a dark theme with a custom dark grey background
+    plt.style.use('dark_background')
+    dark_grey = '#2E2E2E'
+    fig.patch.set_facecolor(dark_grey)
     ax_xz = fig.add_subplot(121) # XZ plane view
+    ax_xz.set_facecolor(dark_grey)
     ax_xy = fig.add_subplot(122) # XY plane view
+    ax_xy.set_facecolor(dark_grey)
     plt.subplots_adjust(left=0.1, right=0.8, bottom=0.35, wspace=0.3)
 
     # Initial angles (all zero)
@@ -96,6 +103,9 @@ def test_leg_fk_interactive_2d():
     ax_slider_gamma = plt.axes([0.25, 0.20, 0.5, 0.03])
     ax_slider_alpha = plt.axes([0.25, 0.15, 0.5, 0.03])
     ax_slider_beta = plt.axes([0.25, 0.10, 0.5, 0.03])
+
+    for ax_s in [ax_slider_gamma, ax_slider_alpha, ax_slider_beta]:
+        ax_s.set_facecolor(dark_grey)
 
     slider_gamma = Slider(ax_slider_gamma, 'γ (Coxa)', -90, 90, valinit=initial_gamma_deg)
     slider_alpha = Slider(ax_slider_alpha, 'α (Femur)', -110, 110, valinit=initial_alpha_deg)

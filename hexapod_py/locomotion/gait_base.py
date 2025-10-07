@@ -57,4 +57,4 @@ class Gait:
             target_pos = Ry @ target_pos
 
         v_foot_local = target_pos - self.kinematics.hip_positions[leg_idx]
-        return self.kinematics.inverse_kinematics(v_foot_local, self.knee_direction)
+        return self.kinematics.leg_ik(v_foot_local, *self.kinematics.leg_lengths, knee_direction=self.knee_direction)

@@ -9,10 +9,10 @@ class TripodGait(Gait):
     def __init__(self, kinematics, step_height, step_length, knee_direction):
         super().__init__(kinematics, step_height, knee_direction)
         self.step_length = step_length
-        # Tripod 1: Front-Right (0), Rear-Right (2), Middle-Left (4)
-        self.tripod_legs_1 = [0, 2, 4]
-        # Tripod 2: Front-Left (3), Rear-Left (5), Middle-Right (1)
-        self.tripod_legs_2 = [3, 5, 1]
+        # Tripod 1: Front-Right (3), Rear-Left (0), Middle-Left (1)
+        self.tripod_legs_1 = [3, 0, 1]
+        # Tripod 2: Front-Left (2), Rear-Right (5), Middle-Right (4)
+        self.tripod_legs_2 = [2, 5, 4]
 
     def run(self, vx, vy, omega, pitch, speed, default_foot_positions, body_height, step_height):
         self.gait_phase = (self.gait_phase + speed) % 1.0

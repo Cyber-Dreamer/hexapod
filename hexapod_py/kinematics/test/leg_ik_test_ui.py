@@ -27,8 +27,15 @@ def test_leg_ik_interactive_2d():
     kinematics = HexapodKinematics(leg_lengths=leg_lengths, hip_positions=hip_positions)
 
     fig = plt.figure(figsize=(14, 7))
+
+    # Use a dark theme with a custom dark grey background
+    plt.style.use('dark_background')
+    dark_grey = '#2E2E2E'
+    fig.patch.set_facecolor(dark_grey)
     ax_xz = fig.add_subplot(121) # XZ plane view
+    ax_xz.set_facecolor(dark_grey)
     ax_xy = fig.add_subplot(122) # XY plane view
+    ax_xy.set_facecolor(dark_grey)
     plt.subplots_adjust(left=0.1, right=0.8, bottom=0.35, wspace=0.3)
 
     # Start with the leg straight out (0, 0, 0 angles)
@@ -157,16 +164,19 @@ def test_leg_ik_interactive_2d():
     ax_slider_z = plt.axes([0.25, 0.10, 0.5, 0.03])
     ax_slider_knee = plt.axes([0.25, 0.05, 0.5, 0.03])
 
+    for ax_s in [ax_slider_x, ax_slider_y, ax_slider_z, ax_slider_knee]:
+        ax_s.set_facecolor(dark_grey)
+
     # Calculate the workspace and set slider limits accordingly
     workspace_limits = calculate_workspace_limits(L_COXA, L_FEMUR, L_TIBIA)
 
     slider_x = Slider(ax_slider_x, 'Target X', workspace_limits['x'][0], workspace_limits['x'][1], valinit=initial_x)
     slider_y = Slider(ax_slider_y, 'Target Y', workspace_limits['y'][0], workspace_limits['y'][1], valinit=initial_y)
     slider_z = Slider(ax_slider_z, 'Target Z', workspace_limits['z'][0], workspace_limits['z'][1], valinit=initial_z)
-    slider_knee = Slider(ax_slider_knee, 'Knee Dir', -1, 1, valinit=-1, valstep=[-1, 1])
+    slider_knee = Slider(ax_slider_knee, 'Knee Dir', -1, 1, valinit=1, valstep=[-1, 1])
 
     # Store the last known valid slider values
-    last_valid_values = {'x': initial_x, 'y': initial_y, 'z': initial_z, 'knee': -1}
+    last_valid_values = {'x': initial_x, 'y': initial_y, 'z': initial_z, 'knee': 1}
 
 
     def update(val):

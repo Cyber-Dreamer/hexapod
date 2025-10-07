@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=0.05, step_length=0.1, knee_direction=-1, gait_type='tripod', body_height=0.20, standoff_distance=0.25):
+    def __init__(self, step_height=0.05, step_length=0.1, knee_direction=1, gait_type='tripod', body_height=0.20, standoff_distance=0.25):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -20,7 +20,14 @@ class HexapodLocomotion:
         femurJoint_to_tibiaJoint = 191.8
         tibiaJoint_to_tipFoot = 284.969
         
-        self.hip_angles = np.deg2rad([30, 90, 150, 210, 270, 330])
+        # Standard leg numbering:
+        # New Clockwise Numbering:
+        # 0: Rear-Left, 1: Middle-Left, 2: Front-Left
+        # 3: Front-Right, 4: Middle-Right, 5: Rear-Right
+        # Angles are measured counter-clockwise from the positive X-axis. The
+        # order of angles must match the leg numbering scheme.
+        self.hip_angles = np.deg2rad([210, 270, 330, 30, 90, 150])
+
         hip_positions = [
             tuple(coord) 
             for coord in np.column_stack(
@@ -62,12 +69,23 @@ class HexapodLocomotion:
         return self.set_body_pose([0, 0, 0], [0, 0, 0])
 
     def set_body_pose(self, translation, rotation):
-        self.recalculate_stance()
-        return self.kinematics.body_ik(translation, rotation, self.foot_positions, self.knee_direction)
+        """
+        Calculates the leg joint angles required to achieve a given body pose.
 
-    def run_gait(self, vx, vy, omega, pitch=0.0, speed=0.02):
+        This is a wrapper around the body_ik function that uses the robot's
+        default standing positions as the reference.
+        """
+        # Note: We pass self.default_foot_positions, which are the fixed world
+        # coordinates for the feet to stay planted on.
+        return self.kinematics.body_ik(translation, rotation, self.kinematics.hip_positions, self.default_foot_positions)
+
+    def run_gait(self, vx, vy, omega, pitch=0.0, speed=0.02, step_height=None):
         if self.current_gait:
-            self.recalculate_stance()
+            # Update step height if a new value is provided from the UI
+            if step_height is not None:
+                self.current_gait.step_height = step_height
+            # Note: recalculate_stance() is intentionally not called here for performance.
+            # It's only called when standoff or body_height are changed.
             return self.current_gait.run(vx, vy, omega, pitch, speed, self.default_foot_positions, self.body_height, self.step_height)
         else:
             return [None] * 6

@@ -7,11 +7,13 @@ class HexapodKinematics:
         self.leg_lengths = leg_lengths
         self.hip_positions = hip_positions
         self.optimal_stance = np.deg2rad([0.0, 0.0, -120.0])
+        # Pre-calculate the base angle for each hip from its position
+        self.hip_base_angles = np.arctan2(np.array(self.hip_positions)[:, 1], np.array(self.hip_positions)[:, 0])
         
     import numpy as np
 
     @staticmethod
-    def leg_ik(point, l_coxa, l_femur, l_tibia, knee_direction=-1):
+    def leg_ik(point, l_coxa, l_femur, l_tibia, knee_direction=1):
         """
         Calculates the inverse kinematics for a single hexapod leg.
 
@@ -88,8 +90,7 @@ class HexapodKinematics:
 
         return (gamma, alpha, beta)
 
-    @staticmethod
-    def body_ik(translation, rotation, coxa_positions, default_foot_positions):
+    def body_ik(self, translation, rotation, coxa_positions, default_foot_positions):
         """
         Calculates the new foot tip coordinates for all six legs to achieve
         a desired body position and orientation.
@@ -134,10 +135,22 @@ class HexapodKinematics:
             # 1. Get the default foot position in the world frame.
             foot_pos_world = default_foot_positions[i]
 
-            # 2. Calculate the new position of the hip joint after body transformation.
+            # 2. Calculate the new position of the hip joint in the world frame after body transformation.
             hip_pos_new = R @ coxa_positions[i] + translation
 
-            # 3. The new foot target vector relative to the body center is the difference.
-            new_foot_positions[i] = foot_pos_world - hip_pos_new
+            # 3. Calculate the vector from the new hip position to the static world foot position.
+            # This vector is in the world frame.
+            foot_vector_world = foot_pos_world - hip_pos_new
+            
+            # 4. Rotate this world-frame vector back into the body's coordinate frame.
+            foot_vector_body = R.T @ foot_vector_world
+
+            # 5. Rotate the body-frame vector into the leg's local coordinate frame.
+            # This is the final, crucial step.
+            hip_base_angle = self.hip_base_angles[i]
+            R_hip_inv = np.array([[ np.cos(hip_base_angle), np.sin(hip_base_angle), 0],
+                                  [-np.sin(hip_base_angle), np.cos(hip_base_angle), 0],
+                                  [0,                       0,                      1]])
+            new_foot_positions[i] = R_hip_inv @ foot_vector_body
             
         return new_foot_positions
