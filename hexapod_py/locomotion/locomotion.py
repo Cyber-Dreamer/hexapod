@@ -20,13 +20,13 @@ class HexapodLocomotion:
         femurJoint_to_tibiaJoint = 191.8
         tibiaJoint_to_tipFoot = 284.969
         
-        hip_angles = np.deg2rad([30, 90, 150, 210, 270, 330])
+        self.hip_angles = np.deg2rad([30, 90, 150, 210, 270, 330])
         hip_positions = [
             tuple(coord) 
             for coord in np.column_stack(
-                (center_to_HipJoint * np.cos(hip_angles),
-                 center_to_HipJoint * np.sin(hip_angles),
-                 np.zeros_like(hip_angles))).tolist()
+                (center_to_HipJoint * np.cos(self.hip_angles),
+                 center_to_HipJoint * np.sin(self.hip_angles),
+                 np.zeros_like(self.hip_angles))).tolist()
         ]
         
         leg_lengths = [
