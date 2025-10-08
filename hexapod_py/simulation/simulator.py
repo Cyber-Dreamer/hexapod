@@ -10,17 +10,20 @@ class HexapodSimulator:
         self.physics_client = None
         self.robot_id = None
         self.joint_name_to_id = {}
+        self.link_name_to_id = {}
         self.debug_param_ids = {}
-        # This mapping assumes the order in your locomotion code (0-5)
-        # and the joint names in your URDF.
-        # The URDF uses hip_#, ties_#, and foot_# for coxa, femur, and tibia.
+        self.gait_selector_id = None
+
+        # This mapping translates the locomotion leg order (0-5) to the URDF joint names.
+        # Locomotion Order: 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
+        # The URDF uses hip_#, ties_#, and foot_# for coxa, femur, and tibia joints.
         self.leg_joint_names = [
-            ["hip_3", "ties_3", "foot_3"], # Leg 0: Front-Right (FR) -> URDF _3
-            ["hip_4", "ties_4", "foot_4"], # Leg 1: Middle-Right (MR) -> URDF _4
-            ["hip_5", "ties_5", "foot_5"], # Leg 2: Rear-Right (RR) -> URDF _5
-            ["hip_2", "ties_2", "foot_2"], # Leg 3: Front-Left (FL) -> URDF _2
-            ["hip_1", "ties_1", "foot_1"], # Leg 4: Middle-Left (ML) -> URDF _1
-            ["hip_6", "ties_6", "foot_6"], # Leg 5: Rear-Left (RL) -> URDF _6
+            ["hip_6", "ties_6", "foot_6"], # Leg 0: Rear-Left (RL) -> URDF _6
+            ["hip_1", "ties_1", "foot_1"], # Leg 1: Middle-Left (ML) -> URDF _1
+            ["hip_2", "ties_2", "foot_2"], # Leg 2: Front-Left (FL) -> URDF _2
+            ["hip_3", "ties_3", "foot_3"], # Leg 3: Front-Right (FR) -> URDF _3
+            ["hip_4", "ties_4", "foot_4"], # Leg 4: Middle-Right (MR) -> URDF _4
+            ["hip_5", "ties_5", "foot_5"], # Leg 5: Rear-Right (RR) -> URDF _5
         ]
         self.package_path = os.path.dirname(__file__) # Path to the 'simulation' directory
 
@@ -32,23 +35,47 @@ class HexapodSimulator:
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
         # Add a floor
-        p.loadURDF("plane.urdf")
+        plane_id = p.loadURDF("plane.urdf")
+        # Increase friction of the ground plane
+        p.changeDynamics(plane_id, -1, lateralFriction=1.0)
 
         # Add the 'simulation' directory to the search path.
         # This allows PyBullet to find 'robot.urdf' and resolve the 'package://' paths for meshes.
         p.setAdditionalSearchPath(self.package_path)
 
         # Load URDF model
-        self.robot_id = p.loadURDF("robot.urdf", basePosition=[0, 0, 0.2])
+        self.robot_id = p.loadURDF("robot.urdf", basePosition=[0, 0, 0.4])
         self._map_joint_names_to_ids()
+        self._set_foot_friction()
         print(f"Simulation started. Robot ID: {self.robot_id}")
 
     def _map_joint_names_to_ids(self):
-        """Creates a map from joint names to their PyBullet IDs."""
+        """Creates maps from joint/link names to their PyBullet IDs."""
         for i in range(p.getNumJoints(self.robot_id)):
             joint_info = p.getJointInfo(self.robot_id, i)
             joint_name = joint_info[1].decode('UTF-8')
             self.joint_name_to_id[joint_name] = joint_info[0]
+            link_name = joint_info[12].decode('UTF-8')
+            # The link index is the same as the joint index it's a child of.
+            self.link_name_to_id[link_name] = joint_info[0]
+
+    def _set_foot_friction(self, lateral_friction=10.0, spinning_friction=0.01, rolling_friction=0.01):
+        """Increases the friction of the foot links."""
+        foot_links = [name for name in self.link_name_to_id.keys() if 'foot_assembly' in name]
+        
+        for link_name in foot_links:
+            link_id = self.link_name_to_id[link_name]
+            p.changeDynamics(
+                self.robot_id, 
+                link_id, 
+                lateralFriction=lateral_friction,
+                spinningFriction=spinning_friction,
+                rollingFriction=rolling_friction
+            )
+            print(f"Set friction for link '{link_name}' (ID: {link_id}) to lateral={lateral_friction}, spinning={spinning_friction}, rolling={rolling_friction}")
+
+        if not foot_links:
+            print("Warning: No 'foot_assembly' links found to set friction.")
 
     def set_joint_angles(self, joint_angles):
         """
@@ -61,8 +88,14 @@ class HexapodSimulator:
                 for joint_idx, angle in enumerate(leg_angles):
                     joint_name = self.leg_joint_names[leg_idx][joint_idx]
                     if joint_name in self.joint_name_to_id:
-                        p.setJointMotorControl2(self.robot_id, self.joint_name_to_id[joint_name],
-                                                p.POSITION_CONTROL, targetPosition=angle)
+                        p.setJointMotorControl2(
+                            bodyIndex=self.robot_id,
+                            jointIndex=self.joint_name_to_id[joint_name],
+                            controlMode=p.POSITION_CONTROL,
+                            targetPosition=angle,
+                            force=10.0,      # Correctly match URDF effort limit (~80kg-cm servo)
+                            positionGain=1.0,  # Increase stiffness to better hold target angles
+                            velocityGain=0.9)  # Keep damping for smooth movement
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")
 
@@ -72,21 +105,33 @@ class HexapodSimulator:
             print("Cannot add UI controls in non-GUI mode.")
             return
 
-        self.debug_param_ids['vx'] = p.addUserDebugParameter("vx (m/s)", -0.2, 0.2, 0.0)
-        self.debug_param_ids['vy'] = p.addUserDebugParameter("vy (m/s)", -0.2, 0.2, 0.0)
-        self.debug_param_ids['omega'] = p.addUserDebugParameter("omega (rad/s)", -1.0, 1.0, 0.0)
-        self.debug_param_ids['speed'] = p.addUserDebugParameter("gait_speed", 0.01, 0.05, 0.02)
-        self.debug_param_ids['body_height'] = p.addUserDebugParameter("body_height (m)", 0.15, 0.25, 0.20)
-        self.debug_param_ids['pitch'] = p.addUserDebugParameter("pitch (rad)", -0.5, 0.5, 0.0)
-        self.debug_param_ids['step_height'] = p.addUserDebugParameter("step_height (m)", 0.0, 0.1, 0.05)
+        self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
+        self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
+        self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
+        self.debug_param_ids['speed'] = p.addUserDebugParameter("Gait Speed", 0.005, 0.05, 0.02)
+        self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.15, 0.3, 0.20)
+        self.debug_param_ids['step_height'] = p.addUserDebugParameter("Step Height (m)", 0.01, 0.08, 0.04)
+        self.debug_param_ids['step_length'] = p.addUserDebugParameter("Step Length (m)", 0.02, 0.15, 0.10)
+        self.debug_param_ids['roll'] = p.addUserDebugParameter("Roll (rad)", -0.5, 0.5, 0.0)
+        self.debug_param_ids['pitch'] = p.addUserDebugParameter("Pitch (rad)", -0.5, 0.5, 0.0)
+
+    def add_gait_selection_ui(self, gait_options):
+        """Adds a radio button UI to select a gait."""
+        if not self.gui:
+            return
+        self.gait_selector_id = p.addUserDebugParameter("Gait", 0, len(gait_options) - 1, 0)
+        # This is a trick to label the radio buttons in PyBullet
+        p.setDebugObjectColor(self.gait_selector_id, -1, objectDebugColorRGB=[0,0,0]) # Hide the slider
+        for i, option in enumerate(gait_options):
+            p.addUserDebugText(option.capitalize(), [0, -1.5 - i*0.5, 0], textColorRGB=[1,1,0], parentObjectUniqueId=self.gait_selector_id, parentLinkIndex=i)
 
     def read_ui_controls(self):
         """Reads the current values from the GUI sliders."""
         if not self.gui or not self.debug_param_ids:
             # Return default values if no GUI or controls are present
-            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'speed': 0.02, 'body_height': 0.20, 'pitch': 0.0, 'step_height': 0.05}
+            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'speed': 0.02, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'step_length': 0.10}
 
-        return {
+        controls = {
             'vx': p.readUserDebugParameter(self.debug_param_ids['vx']),
             'vy': p.readUserDebugParameter(self.debug_param_ids['vy']),
             'omega': p.readUserDebugParameter(self.debug_param_ids['omega']),
@@ -95,10 +140,20 @@ class HexapodSimulator:
             'pitch': p.readUserDebugParameter(self.debug_param_ids['pitch']),
             'step_height': p.readUserDebugParameter(self.debug_param_ids['step_height'])
         }
+        if 'roll' in self.debug_param_ids:
+            controls['roll'] = p.readUserDebugParameter(self.debug_param_ids['roll'])
+        if 'step_length' in self.debug_param_ids:
+            controls['step_length'] = p.readUserDebugParameter(self.debug_param_ids['step_length'])
+        return controls
+
+    def read_gait_selection_ui(self):
+        """Reads the selected gait index from the radio button UI."""
+        if self.gait_selector_id is not None:
+            return int(p.readUserDebugParameter(self.gait_selector_id))
+        return 0
 
     def step(self):
         p.stepSimulation()
-        time.sleep(1.0 / 240.0)
 
     def stop(self):
         p.disconnect()
