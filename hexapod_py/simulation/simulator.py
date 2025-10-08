@@ -92,10 +92,11 @@ class HexapodSimulator:
                             bodyIndex=self.robot_id,
                             jointIndex=self.joint_name_to_id[joint_name],
                             controlMode=p.POSITION_CONTROL,
-                            targetPosition=angle,
-                            force=10.0,      # Correctly match URDF effort limit (~80kg-cm servo)
-                            positionGain=1.0,  # Increase stiffness to better hold target angles
-                            velocityGain=0.9)  # Keep damping for smooth movement
+                            targetPosition=angle,      # The desired angle for the joint
+                            force=1000.0,                # Reduced force for stability
+                            positionGain=0.5,          # Reduced gain for smoother contact
+                            velocityGain=0.9,          # Standard damping for stability
+                            maxVelocity=5.236)         # 60 deg / 0.2s = 5.236 rad/s
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")
 
@@ -108,10 +109,10 @@ class HexapodSimulator:
         self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
         self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
         self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
-        self.debug_param_ids['speed'] = p.addUserDebugParameter("Gait Speed", 0.005, 0.05, 0.02)
+        self.debug_param_ids['speed'] = p.addUserDebugParameter("Gait Speed", 0.1, 2.0, 0.7)
         self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.15, 0.3, 0.20)
         self.debug_param_ids['step_height'] = p.addUserDebugParameter("Step Height (m)", 0.01, 0.08, 0.04)
-        self.debug_param_ids['step_length'] = p.addUserDebugParameter("Step Length (m)", 0.02, 0.15, 0.10)
+        self.debug_param_ids['standoff'] = p.addUserDebugParameter("Standoff (m)", 0.2, 0.5, 0.28)
         self.debug_param_ids['roll'] = p.addUserDebugParameter("Roll (rad)", -0.5, 0.5, 0.0)
         self.debug_param_ids['pitch'] = p.addUserDebugParameter("Pitch (rad)", -0.5, 0.5, 0.0)
 
@@ -129,7 +130,7 @@ class HexapodSimulator:
         """Reads the current values from the GUI sliders."""
         if not self.gui or not self.debug_param_ids:
             # Return default values if no GUI or controls are present
-            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'speed': 0.02, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'step_length': 0.10}
+            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'speed': 0.7, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
 
         controls = {
             'vx': p.readUserDebugParameter(self.debug_param_ids['vx']),
@@ -138,12 +139,11 @@ class HexapodSimulator:
             'speed': p.readUserDebugParameter(self.debug_param_ids['speed']),
             'body_height': p.readUserDebugParameter(self.debug_param_ids['body_height']),
             'pitch': p.readUserDebugParameter(self.debug_param_ids['pitch']),
-            'step_height': p.readUserDebugParameter(self.debug_param_ids['step_height'])
+            'step_height': p.readUserDebugParameter(self.debug_param_ids['step_height']),
+            'standoff': p.readUserDebugParameter(self.debug_param_ids['standoff'])
         }
         if 'roll' in self.debug_param_ids:
             controls['roll'] = p.readUserDebugParameter(self.debug_param_ids['roll'])
-        if 'step_length' in self.debug_param_ids:
-            controls['step_length'] = p.readUserDebugParameter(self.debug_param_ids['step_length'])
         return controls
 
     def read_gait_selection_ui(self):

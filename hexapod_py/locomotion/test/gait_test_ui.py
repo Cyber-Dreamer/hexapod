@@ -19,7 +19,7 @@ def test_gait_interactive():
     velocity and rotation, and an animated 3D plot displays the walking motion.
     """
     # --- Initialization ---
-    locomotion = HexapodLocomotion(gait_type='tripod', body_height=200, standoff_distance=350)
+    locomotion = HexapodLocomotion(gait_type='tripod', body_height=200)
     kinematics = locomotion.kinematics
     
     fk_calculator = HexapodForwardKinematics(
@@ -64,14 +64,14 @@ def test_gait_interactive():
 
     # --- Sliders ---
     slider_axes = {
-        'vx': plt.axes([0.25, 0.28, 0.5, 0.02]),
-        'vy': plt.axes([0.25, 0.24, 0.5, 0.02]),
-        'omega': plt.axes([0.25, 0.20, 0.5, 0.02]),
-        'roll': plt.axes([0.25, 0.16, 0.5, 0.02]),
-        'pitch': plt.axes([0.25, 0.12, 0.5, 0.02]),
-        'speed': plt.axes([0.25, 0.08, 0.5, 0.02]),
-        'step_h': plt.axes([0.25, 0.04, 0.5, 0.02]),
-        'step_l': plt.axes([0.25, 0.00, 0.5, 0.02]),
+        'vx': plt.axes([0.25, 0.30, 0.5, 0.02]),
+        'vy': plt.axes([0.25, 0.27, 0.5, 0.02]),
+        'omega': plt.axes([0.25, 0.24, 0.5, 0.02]),
+        'roll': plt.axes([0.25, 0.21, 0.5, 0.02]),
+        'pitch': plt.axes([0.25, 0.18, 0.5, 0.02]),
+        'speed': plt.axes([0.25, 0.15, 0.5, 0.02]),
+        'step_h': plt.axes([0.25, 0.12, 0.5, 0.02]),
+        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02])
     }
     for ax_s in slider_axes.values():
         ax_s.set_facecolor(dark_grey)
@@ -82,9 +82,9 @@ def test_gait_interactive():
         'omega': Slider(slider_axes['omega'], 'Omega (turn)', -1.0, 1.0, valinit=0),
         'roll': Slider(slider_axes['roll'], 'Roll', -np.pi/8, np.pi/8, valinit=0),
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/8, np.pi/8, valinit=0),
-        'speed': Slider(slider_axes['speed'], 'Gait Speed', 0.005, 0.05, valinit=0.02),
+        'speed': Slider(slider_axes['speed'], 'Gait Speed', 0.005, 0.05, valinit=0.006),
         'step_h': Slider(slider_axes['step_h'], 'Step Height', 10, 80, valinit=40),
-        'step_l': Slider(slider_axes['step_l'], 'Step Length', 20, 150, valinit=100),
+        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
     }
 
     # --- Radio Buttons for Gait Selection ---
@@ -95,9 +95,6 @@ def test_gait_interactive():
     def select_gait(label):
         """Callback function to switch the gait."""
         locomotion.set_gait(label)
-        # Update the step length slider to match the new gait's default
-        if locomotion.current_gait:
-            sliders['step_l'].set_val(locomotion.current_gait.step_length)
         fig.canvas.draw_idle()
 
     radio_buttons.on_clicked(select_gait)
@@ -112,7 +109,7 @@ def test_gait_interactive():
         pitch = sliders['pitch'].val
         speed = sliders['speed'].val
         step_height = sliders['step_h'].val
-        step_length = sliders['step_l'].val
+        standoff = sliders['standoff'].val
 
         # Normalize the direction vector if it's greater than 1
         dir_vec = np.array([vx, vy])
@@ -120,8 +117,11 @@ def test_gait_interactive():
             dir_vec = dir_vec / np.linalg.norm(dir_vec)
             vx, vy = dir_vec
 
+        # Update stance based on standoff slider
+        locomotion.recalculate_stance(standoff_distance=standoff)
+
         # 2. Run the gait logic to get joint angles
-        all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, speed=speed, step_height=step_height, step_length=step_length)
+        all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, speed=speed, step_height=step_height)
 
         # 3. Use body_fk to get world coordinates for all legs
         # For gait, the body itself is considered static at the origin.

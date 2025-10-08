@@ -20,7 +20,7 @@ def test_body_ik_interactive():
     # Use HexapodLocomotion to get a pre-configured robot model.
     # We provide realistic values for body height and standoff distance in mm
     # to achieve a stable, spider-like initial stance.
-    locomotion = HexapodLocomotion(body_height=200, standoff_distance=350)
+    locomotion = HexapodLocomotion(body_height=200)
 
     kinematics = locomotion.kinematics
     
@@ -83,20 +83,20 @@ def test_body_ik_interactive():
     slider_axes = {
         'tx': plt.axes([0.25, 0.30, 0.5, 0.02]), 'ty': plt.axes([0.25, 0.27, 0.5, 0.02]), 'tz': plt.axes([0.25, 0.24, 0.5, 0.02]),
         'roll': plt.axes([0.25, 0.18, 0.5, 0.02]), 'pitch': plt.axes([0.25, 0.15, 0.5, 0.02]), 'yaw': plt.axes([0.25, 0.12, 0.5, 0.02]),
+        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02]),
         'knee': plt.axes([0.25, 0.06, 0.5, 0.02]),
-        'standoff': plt.axes([0.25, 0.02, 0.5, 0.02])
     }
     for ax_s in slider_axes.values():
         ax_s.set_facecolor(dark_grey)
     sliders = {
-        'tx': Slider(slider_axes['tx'], 'Translate X', -250, 250, valinit=0),
-        'ty': Slider(slider_axes['ty'], 'Translate Y', -250, 250, valinit=0),
-        'tz': Slider(slider_axes['tz'], 'Translate Z', -150, 150, valinit=0),
+        'tx': Slider(slider_axes['tx'], 'Translate X', -150, 150, valinit=0),
+        'ty': Slider(slider_axes['ty'], 'Translate Y', -150, 150, valinit=0),
+        'tz': Slider(slider_axes['tz'], 'Translate Z', -100, 100, valinit=0),
         'roll': Slider(slider_axes['roll'], 'Roll', -np.pi/4, np.pi/4, valinit=0),
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/4, np.pi/4, valinit=0),
         'yaw': Slider(slider_axes['yaw'], 'Yaw', -np.pi/4, np.pi/4, valinit=0),
-        'knee': Slider(slider_axes['knee'], 'Knee Dir', -1, 1, valinit=1, valstep=[-1, 1]),
-        'standoff': Slider(slider_axes['standoff'], 'Standoff', 150, 450, valinit=350)
+        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
+        'knee': Slider(slider_axes['knee'], 'Knee Dir', -1, 1, valinit=1, valstep=[-1, 1])
     }
 
     # Store the last known valid slider values to prevent entering impossible positions
@@ -109,14 +109,10 @@ def test_body_ik_interactive():
         knee_dir = sliders['knee'].val
         standoff = sliders['standoff'].val
 
-        # Update stance if standoff distance has changed
-        if locomotion.standoff_distance != standoff:
-            locomotion.standoff_distance = standoff
-            locomotion.recalculate_stance()
-            # Update the target markers on the plot
-            new_targets = np.array(locomotion.default_foot_positions)
-            foot_targets_plot._offsets3d = (new_targets[:, 0], new_targets[:, 1], new_targets[:, 2])
-
+        # 2. Update stance based on standoff slider and get new default foot positions
+        locomotion.recalculate_stance(standoff_distance=standoff)
+        default_foot_positions_world = np.array(locomotion.default_foot_positions)
+ 
         # 2. Calculate Body IK
         # This gives us the new target for each foot tip, relative to the body center.
         new_foot_targets_local = kinematics.body_ik(
@@ -174,6 +170,12 @@ def test_body_ik_interactive():
 
         # Update body center dot
         body_center_dot._offsets3d = ([translation[0]], [translation[1]], [translation[2]])
+
+        # Update foot target markers
+        foot_targets_plot._offsets3d = (default_foot_positions_world[:, 0],
+                                        default_foot_positions_world[:, 1],
+                                        default_foot_positions_world[:, 2])
+
 
         # Update angle text display
         angle_strings = [f"Leg {i}: {np.rad2deg(a)[0]:6.1f}, {np.rad2deg(a)[1]:6.1f}, {np.rad2deg(a)[2]:6.1f}" for i, a in enumerate(all_angles)]
