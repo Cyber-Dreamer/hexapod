@@ -93,9 +93,9 @@ class HexapodSimulator:
                             jointIndex=self.joint_name_to_id[joint_name],
                             controlMode=p.POSITION_CONTROL,
                             targetPosition=angle,      # The desired angle for the joint
-                            force=1000.0,                # Reduced force for stability
-                            positionGain=0.5,          # Reduced gain for smoother contact
-                            velocityGain=0.9,          # Standard damping for stability
+                            force=3000,                 # Realistic torque for an 80kg-cm servo (~7.85 Nm)
+                            positionGain=1.0,          # High gain for stiff, responsive control
+                            velocityGain=0.1,          # Reduced damping to mimic aggressive servo behavior
                             maxVelocity=5.236)         # 60 deg / 0.2s = 5.236 rad/s
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")

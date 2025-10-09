@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=100, knee_direction=1, gait_type='tripod', body_height=150, standoff_distance=None):
+    def __init__(self, step_height=40, max_step_length=100, knee_direction=1, gait_type='tripod', body_height=150, standoff_distance=300):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024

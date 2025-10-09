@@ -49,7 +49,7 @@ def main():
                 omega=controls['omega'],
                 roll=controls['roll'],
                 pitch=controls['pitch'],
-                speed=controls['speed'],
+                speed=controls['speed'] / 100.0, # Scale down UI speed to a reasonable value for the gait cycle
                 step_height=controls['step_height'] * 1000 # m to mm
             )
 

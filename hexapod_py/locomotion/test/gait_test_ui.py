@@ -71,7 +71,8 @@ def test_gait_interactive():
         'pitch': plt.axes([0.25, 0.18, 0.5, 0.02]),
         'speed': plt.axes([0.25, 0.15, 0.5, 0.02]),
         'step_h': plt.axes([0.25, 0.12, 0.5, 0.02]),
-        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02])
+        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02]),
+        'body_h': plt.axes([0.25, 0.06, 0.5, 0.02])
     }
     for ax_s in slider_axes.values():
         ax_s.set_facecolor(dark_grey)
@@ -85,6 +86,7 @@ def test_gait_interactive():
         'speed': Slider(slider_axes['speed'], 'Gait Speed', 0.005, 0.05, valinit=0.006),
         'step_h': Slider(slider_axes['step_h'], 'Step Height', 10, 80, valinit=40),
         'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
+        'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 250, valinit=locomotion.body_height),
     }
 
     # --- Radio Buttons for Gait Selection ---
@@ -110,6 +112,7 @@ def test_gait_interactive():
         speed = sliders['speed'].val
         step_height = sliders['step_h'].val
         standoff = sliders['standoff'].val
+        body_height = sliders['body_h'].val
 
         # Normalize the direction vector if it's greater than 1
         dir_vec = np.array([vx, vy])
@@ -117,8 +120,9 @@ def test_gait_interactive():
             dir_vec = dir_vec / np.linalg.norm(dir_vec)
             vx, vy = dir_vec
 
-        # Update stance based on standoff slider
+        # Update locomotion parameters from sliders
         locomotion.recalculate_stance(standoff_distance=standoff)
+        locomotion.body_height = body_height
 
         # 2. Run the gait logic to get joint angles
         all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, speed=speed, step_height=step_height)
