@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Control Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Robot Control Center</h1>
+        </header>
+
+        <main>
+            <div class="video-streams">
+                <div class="video-container">
+                    <h2>Camera 1</h2>
+                    <img src="{{ url_for('video_feed', camera_id=1) }}" width="640" height="480" alt="Camera 1 Feed">
+                </div>
+                <div class="video-container">
+                    <h2>Camera 2</h2>
+                    <img src="{{ url_for('video_feed', camera_id=2) }}" width="640" height="480" alt="Camera 2 Feed">
+                </div>
+            </div>
+
+            <div class="controls-and-sensors">
+                <div class="control-panel card">
+                    <h2>Movement Controls</h2>
+                    <div class="d-pad">
+                        <button id="forward" class="control-btn up" aria-label="Forward">&#9650;</button>
+                        <button id="left" class="control-btn left" aria-label="Left">&#9664;</button>
+                        <button id="stop" class="control-btn center" aria-label="Stop">STOP</button>
+                        <button id="right" class="control-btn right" aria-label="Right">&#9654;</button>
+                        <button id="backward" class="control-btn down" aria-label="Backward">&#9660;</button>
+                    </div>
+                </div>
+
+                <div class="sensor-data card">
+                    <h2>Sensor Readings</h2>
+                    <div class="sensor-grid">
+                        <div class="sensor-item" id="gps-card">
+                            <span class="sensor-label">GPS</span>
+                            <span class="sensor-value" id="gps-data">Loading...</span>
+                        </div>
+                        <div class="sensor-item" id="gyro-card">
+                            <span class="sensor-label">Gyroscope</span>
+                            <span class="sensor-value" id="gyro-data">Loading...</span>
+                        </div>
+                        <div class="sensor-item" id="accel-card">
+                            <span class="sensor-label">Accelerometer</span>
+                            <span class="sensor-value" id="accel-data">Loading...</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Status</span>
+                            <span class="sensor-value" id="status-light" title="Sensor Status">●</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const controls = document.querySelector('.control-panel');
+ 
+            // Use event delegation for control buttons
+            controls.addEventListener('click', (event) => {
+                const button = event.target.closest('.control-btn');
+                if (button) {
+                    const action = button.id;
+                    fetch(`/move/${action}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                console.error(`Command ${action} failed!`);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+ 
+            // Handle keyboard controls for movement
+            document.addEventListener('keydown', (event) => {
+                let action = null;
+                switch(event.key) {
+                    case 'w': case 'ArrowUp':    action = 'forward'; break;
+                    case 's': case 'ArrowDown':  action = 'backward'; break;
+                    case 'a': case 'ArrowLeft':  action = 'left'; break;
+                    case 'd': case 'ArrowRight': action = 'right'; break;
+                    case ' ':                    action = 'stop'; event.preventDefault(); break; // Space for stop
+                }
+                if (action) {
+                    document.getElementById(action).click();
+                }
+            });
+ 
+            // --- Live Sensor Data Updates ---
+            const statusLight = document.getElementById('status-light');
+ 
+            function updateSensorData() {
+                fetch('/sensor_data')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const gpsDiv = document.getElementById('gps-data');
+                        if (data.gps_data && data.gps_data.lat) {
+                            gpsDiv.innerHTML = `Lat: ${data.gps_data.lat.toFixed(4)}<br>Lon: ${data.gps_data.lon.toFixed(4)}`;
+                        } else {
+                            gpsDiv.textContent = 'No Fix';
+                        }
+ 
+                        const gyroDiv = document.getElementById('gyro-data');
+                        const accelDiv = document.getElementById('accel-data');
+                        if (data.gyro_data) {
+                            gyroDiv.innerHTML = `X: ${data.gyro_data.gyro.x.toFixed(2)}<br>Y: ${data.gyro_data.gyro.y.toFixed(2)}`;
+                            accelDiv.innerHTML = `X: ${data.gyro_data.accel.x.toFixed(2)}<br>Y: ${data.gyro_data.accel.y.toFixed(2)}`;
+                        } else {
+                            gyroDiv.textContent = 'N/A';
+                            accelDiv.textContent = 'N/A';
+                        }
+                        statusLight.style.color = 'var(--accent-color)'; // Greenish-blue for success
+                    })
+                    .catch(error => {
+                        console.error('Failed to fetch sensor data:', error);
+                        document.getElementById('gps-data').textContent = 'Error';
+                        document.getElementById('gyro-data').textContent = 'Error';
+                        document.getElementById('accel-data').textContent = 'Error';
+                        statusLight.style.color = '#c0392b'; // Red for error
+                    });
+            }
+ 
+            // Initial call and then update every 2 seconds
+            updateSensorData();
+            setInterval(updateSensorData, 2000);
+        });
+    </script>
+</body>
+</html>
