@@ -36,8 +36,8 @@ class HexapodSimulator:
 
         # Add a floor
         plane_id = p.loadURDF("plane.urdf")
-        # Increase friction of the ground plane
-        p.changeDynamics(plane_id, -1, lateralFriction=1.0)
+        # Set friction to simulate rubber on rubber (kinetic friction coeff ~1.0)
+        p.changeDynamics(plane_id, -1, lateralFriction=2.0)
 
         # Add the 'simulation' directory to the search path.
         # This allows PyBullet to find 'robot.urdf' and resolve the 'package://' paths for meshes.
@@ -59,7 +59,7 @@ class HexapodSimulator:
             # The link index is the same as the joint index it's a child of.
             self.link_name_to_id[link_name] = joint_info[0]
 
-    def _set_foot_friction(self, lateral_friction=10.0, spinning_friction=0.01, rolling_friction=0.01):
+    def _set_foot_friction(self, lateral_friction=1.0, spinning_friction=0.01, rolling_friction=0.01):
         """Increases the friction of the foot links."""
         foot_links = [name for name in self.link_name_to_id.keys() if 'foot_assembly' in name]
         
@@ -93,10 +93,10 @@ class HexapodSimulator:
                             jointIndex=self.joint_name_to_id[joint_name],
                             controlMode=p.POSITION_CONTROL,
                             targetPosition=angle,      # The desired angle for the joint
-                            force=3000,                 # Realistic torque for an 80kg-cm servo (~7.85 Nm)
+                            force=50,                 # Realistic torque for an 80kg-cm servo (~7.85 Nm)
                             positionGain=1.0,          # High gain for stiff, responsive control
-                            velocityGain=0.1,          # Reduced damping to mimic aggressive servo behavior
-                            maxVelocity=5.236)         # 60 deg / 0.2s = 5.236 rad/s
+                            velocityGain=0.05,          # Reduced damping to mimic aggressive servo behavior
+                            maxVelocity=5.236)         # 60 deg / 0.2s = 300 deg/s = 5.236 rad/s
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")
 
@@ -109,7 +109,6 @@ class HexapodSimulator:
         self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
         self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
         self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
-        self.debug_param_ids['speed'] = p.addUserDebugParameter("Gait Speed", 0.1, 2.0, 0.7)
         self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.15, 0.3, 0.20)
         self.debug_param_ids['step_height'] = p.addUserDebugParameter("Step Height (m)", 0.01, 0.08, 0.04)
         self.debug_param_ids['standoff'] = p.addUserDebugParameter("Standoff (m)", 0.2, 0.5, 0.28)
@@ -130,13 +129,12 @@ class HexapodSimulator:
         """Reads the current values from the GUI sliders."""
         if not self.gui or not self.debug_param_ids:
             # Return default values if no GUI or controls are present
-            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'speed': 0.7, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
+            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
 
         controls = {
             'vx': p.readUserDebugParameter(self.debug_param_ids['vx']),
             'vy': p.readUserDebugParameter(self.debug_param_ids['vy']),
             'omega': p.readUserDebugParameter(self.debug_param_ids['omega']),
-            'speed': p.readUserDebugParameter(self.debug_param_ids['speed']),
             'body_height': p.readUserDebugParameter(self.debug_param_ids['body_height']),
             'pitch': p.readUserDebugParameter(self.debug_param_ids['pitch']),
             'step_height': p.readUserDebugParameter(self.debug_param_ids['step_height']),

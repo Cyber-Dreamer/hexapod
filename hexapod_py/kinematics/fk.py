@@ -87,12 +87,16 @@ class HexapodForwardKinematics:
 
         world_leg_points = []
         for i in range(6):
-            angles = all_leg_angles[i]
             hip_pos_world = R_body @ self.hip_positions[i] + body_translation
-            if angles is None:
-                # If angles are None, just transform the hip position
+
+            # If all_leg_angles is empty or the specific angle is None,
+            # we only calculate the hip position.
+            if not all_leg_angles or all_leg_angles[i] is None:
                 world_leg_points.append(np.array([hip_pos_world]))
                 continue
+
+            # We have valid angles, so proceed with full leg FK.
+            angles = all_leg_angles[i]
 
             # 1. Get the joint positions in the leg's local frame
             local_points = self.leg_fk(angles)

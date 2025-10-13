@@ -46,7 +46,7 @@ def main():
             # 5. "Publish": The controller calculates joint angles based on UI input.
             joint_angles = locomotion.run_gait(
                 vx=controls['vx'], vy=controls['vy'], omega=controls['omega'],
-                pitch=controls['pitch'], speed=controls['speed']
+                pitch=controls['pitch']
             )
 
             # 6. "Subscribe": The simulator applies the calculated joint angles.

@@ -23,7 +23,7 @@ def main():
     
     # Initialize a forward kinematics calculator to get 3D points from angles
     fk_calculator = HexapodForwardKinematics(
-        leg_lengths=locomotion.kinematics.leg_lengths,
+        leg_lengths=locomotion.kinematics.segment_lengths,
         hip_positions=locomotion.kinematics.hip_positions
     )
 
@@ -54,8 +54,11 @@ def main():
 
             # Update parameters that might change during simulation
             locomotion.body_height = controls['body_height'] * 1000 # m to mm
-            locomotion.recalculate_stance() # Recalculate foot positions based on new height
-
+            standoff_mm = controls['standoff'] * 1000 # m to mm
+            # Only recalculate stance if the standoff distance has changed to avoid unnecessary computation
+            if locomotion.standoff_distance != standoff_mm:
+                locomotion.recalculate_stance(standoff_distance=standoff_mm)
+ 
 
             # 3. Run the gait logic to get target joint angles
             # Note: The URDF joint names are different from the locomotion leg order.
@@ -66,7 +69,6 @@ def main():
                 omega=controls['omega'],
                 roll=controls['roll'],
                 pitch=controls['pitch'],
-                speed=controls['speed'],
                 step_height=controls['step_height'] * 1000 # m to mm
             )
 

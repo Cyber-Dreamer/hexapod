@@ -9,8 +9,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from hexapod_py.locomotion.locomotion import HexapodLocomotion
 from hexapod_py.kinematics.fk import HexapodForwardKinematics
+from hexapod_py.kinematics.ik import HexapodKinematics
 
 def test_body_ik_interactive():
     """
@@ -18,15 +18,31 @@ def test_body_ik_interactive():
     body's translation and rotation, and a 3D plot displays the resulting posture.
     """
     # Use HexapodLocomotion to get a pre-configured robot model.
-    # We provide realistic values for body height and standoff distance in mm
-    # to achieve a stable, spider-like initial stance.
-    locomotion = HexapodLocomotion(body_height=200)
+    # Define hexapod geometry directly to decouple from the locomotion module
+    center_to_hip_joint = 152.024
+    leg_lengths = [92.5, 191.8, 284.969] # Coxa, Femur, Tibia
+    body_height = 200
+    initial_standoff = 380
 
-    kinematics = locomotion.kinematics
+    # Leg numbering: 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
+    hip_angles = np.deg2rad([210, 270, 330, 30, 90, 150])
+    hip_positions = np.array([
+        (center_to_hip_joint * np.cos(angle), center_to_hip_joint * np.sin(angle), 0)
+        for angle in hip_angles
+    ])
+
+    # Define joint limits [coxa, femur, tibia] in radians
+    joint_limits = np.deg2rad([90, 110, 120])
+
+    kinematics = HexapodKinematics(
+        segment_lengths=leg_lengths,
+        hip_positions=hip_positions,
+        joint_limits=joint_limits
+    )
     
     # The FK calculator will be used to draw the legs based on calculated angles
     fk_calculator = HexapodForwardKinematics(
-        leg_lengths=kinematics.leg_lengths,
+        leg_lengths=kinematics.segment_lengths,
         hip_positions=kinematics.hip_positions
     )    
 
@@ -45,10 +61,19 @@ def test_body_ik_interactive():
     initial_translation = np.array([0.0, 0.0, 0.0])
     initial_rotation = np.array([0.0, 0.0, 0.0]) # Roll, Pitch, Yaw
 
-    # Get the default foot positions when standing neutral
-    # These are relative to the body center
-    locomotion.recalculate_stance()
-    default_foot_positions_world = np.array(locomotion.default_foot_positions)
+    # Helper function to calculate default foot positions in the world frame
+    def calculate_stance(standoff, height):
+        foot_positions = []
+        for pos in hip_positions:
+            v = np.array([pos[0], pos[1], 0])
+            v_norm = v / np.linalg.norm(v) if np.linalg.norm(v) > 0 else v
+            default_pos_xy = v + v_norm * standoff
+            foot_positions.append(np.array([default_pos_xy[0], default_pos_xy[1], -height]))
+        return np.array(foot_positions)
+
+    # Get the initial default foot positions
+    default_foot_positions_world = calculate_stance(initial_standoff, body_height)
+
 
     # --- Plotting Setup ---
     leg_colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5'] # Standard matplotlib colors
@@ -58,8 +83,11 @@ def test_body_ik_interactive():
     # Add markers for the target foot positions. These will be updated dynamically.
     foot_targets_plot = ax.scatter(default_foot_positions_world[:, 0], 
                                    default_foot_positions_world[:, 1], 
-                                   default_foot_positions_world[:, 2], 
-                                   c=leg_colors, marker='x', s=100, label='Foot Targets')
+                                   default_foot_positions_world[:, 2],
+                                   c=leg_colors, marker='x', s=100, label='Foot Targets (World)')
+
+    # Draw the body outline by connecting the hip positions
+    body_line, = ax.plot([], [], [], '-', color='gray', label='Body')
 
 
     ax.set_xlabel('World X (mm)')
@@ -94,29 +122,35 @@ def test_body_ik_interactive():
         'roll': Slider(slider_axes['roll'], 'Roll', -np.pi/4, np.pi/4, valinit=0),
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/4, np.pi/4, valinit=0),
         'yaw': Slider(slider_axes['yaw'], 'Yaw', -np.pi/4, np.pi/4, valinit=0),
-        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance)
+        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=initial_standoff)
     }
 
     # Store the last known valid slider values to prevent entering impossible positions
     last_valid_values = {key: slider.valinit for key, slider in sliders.items()}
+    
+    # Flag to prevent recursive updates when resetting sliders to a valid state.
+    _is_programmatic_update = False
 
     def update(val):
+        nonlocal _is_programmatic_update
+        if _is_programmatic_update:
+            return
+
         # 1. Read values from sliders
         translation = np.array([sliders['tx'].val, sliders['ty'].val, sliders['tz'].val])
         rotation = np.array([sliders['roll'].val, sliders['pitch'].val, sliders['yaw'].val])
         standoff = sliders['standoff'].val
 
         # 2. Update stance based on standoff slider and get new default foot positions
-        locomotion.recalculate_stance(standoff_distance=standoff)
-        default_foot_positions_world = np.array(locomotion.default_foot_positions)
+        default_foot_positions_world = calculate_stance(standoff, body_height)
  
         # 2. Calculate Body IK
         # This gives us the new target for each foot tip, relative to the body center.
         new_foot_targets_local = kinematics.body_ik(
             translation,
             rotation,
-            kinematics.hip_positions,
-            np.array(locomotion.default_foot_positions)
+            hip_positions,
+            default_foot_positions_world
         )
 
         all_angles = []
@@ -127,7 +161,7 @@ def test_body_ik_interactive():
             # The body_ik function already returns the target in the leg's local frame.
             foot_target_local = new_foot_targets_local[i]
             
-            angles = kinematics.leg_ik(foot_target_local)
+            angles = kinematics.leg_ik(foot_target_local, knee_direction=-1)
             all_angles.append(angles)
             if angles is None:
                 # unreachable_legs.append(i) # This variable is not used
@@ -135,10 +169,11 @@ def test_body_ik_interactive():
         
         # 4. Check if the pose is reachable. If not, revert sliders and stop.
         if any(angles is None for angles in all_angles):
+            _is_programmatic_update = True
             # Revert sliders to the last valid position to prevent invalid state
-            # We use sendevent=False to avoid triggering a recursive update loop.
             for key, slider in sliders.items():
-                slider.set_val(last_valid_values[key], sendevent=False)
+                slider.set_val(last_valid_values[key])
+            _is_programmatic_update = False
             
             # Find which leg was unreachable for the message
             unreachable_idx = next(i for i, v in enumerate(all_angles) if v is None)
@@ -160,6 +195,13 @@ def test_body_ik_interactive():
             lines[i].set_data(leg_points[:, 0], leg_points[:, 1])
             lines[i].set_3d_properties(leg_points[:, 2])                
             lines[i].set_color(leg_colors[i])
+
+        # Update the body line to reflect the new position and orientation
+        R = fk_calculator.body_fk([], body_translation=translation, body_rotation=rotation)
+        rotated_hips = np.array([p[0] for p in R])
+        body_plot_points = np.vstack([rotated_hips, rotated_hips[0]])
+        body_line.set_data(body_plot_points[:, 0], body_plot_points[:, 1])
+        body_line.set_3d_properties(body_plot_points[:, 2])
 
         # Update body center dot
         body_center_dot._offsets3d = ([translation[0]], [translation[1]], [translation[2]])

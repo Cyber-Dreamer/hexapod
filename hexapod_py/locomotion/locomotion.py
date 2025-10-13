@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=100, gait_type='tripod', body_height=150, standoff_distance=300):
+    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=150, standoff_distance=300, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -44,20 +44,23 @@ class HexapodLocomotion:
         
 
 
-        self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, hip_positions= hip_positions)
+        self.kinematics = HexapodKinematics(segment_lengths=leg_lengths, hip_positions=hip_positions, joint_limits=np.deg2rad([90, 110, 120]))
+        self.knee_direction = knee_direction
         self.available_gaits = {
-            'tripod': TripodGait(self.kinematics, step_height, max_step_length),
-            'ripple': RippleGait(self.kinematics, step_height, max_step_length)
+            'tripod': TripodGait(self.kinematics, step_height, max_step_length, self.knee_direction),
+            'ripple': RippleGait(self.kinematics, step_height, max_step_length, self.knee_direction)
         }
         self.set_gait(gait_type)
         self.body_height = body_height
         self.step_height = step_height
+        self.gait_speed_factor = gait_speed_factor
+        self.rotation_scale_factor = rotation_scale_factor
 
         if standoff_distance is None:
             # To achieve a 90-degree angle at the knee, the horizontal distance
             # from the femur joint to the foot tip must be equal to the femur length.
             # The total horizontal distance (standoff) is this plus the coxa length.
-            standoff_distance = self.kinematics.leg_lengths[0] + self.kinematics.leg_lengths[1]
+            standoff_distance = self.kinematics.segment_lengths[0] + self.kinematics.segment_lengths[1]
         self.standoff_distance = standoff_distance
         self.recalculate_stance()
 
@@ -77,16 +80,20 @@ class HexapodLocomotion:
         # Note: We pass self.default_foot_positions, which are the fixed world
         # coordinates for the feet to stay planted on.
         return self.kinematics.body_ik(translation, rotation, self.kinematics.hip_positions, self.default_foot_positions)
-
-    def run_gait(self, vx, vy, omega, roll=0.0, pitch=0.0, speed=0.006, step_height=None):
+    
+    def run_gait(self, vx, vy, omega, roll=0.0, pitch=0.0, step_height=None):
         if self.current_gait:
             # Update gait parameters if new values are provided from the UI
             if step_height is not None:
                 self.current_gait.step_height = step_height
+    
+            # Dynamically calculate gait speed based on movement commands.
+            # If there's no movement input, the speed is 0, and the gait pauses.
+            speed = max(np.linalg.norm([vx, vy]), abs(omega)) * self.gait_speed_factor
 
             # Note: recalculate_stance() is intentionally not called here for performance.
             # It's only called when standoff or body_height are changed.
-            return self.current_gait.run(vx, vy, omega, roll, pitch, speed, self.default_foot_positions, self.default_joint_angles, self.body_height, self.current_gait.step_height, self.current_gait.max_step_length)
+            return self.current_gait.run(vx, vy, omega, roll, pitch, speed, self.default_foot_positions, self.default_joint_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
         else:
             return [None] * 6
 
@@ -110,7 +117,7 @@ class HexapodLocomotion:
         self.default_joint_angles = []
         new_foot_targets_local = self.kinematics.body_ik(np.zeros(3), np.zeros(3), self.kinematics.hip_positions, self.foot_positions)
         for i in range(6):
-            angles = self.kinematics.leg_ik(new_foot_targets_local[i])
+            angles = self.kinematics.leg_ik(new_foot_targets_local[i], knee_direction=self.knee_direction)
             if angles is None:
                 angles = np.zeros(3) # Should not happen with a valid stance
             self.default_joint_angles.append(angles)

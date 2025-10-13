@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider, RadioButtons
+from matplotlib.widgets import Slider, RadioButtons, Button
 from matplotlib.animation import FuncAnimation
 
 # Add parent directory to path to import hexapod
@@ -23,7 +23,7 @@ def test_gait_interactive():
     kinematics = locomotion.kinematics
     
     fk_calculator = HexapodForwardKinematics(
-        leg_lengths=kinematics.leg_lengths,
+        leg_lengths=kinematics.segment_lengths,
         hip_positions=kinematics.hip_positions
     )
 
@@ -68,11 +68,9 @@ def test_gait_interactive():
         'vy': plt.axes([0.25, 0.27, 0.5, 0.02]),
         'omega': plt.axes([0.25, 0.24, 0.5, 0.02]),
         'roll': plt.axes([0.25, 0.21, 0.5, 0.02]),
-        'pitch': plt.axes([0.25, 0.18, 0.5, 0.02]),
-        'speed': plt.axes([0.25, 0.15, 0.5, 0.02]),
-        'step_h': plt.axes([0.25, 0.12, 0.5, 0.02]),
-        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02]),
-        'body_h': plt.axes([0.25, 0.06, 0.5, 0.02])
+        'pitch': plt.axes([0.25, 0.18, 0.5, 0.02]),        'step_h': plt.axes([0.25, 0.15, 0.5, 0.02]),
+        'standoff': plt.axes([0.25, 0.12, 0.5, 0.02]),
+        'body_h': plt.axes([0.25, 0.09, 0.5, 0.02])
     }
     for ax_s in slider_axes.values():
         ax_s.set_facecolor(dark_grey)
@@ -83,7 +81,6 @@ def test_gait_interactive():
         'omega': Slider(slider_axes['omega'], 'Omega (turn)', -1.0, 1.0, valinit=0),
         'roll': Slider(slider_axes['roll'], 'Roll', -np.pi/8, np.pi/8, valinit=0),
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/8, np.pi/8, valinit=0),
-        'speed': Slider(slider_axes['speed'], 'Gait Speed', 0.005, 0.05, valinit=0.006),
         'step_h': Slider(slider_axes['step_h'], 'Step Height', 10, 80, valinit=40),
         'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
         'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 250, valinit=locomotion.body_height),
@@ -101,6 +98,29 @@ def test_gait_interactive():
 
     radio_buttons.on_clicked(select_gait)
 
+    # --- Reset Button ---
+    ax_reset = plt.axes([0.05, 0.02, 0.15, 0.04], facecolor=dark_grey)
+    reset_button = Button(ax_reset, 'Reset Sliders', color=dark_grey, hovercolor='0.5')
+
+    def reset_sliders(event):
+        """Callback to reset all sliders to their initial values."""
+        for slider in sliders.values():
+            slider.set_val(slider.valinit)
+        fig.canvas.draw_idle()
+
+    reset_button.on_clicked(reset_sliders)
+
+    # --- Radio Buttons for Knee Direction ---
+    ax_knee_radio = plt.axes([0.82, 0.6, 0.15, 0.15], facecolor=dark_grey)
+    knee_radio = RadioButtons(ax_knee_radio, ('Knee Down (-1)', 'Knee Up (+1)'), active=0)
+    knee_direction_map = {'Knee Down (-1)': -1, 'Knee Up (+1)': 1}
+
+    def select_knee_direction(label):
+        """Callback to set knee direction."""
+        locomotion.knee_direction = knee_direction_map[label]
+
+    knee_radio.on_clicked(select_knee_direction)
+
     # --- Animation Update Function ---
     def update(frame):
         # 1. Read values from sliders
@@ -109,7 +129,6 @@ def test_gait_interactive():
         omega = sliders['omega'].val
         roll = sliders['roll'].val
         pitch = sliders['pitch'].val
-        speed = sliders['speed'].val
         step_height = sliders['step_h'].val
         standoff = sliders['standoff'].val
         body_height = sliders['body_h'].val
@@ -125,7 +144,7 @@ def test_gait_interactive():
         locomotion.body_height = body_height
 
         # 2. Run the gait logic to get joint angles
-        all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, speed=speed, step_height=step_height)
+        all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, step_height=step_height)
 
         # 3. Use body_fk to get world coordinates for all legs
         # For gait, the body itself is considered static at the origin.

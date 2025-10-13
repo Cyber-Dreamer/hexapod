@@ -11,29 +11,30 @@ class Gait:
     """
     Abstract base class for hexapod gaits.
     """
-    def __init__(self, kinematics, step_height):
+    def __init__(self, kinematics, step_height, knee_direction=-1):
         """
         Initializes the Gait object.
 
         :param kinematics: The HexapodKinematics object.
         :param step_height: The height of a step.
         """
+        self.knee_direction = knee_direction
         self.kinematics = kinematics
         self.step_height = step_height
         self.gait_phase = 0.0
 
-    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, default_joint_angles, body_height, step_height, max_step_length):
+    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, default_joint_angles, body_height, step_height, rotation_scale_factor=1.0):
         raise NotImplementedError("The 'run' method must be implemented by the gait subclass.")
 
-    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, default_joint_angles, max_step_length, body_height, step_height):
+    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, default_joint_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
         # Linear velocity component
         linear_step = np.array([vx, vy, 0]) * max_step_length
 
         # Rotational velocity component
         # Get the vector from body center to the leg's default position
         hip_pos = self.kinematics.hip_positions[leg_idx]
-        # The rotational movement is perpendicular to this vector
-        rotational_step = np.array([-hip_pos[1], hip_pos[0], 0]) * omega * max_step_length
+        # The rotational movement is perpendicular to this vector, scaled to prevent collisions.
+        rotational_step = np.array([-hip_pos[1], hip_pos[0], 0]) * omega * max_step_length * rotation_scale_factor
 
         # Total step vector is the sum of linear and rotational parts
         total_step = linear_step + rotational_step
@@ -79,7 +80,7 @@ class Gait:
                               [0,                       0,                      1]])
         v_foot_local = R_hip_inv @ v_foot_body
 
-        angles = self.kinematics.leg_ik(v_foot_local)
+        angles = self.kinematics.leg_ik(v_foot_local, knee_direction=self.knee_direction)
 
         if angles is None:
             # If the target is unreachable, instantly fall back to the pre-calculated neutral angles for this leg.

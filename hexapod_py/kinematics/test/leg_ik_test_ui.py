@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
+from matplotlib.widgets import Slider, RadioButtons
 
 # Add parent directory to path to import hexapod
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -190,6 +190,15 @@ def test_leg_ik_interactive_2d():
     slider_y = Slider(ax_slider_y, 'Target Y', workspace_limits['y'][0], workspace_limits['y'][1], valinit=initial_y, valstep=1)
     slider_z = Slider(ax_slider_z, 'Target Z', workspace_limits['z'][0], workspace_limits['z'][1], valinit=initial_z, valstep=1)
 
+    # --- Radio Buttons for Knee Direction ---
+    ax_radio = plt.axes([0.82, 0.6, 0.15, 0.15], facecolor=dark_grey)
+    radio_buttons = RadioButtons(ax_radio, ('Knee Down (-1)', 'Knee Up (+1)'), active=0)
+
+    # Store knee direction values corresponding to radio button labels
+    knee_direction_map = {
+        'Knee Down (-1)': -1,
+        'Knee Up (+1)': 1
+    }
     # Store the last known valid slider values
     last_valid_values = {'x': initial_x, 'y': initial_y, 'z': initial_z}
 
@@ -204,9 +213,10 @@ def test_leg_ik_interactive_2d():
             return
 
         target_point = np.array([slider_x.val, slider_y.val, slider_z.val])
+        knee_direction = knee_direction_map[radio_buttons.value_selected]
         
         # Calculate IK
-        angles = kinematics.leg_ik(target_point)
+        angles = kinematics.leg_ik(target_point, knee_direction=knee_direction)
         
         if angles is not None:
             leg_points = get_joint_positions(angles)
@@ -248,6 +258,7 @@ def test_leg_ik_interactive_2d():
     slider_x.on_changed(update)
     slider_y.on_changed(update)
     slider_z.on_changed(update)
+    radio_buttons.on_clicked(update)
 
     update(0) # Initial call to set limits
     plt.show()
