@@ -68,3 +68,6 @@ class LivePlotter:
         # Redraw the canvas
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+        # Add a small pause to allow the GUI event loop to run.
+        # This is crucial for the plot to update when running in a separate process.
+        plt.pause(0.0001)

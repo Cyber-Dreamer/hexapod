@@ -9,7 +9,6 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from hexapod_py.locomotion.locomotion import HexapodLocomotion
 from hexapod_py.kinematics.fk import HexapodForwardKinematics
 
 def test_body_fk_interactive():
@@ -17,14 +16,21 @@ def test_body_fk_interactive():
     An interactive test for full-body forward kinematics. Sliders control each of
     the 18 joint angles, and a 3D plot displays the resulting robot posture.
     """
-    # Use HexapodLocomotion to get a pre-configured robot model.
-    locomotion = HexapodLocomotion()
-    kinematics = locomotion.kinematics
+    # Define hexapod geometry directly to decouple from the locomotion module
+    center_to_hip_joint = 152.024
+    leg_lengths = [92.5, 191.8, 284.969] # Coxa, Femur, Tibia
+
+    # Leg numbering: 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
+    hip_angles = np.deg2rad([210, 270, 330, 30, 90, 150])
+    hip_positions = np.array([
+        (center_to_hip_joint * np.cos(angle), center_to_hip_joint * np.sin(angle), 0)
+        for angle in hip_angles
+    ])
     
     # The FK calculator will be used to draw the legs based on slider angles
     fk_calculator = HexapodForwardKinematics(
-        leg_lengths=kinematics.leg_lengths,
-        hip_positions=kinematics.hip_positions
+        leg_lengths=leg_lengths,
+        hip_positions=hip_positions
     )
 
     # --- UI Setup ---
@@ -47,7 +53,7 @@ def test_body_fk_interactive():
     lines = [ax.plot([], [], [], 'o-', markersize=4, color=leg_colors[i])[0] for i in range(6)]
     
     # Draw the body outline by connecting the hip positions
-    body_outline_points = np.array(kinematics.hip_positions)
+    body_outline_points = hip_positions
     # Close the loop for drawing
     body_plot_points = np.vstack([body_outline_points, body_outline_points[0]])
     ax.plot(body_plot_points[:, 0], body_plot_points[:, 1], body_plot_points[:, 2], 'o-', color='gray', label='Body')

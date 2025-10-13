@@ -42,6 +42,9 @@ def test_gait_interactive():
     leg_colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5']
     lines = [ax.plot([], [], [], 'o-', markersize=4, color=leg_colors[i])[0] for i in range(6)]
     
+    # Add text annotations for leg numbers
+    leg_texts = [ax.text(0, 0, 0, str(i), color=leg_colors[i], fontsize=10, ha='center', va='center') for i in range(6)]
+    
     # Draw the body outline
     body_outline_points = np.array(kinematics.hip_positions)
     # Connect hips in order to draw the body chassis
@@ -157,6 +160,10 @@ def test_gait_interactive():
             if leg_points.shape[0] > 1:
                 lines[i].set_data(leg_points[:, 0], leg_points[:, 1])
                 lines[i].set_3d_properties(leg_points[:, 2])
+                # Update leg number text position to be near the hip joint
+                hip_pos = leg_points[0]
+                leg_texts[i].set_position((hip_pos[0], hip_pos[1]))
+                leg_texts[i].set_z(hip_pos[2] + 15) # Offset slightly above the joint
             else: # Unreachable
                 lines[i].set_data([], [])
                 lines[i].set_3d_properties([])
@@ -172,7 +179,7 @@ def test_gait_interactive():
             f"Pitch: {np.rad2deg(pitch):.1f}°"
         )
 
-        return lines + [body_line, info_text]
+        return lines + leg_texts + [body_line, info_text]
 
     # Create and start the animation
     ani = FuncAnimation(fig, update, frames=None, blit=False, interval=30, repeat=True)

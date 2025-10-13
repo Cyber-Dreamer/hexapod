@@ -59,10 +59,11 @@ class HexapodSimulator:
             # The link index is the same as the joint index it's a child of.
             self.link_name_to_id[link_name] = joint_info[0]
 
-    def _set_foot_friction(self, lateral_friction=1.0, spinning_friction=0.01, rolling_friction=0.01):
+    def _set_foot_friction(self, lateral_friction=2.0, spinning_friction=0.1, rolling_friction=0.1):
         """Increases the friction of the foot links."""
-        foot_links = [name for name in self.link_name_to_id.keys() if 'foot_assembly' in name]
-        
+        # The links that make contact with the ground are the "tibia" links in this URDF.
+        foot_links = [name for name in self.link_name_to_id.keys() if 'tibia' in name]
+
         for link_name in foot_links:
             link_id = self.link_name_to_id[link_name]
             p.changeDynamics(
@@ -75,7 +76,7 @@ class HexapodSimulator:
             print(f"Set friction for link '{link_name}' (ID: {link_id}) to lateral={lateral_friction}, spinning={spinning_friction}, rolling={rolling_friction}")
 
         if not foot_links:
-            print("Warning: No 'foot_assembly' links found to set friction.")
+            print("Warning: No 'tibia' links found to set friction.")
 
     def set_joint_angles(self, joint_angles):
         """

@@ -27,15 +27,23 @@ class Gait:
         raise NotImplementedError("The 'run' method must be implemented by the gait subclass.")
 
     def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, default_joint_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
+        # vx, vy are now target linear velocities (mm/s)
+        # omega is now target angular velocity (rad/s)
+
+        # For a simple gait (e.g., tripod), stance phase is 50% of the cycle.
+        # The step length needs to be twice the displacement that occurs during the stance phase.
+        # However, the phase calculation is normalized. The `speed` parameter in `run_gait`
+        # controls the cycle frequency. A simpler approach is to scale the velocity by a factor
+        # to get a reasonable step length. Let's use a factor that makes `max_step_length`
+        # correspond to the max velocity.
+        step_translation_factor = 0.5 # This factor can be tuned.
+        
         # Linear velocity component
-        linear_step = np.array([vx, vy, 0]) * max_step_length
-
+        # This is calculated in the BODY frame.
+        linear_step = np.array([vx, vy, 0]) * step_translation_factor
         # Rotational velocity component
-        # Get the vector from body center to the leg's default position
         hip_pos = self.kinematics.hip_positions[leg_idx]
-        # The rotational movement is perpendicular to this vector, scaled to prevent collisions.
-        rotational_step = np.array([-hip_pos[1], hip_pos[0], 0]) * omega * max_step_length * rotation_scale_factor
-
+        rotational_step = np.array([-hip_pos[1], hip_pos[0], 0]) * omega * rotation_scale_factor
         # Total step vector is the sum of linear and rotational parts
         total_step = linear_step + rotational_step
         
@@ -65,14 +73,15 @@ class Gait:
             # Rotation matrix for pitch (around Y-axis)
             Ry = np.array([[np.cos(pitch), 0, np.sin(pitch)], [0, 1, 0], [-np.sin(pitch), 0, np.cos(pitch)]])
             
-            # Combine rotations (Roll first, then Pitch) and apply to the target position
+            # Combine rotations (Roll first, then Pitch)
             R_body = Ry @ Rx
-            target_pos = R_body @ target_pos
-
-        # Calculate the vector from the hip to the target in the body's coordinate frame
-        v_foot_body = target_pos - self.kinematics.hip_positions[leg_idx]
-
-        # Rotate the body-frame vector into the leg's local coordinate frame.
+            # Calculate the new hip position after body rotation
+            hip_pos_rotated = R_body @ self.kinematics.hip_positions[leg_idx]
+            # The vector to the foot is from the new hip position to the original target
+            v_foot_body = target_pos - hip_pos_rotated 
+        else:
+            v_foot_body = target_pos - self.kinematics.hip_positions[leg_idx]
+        # Rotate the vector from the body frame into the leg's local coordinate frame.
         # This is the same crucial step that was needed for body_ik to work correctly.
         hip_base_angle = self.kinematics.hip_base_angles[leg_idx]
         R_hip_inv = np.array([[ np.cos(hip_base_angle), np.sin(hip_base_angle), 0],

@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=150, standoff_distance=300, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7):
+    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=150, standoff_distance=300, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -47,6 +47,7 @@ class HexapodLocomotion:
         self.kinematics = HexapodKinematics(segment_lengths=leg_lengths, hip_positions=hip_positions, joint_limits=np.deg2rad([90, 110, 120]))
         self.knee_direction = knee_direction
         self.available_gaits = {
+            # max_step_length is now a fallback/limit, not the primary driver of step size
             'tripod': TripodGait(self.kinematics, step_height, max_step_length, self.knee_direction),
             'ripple': RippleGait(self.kinematics, step_height, max_step_length, self.knee_direction)
         }
@@ -55,6 +56,8 @@ class HexapodLocomotion:
         self.step_height = step_height
         self.gait_speed_factor = gait_speed_factor
         self.rotation_scale_factor = rotation_scale_factor
+        self.max_linear_velocity = max_linear_velocity  # mm/s
+        self.max_angular_velocity = max_angular_velocity # rad/s
 
         if standoff_distance is None:
             # To achieve a 90-degree angle at the knee, the horizontal distance
@@ -87,13 +90,27 @@ class HexapodLocomotion:
             if step_height is not None:
                 self.current_gait.step_height = step_height
     
-            # Dynamically calculate gait speed based on movement commands.
-            # If there's no movement input, the speed is 0, and the gait pauses.
-            speed = max(np.linalg.norm([vx, vy]), abs(omega)) * self.gait_speed_factor
+            # Calculate the magnitude of the movement command
+            command_magnitude = max(np.linalg.norm([vx, vy]), abs(omega))
+            
+            # Dynamically calculate gait cycle speed. If there's no movement, the gait pauses.
+            speed = command_magnitude * self.gait_speed_factor
+
+            # Calculate the duration of one full gait cycle (T_cycle) in seconds.
+            # This assumes the simulation runs at a rate that makes `speed` meaningful.
+            # A smaller gait_speed_factor means a longer cycle.
+            # We assume a nominal simulation rate (e.g., 240Hz) and that `speed` advances the phase each step.
+            # T_cycle = (1 / (speed * sim_rate)) if speed > 0 else float('inf')
+            # For simplicity, we'll tie step length directly to velocity input, not cycle time.
+            
+            # Convert normalized inputs (-1 to 1) to physical velocities
+            target_vx = vx * self.max_linear_velocity
+            target_vy = vy * self.max_linear_velocity
+            target_omega = omega * self.max_angular_velocity
 
             # Note: recalculate_stance() is intentionally not called here for performance.
             # It's only called when standoff or body_height are changed.
-            return self.current_gait.run(vx, vy, omega, roll, pitch, speed, self.default_foot_positions, self.default_joint_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
+            return self.current_gait.run(target_vx, target_vy, target_omega, roll, pitch, speed, self.default_foot_positions, self.default_joint_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
         else:
             return [None] * 6
 

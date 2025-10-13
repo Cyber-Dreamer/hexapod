@@ -40,8 +40,9 @@ def main():
             # Update parameters that might change during simulation
             locomotion.body_height = controls['body_height'] * 1000 # m to mm
             standoff_mm = controls['standoff'] * 1000 # m to mm
-            locomotion.recalculate_stance(standoff_distance=standoff_mm) # Recalculate foot positions
-
+            # Only recalculate stance if the standoff distance has changed to avoid unnecessary computation
+            if locomotion.standoff_distance != standoff_mm:
+                locomotion.recalculate_stance(standoff_distance=standoff_mm)
             # 2. Run the gait logic to get target joint angles
             all_angles_rad = locomotion.run_gait(
                 vx=vx,
