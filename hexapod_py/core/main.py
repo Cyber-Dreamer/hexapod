@@ -1,7 +1,6 @@
 import asyncio
-from gait.controller import GaitController
-from sensors.base import AsyncSensor
-from web.server import run_web_server
+from ..gait.controller import GaitController
+from ..sensors.base import AsyncSensor
 
 async def gait_task():
     gait = GaitController()
@@ -19,6 +18,5 @@ async def main():
     tasks = [
         asyncio.create_task(gait_task()),
         asyncio.create_task(sensor_task()),
-        asyncio.create_task(run_web_server()),
     ]
     await asyncio.gather(*tasks)

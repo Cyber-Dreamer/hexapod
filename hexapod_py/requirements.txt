@@ -2,3 +2,5 @@ asyncio
 fastapi
 uvicorn
 flask
+opencv-python
+numpy

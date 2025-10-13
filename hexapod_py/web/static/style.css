@@ -1,0 +1,35 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.mode-selector, .controls, .video-feeds, .sensor-data {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.controls button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.video-feeds {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.video-feed img {
+    width: 100%;
+    border: 1px solid #eee;
+}

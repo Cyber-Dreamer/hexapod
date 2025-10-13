@@ -19,6 +19,11 @@ def test_leg_fk_interactive_2d():
     L_COXA = 92.5      # hipJoint_to_femurJoint
     L_FEMUR = 191.8    # femurJoint_to_tibiaJoint
     L_TIBIA = 284.969  # tibiaJoint_to_tipFoot
+    
+    Limit_COXA = 90
+    Limit_FEMUR = 110
+    Limit_TIBIA = 120
+
 
     fig = plt.figure(figsize=(14, 7))
 

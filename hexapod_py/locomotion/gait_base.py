@@ -11,17 +11,15 @@ class Gait:
     """
     Abstract base class for hexapod gaits.
     """
-    def __init__(self, kinematics, step_height, knee_direction):
+    def __init__(self, kinematics, step_height):
         """
         Initializes the Gait object.
 
         :param kinematics: The HexapodKinematics object.
         :param step_height: The height of a step.
-        :param knee_direction: The knee bend direction.
         """
         self.kinematics = kinematics
         self.step_height = step_height
-        self.knee_direction = knee_direction
         self.gait_phase = 0.0
 
     def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, default_joint_angles, body_height, step_height, max_step_length):
@@ -81,7 +79,7 @@ class Gait:
                               [0,                       0,                      1]])
         v_foot_local = R_hip_inv @ v_foot_body
 
-        angles = self.kinematics.leg_ik(v_foot_local, *self.kinematics.leg_lengths, knee_direction=self.knee_direction)
+        angles = self.kinematics.leg_ik(v_foot_local)
 
         if angles is None:
             # If the target is unreachable, instantly fall back to the pre-calculated neutral angles for this leg.

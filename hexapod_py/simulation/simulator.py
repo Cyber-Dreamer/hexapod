@@ -159,6 +159,62 @@ class HexapodSimulator:
         p.disconnect()
         print("Simulation stopped.")
 
+    def get_camera_image(self, camera_id, width=640, height=480):
+        """
+        Gets an image from a camera attached to the robot.
+        :param camera_id: 0 for front camera, 1 for rear camera.
+        :param width: Image width.
+        :param height: Image height.
+        :return: An RGB image as a numpy array.
+        """
+        if self.robot_id is None:
+            return None
+
+        # Get the position and orientation of the robot's base
+        base_pos, base_orn = p.getBasePositionAndOrientation(self.robot_id)
+        rot_matrix = p.getMatrixFromQuaternion(base_orn)
+        rot_matrix = np.array(rot_matrix).reshape(3, 3)
+
+        # Define camera properties relative to the robot's body
+        if camera_id == 0:  # Front camera
+            # Positioned at the front, looking forward
+            camera_offset = [0.2, 0, 0.05]
+            target_offset = [1.0, 0, 0.0]
+        elif camera_id == 1:  # Rear camera
+            # Positioned at the back, looking backward
+            camera_offset = [-0.2, 0, 0.05]
+            target_offset = [-1.0, 0, 0.0]
+        else:
+            print(f"Warning: Invalid camera_id: {camera_id}")
+            return None
+
+        # Transform camera position and target to world coordinates
+        camera_pos_world = base_pos + rot_matrix.dot(camera_offset)
+        target_pos_world = base_pos + rot_matrix.dot(target_offset)
+        
+        # The camera's "up" vector is the Z-axis of the robot's body frame
+        camera_up_vector_world = rot_matrix.dot([0, 0, 1])
+
+        # Compute the view matrix
+        view_matrix = p.computeViewMatrix(
+            cameraEyePosition=camera_pos_world,
+            cameraTargetPosition=target_pos_world,
+            cameraUpVector=camera_up_vector_world
+        )
+
+        # Compute the projection matrix
+        projection_matrix = p.computeProjectionMatrixFOV(
+            fov=60.0, aspect=width/height, nearVal=0.1, farVal=10.0
+        )
+
+        # Get the camera image
+        _, _, rgba_img, _, _ = p.getCameraImage(
+            width, height, view_matrix, projection_matrix, renderer=p.ER_BULLET_HARDWARE_OPENGL
+        )
+
+        # Convert RGBA to RGB
+        return rgba_img[:, :, :3]
+
 # Example of running the simulation with locomotion control
 if __name__ == "__main__":
     # This main block is now for demonstration.

@@ -83,8 +83,7 @@ def test_body_ik_interactive():
     slider_axes = {
         'tx': plt.axes([0.25, 0.30, 0.5, 0.02]), 'ty': plt.axes([0.25, 0.27, 0.5, 0.02]), 'tz': plt.axes([0.25, 0.24, 0.5, 0.02]),
         'roll': plt.axes([0.25, 0.18, 0.5, 0.02]), 'pitch': plt.axes([0.25, 0.15, 0.5, 0.02]), 'yaw': plt.axes([0.25, 0.12, 0.5, 0.02]),
-        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02]),
-        'knee': plt.axes([0.25, 0.06, 0.5, 0.02]),
+        'standoff': plt.axes([0.25, 0.09, 0.5, 0.02])
     }
     for ax_s in slider_axes.values():
         ax_s.set_facecolor(dark_grey)
@@ -95,8 +94,7 @@ def test_body_ik_interactive():
         'roll': Slider(slider_axes['roll'], 'Roll', -np.pi/4, np.pi/4, valinit=0),
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/4, np.pi/4, valinit=0),
         'yaw': Slider(slider_axes['yaw'], 'Yaw', -np.pi/4, np.pi/4, valinit=0),
-        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
-        'knee': Slider(slider_axes['knee'], 'Knee Dir', -1, 1, valinit=1, valstep=[-1, 1])
+        'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance)
     }
 
     # Store the last known valid slider values to prevent entering impossible positions
@@ -106,7 +104,6 @@ def test_body_ik_interactive():
         # 1. Read values from sliders
         translation = np.array([sliders['tx'].val, sliders['ty'].val, sliders['tz'].val])
         rotation = np.array([sliders['roll'].val, sliders['pitch'].val, sliders['yaw'].val])
-        knee_dir = sliders['knee'].val
         standoff = sliders['standoff'].val
 
         # 2. Update stance based on standoff slider and get new default foot positions
@@ -130,11 +127,7 @@ def test_body_ik_interactive():
             # The body_ik function already returns the target in the leg's local frame.
             foot_target_local = new_foot_targets_local[i]
             
-            angles = kinematics.leg_ik(
-                foot_target_local,
-                *kinematics.leg_lengths,
-                knee_direction=knee_dir
-            )
+            angles = kinematics.leg_ik(foot_target_local)
             all_angles.append(angles)
             if angles is None:
                 # unreachable_legs.append(i) # This variable is not used

@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=100, knee_direction=1, gait_type='tripod', body_height=150, standoff_distance=300):
+    def __init__(self, step_height=40, max_step_length=100, gait_type='tripod', body_height=150, standoff_distance=300):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -45,10 +45,9 @@ class HexapodLocomotion:
 
 
         self.kinematics = HexapodKinematics(leg_lengths=leg_lengths, hip_positions= hip_positions)
-        self.knee_direction = knee_direction
         self.available_gaits = {
-            'tripod': TripodGait(self.kinematics, step_height, max_step_length, knee_direction),
-            'ripple': RippleGait(self.kinematics, step_height, max_step_length, knee_direction)
+            'tripod': TripodGait(self.kinematics, step_height, max_step_length),
+            'ripple': RippleGait(self.kinematics, step_height, max_step_length)
         }
         self.set_gait(gait_type)
         self.body_height = body_height
@@ -67,12 +66,6 @@ class HexapodLocomotion:
         self.current_gait = self.available_gaits.get(gait_type)
         if self.current_gait:
             self.current_gait.gait_phase = 0.0
-
-    def update_knee_direction(self, new_direction):
-        self.knee_direction = new_direction
-        for gait in self.available_gaits.values():
-            gait.knee_direction = new_direction
-        return self.set_body_pose([0, 0, 0], [0, 0, 0])
 
     def set_body_pose(self, translation, rotation):
         """
@@ -117,7 +110,7 @@ class HexapodLocomotion:
         self.default_joint_angles = []
         new_foot_targets_local = self.kinematics.body_ik(np.zeros(3), np.zeros(3), self.kinematics.hip_positions, self.foot_positions)
         for i in range(6):
-            angles = self.kinematics.leg_ik(new_foot_targets_local[i], *self.kinematics.leg_lengths, knee_direction=self.knee_direction)
+            angles = self.kinematics.leg_ik(new_foot_targets_local[i])
             if angles is None:
                 angles = np.zeros(3) # Should not happen with a valid stance
             self.default_joint_angles.append(angles)

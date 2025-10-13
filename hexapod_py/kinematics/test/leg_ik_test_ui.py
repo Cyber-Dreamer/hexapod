@@ -9,7 +9,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from hexapod_py.kinematics.ik import HexapodKinematics
+from hexapod_py.kinematics.ik import HexapodKinematics # Assuming this is where your updated class is
 
 def test_leg_ik_interactive_2d():
     """
@@ -20,11 +20,19 @@ def test_leg_ik_interactive_2d():
     L_COXA = 92.5      # hipJoint_to_femurJoint
     L_FEMUR = 191.8    # femurJoint_to_tibiaJoint
     L_TIBIA = 284.969  # tibiaJoint_to_tipFoot
-    leg_lengths = [L_COXA, L_FEMUR, L_TIBIA]
+    
+    Limit_COXA = 90
+    Limit_FEMUR = 110
+    Limit_TIBIA = 120
+    
+    segment_lengths = [L_COXA, L_FEMUR, L_TIBIA]
+    
+    joint_limits_rad = [np.deg2rad(Limit_COXA), np.deg2rad(Limit_FEMUR), np.deg2rad(Limit_TIBIA)]
+
 
     # Dummy hip position (not used for single leg IK, but required by HexapodKinematics)
     hip_positions = np.array([[0, 0, 0]] * 6)
-    kinematics = HexapodKinematics(leg_lengths=leg_lengths, hip_positions=hip_positions)
+    kinematics = HexapodKinematics(segment_lengths=segment_lengths, hip_positions=hip_positions, joint_limits=joint_limits_rad)
 
     fig = plt.figure(figsize=(14, 7))
 
@@ -46,29 +54,33 @@ def test_leg_ik_interactive_2d():
 
     # --- Helper function to get joint positions from angles ---
     def get_joint_positions(angles):
-        if angles is None:
-            return np.zeros((4, 3))
 
-        gamma, alpha, beta = angles
+        gamma = angles[0]
+        alpha = angles[1]
+        beta = angles[2]
 
-        # --- Correct Forward Kinematics ---
-        # This logic is the mathematical inverse of the leg_ik function.
-
-        # 1. Start with the origin (coxa pivot)
+        # --- Forward Kinematics Calculation ---
+        # This logic calculates the 3D position of each joint based on the angles.
+        # It should mirror the logic in the HexapodForwardKinematics class.
+        
+        # p0: Coxa joint at the origin of the leg's frame
         p0 = np.array([0, 0, 0])
 
-        # 2. Calculate the position of the femur joint. This is a simple 2D rotation on the XY plane.
+        # p1: Femur joint position. This is a simple 2D rotation on the XY plane.
         p1 = np.array([L_COXA * np.cos(gamma), L_COXA * np.sin(gamma), 0])
 
-        # 3. Calculate the position of the tibia joint. This is in the leg's 2D plane, which is rotated by gamma.
-        p2 = p1 + np.array([L_FEMUR * np.cos(alpha) * np.cos(gamma),
-                            L_FEMUR * np.cos(alpha) * np.sin(gamma),
-                            L_FEMUR * np.sin(alpha)])
+        # To calculate p2 and p3, we first find their positions in the leg's 2D plane
+        # (as if gamma were 0), and then rotate them by gamma around the Z-axis.
+        
+        # Vector from femur joint to tibia joint in the leg's 2D plane
+        femur_vec_local = np.array([L_FEMUR * np.cos(alpha), 0, L_FEMUR * np.sin(alpha)])
+        # Vector from tibia joint to foot tip in the leg's 2D plane
+        tibia_vec_local = np.array([L_TIBIA * np.cos(alpha + beta), 0, L_TIBIA * np.sin(alpha + beta)])
 
-        # 4. Calculate the position of the foot tip. This is also in the leg's 2D plane.
-        p3 = p2 + np.array([L_TIBIA * np.cos(alpha + beta) * np.cos(gamma),
-                            L_TIBIA * np.cos(alpha + beta) * np.sin(gamma),
-                            L_TIBIA * np.sin(alpha + beta)])
+        # p2: Tibia joint position.
+        p2 = p1 + np.array([femur_vec_local[0] * np.cos(gamma), femur_vec_local[0] * np.sin(gamma), femur_vec_local[2]])
+        # p3: Foot tip position.
+        p3 = p2 + np.array([tibia_vec_local[0] * np.cos(gamma), tibia_vec_local[0] * np.sin(gamma), tibia_vec_local[2]])
 
         return np.array([p0, p1, p2, p3])
 
@@ -106,17 +118,22 @@ def test_leg_ik_interactive_2d():
         # The IK function has a reachability check, so we filter out points that are impossible
         # even if the angles are within limits (e.g., fully folded back on itself).
         l_horizontal = np.sqrt(x_coords**2 + y_coords**2) - l_coxa
-        l_hyp = np.sqrt(l_horizontal**2 + z_coords**2)
-        valid_mask = (l_hyp <= (l_femur + l_tibia)) & (l_hyp >= abs(l_femur - l_tibia))
+        l_hyp = np.sqrt(l_horizontal**2 + z_coords**2) 
+        # Use np.isclose for the upper bound to handle floating point inaccuracies at full extension.
+        # This ensures the "straight leg" position is included in the workspace.
+        valid_mask = (l_hyp <= (l_femur + l_tibia) + 1e-6) & (l_hyp >= abs(l_femur - l_tibia) - 1e-6)
+
+        # The theoretical maximum X reach is the sum of all segment lengths.
+        x_max_theoretical = l_coxa + l_femur + l_tibia
 
         return {
-            'x': (np.min(x_coords[valid_mask]), np.max(x_coords[valid_mask])),
-            'y': (np.min(y_coords[valid_mask]), np.max(y_coords[valid_mask])),
+            'x': (np.min(x_coords[valid_mask]), x_max_theoretical),
+            'y': (np.min(y_coords[valid_mask]), np.max(y_coords[valid_mask]) + 1), # Add 1mm buffer
             'z': (np.min(z_coords[valid_mask]), np.max(z_coords[valid_mask])),
         }
 
     # --- Plot initial state ---
-    angles = kinematics.leg_ik(initial_target_point, L_COXA, L_FEMUR, L_TIBIA)
+    angles = kinematics.leg_ik(initial_target_point)
     leg_points = get_joint_positions(angles)
 
     # Create plot objects for each segment and view
@@ -162,29 +179,34 @@ def test_leg_ik_interactive_2d():
     ax_slider_x = plt.axes([0.25, 0.20, 0.5, 0.03])
     ax_slider_y = plt.axes([0.25, 0.15, 0.5, 0.03])
     ax_slider_z = plt.axes([0.25, 0.10, 0.5, 0.03])
-    ax_slider_knee = plt.axes([0.25, 0.05, 0.5, 0.03])
 
-    for ax_s in [ax_slider_x, ax_slider_y, ax_slider_z, ax_slider_knee]:
+    for ax_s in [ax_slider_x, ax_slider_y, ax_slider_z]:
         ax_s.set_facecolor(dark_grey)
 
     # Calculate the workspace and set slider limits accordingly
     workspace_limits = calculate_workspace_limits(L_COXA, L_FEMUR, L_TIBIA)
 
-    slider_x = Slider(ax_slider_x, 'Target X', workspace_limits['x'][0], workspace_limits['x'][1], valinit=initial_x)
-    slider_y = Slider(ax_slider_y, 'Target Y', workspace_limits['y'][0], workspace_limits['y'][1], valinit=initial_y)
-    slider_z = Slider(ax_slider_z, 'Target Z', workspace_limits['z'][0], workspace_limits['z'][1], valinit=initial_z)
-    slider_knee = Slider(ax_slider_knee, 'Knee Dir', -1, 1, valinit=1, valstep=[-1, 1])
+    slider_x = Slider(ax_slider_x, 'Target X', workspace_limits['x'][0], workspace_limits['x'][1], valinit=initial_x, valstep=1)
+    slider_y = Slider(ax_slider_y, 'Target Y', workspace_limits['y'][0], workspace_limits['y'][1], valinit=initial_y, valstep=1)
+    slider_z = Slider(ax_slider_z, 'Target Z', workspace_limits['z'][0], workspace_limits['z'][1], valinit=initial_z, valstep=1)
 
     # Store the last known valid slider values
-    last_valid_values = {'x': initial_x, 'y': initial_y, 'z': initial_z, 'knee': 1}
+    last_valid_values = {'x': initial_x, 'y': initial_y, 'z': initial_z}
 
+    # Flag to prevent recursive updates when resetting sliders to a valid state.
+    # This is a workaround for older matplotlib versions that don't support
+    # the 'sendevent=False' argument in slider.set_val().
+    _is_programmatic_update = False
 
     def update(val):
+        nonlocal _is_programmatic_update
+        if _is_programmatic_update:
+            return
+
         target_point = np.array([slider_x.val, slider_y.val, slider_z.val])
-        knee_dir = slider_knee.val
         
         # Calculate IK
-        angles = kinematics.leg_ik(target_point, L_COXA, L_FEMUR, L_TIBIA, knee_direction=knee_dir)
+        angles = kinematics.leg_ik(target_point)
         
         if angles is not None:
             leg_points = get_joint_positions(angles)
@@ -192,7 +214,6 @@ def test_leg_ik_interactive_2d():
             last_valid_values['x'] = slider_x.val
             last_valid_values['y'] = slider_y.val
             last_valid_values['z'] = slider_z.val
-            last_valid_values['knee'] = slider_knee.val
             p0, p1, p2, p3 = leg_points
             
             # Update XZ plot (Side View)
@@ -212,11 +233,13 @@ def test_leg_ik_interactive_2d():
             angle_text.set_text(f"Angles (deg):\nγ: {gamma:6.1f}\nα: {alpha:6.1f}\nβ: {beta:6.1f}")
         else:
             # Target is unreachable, revert the sliders to the last valid position
-            # We use sendevent=False to prevent a recursive update loop
-            slider_x.set_val(last_valid_values['x'], sendevent=False)
-            slider_y.set_val(last_valid_values['y'], sendevent=False)
-            slider_z.set_val(last_valid_values['z'], sendevent=False)
-            slider_knee.set_val(last_valid_values['knee'], sendevent=False)
+            # Set a flag to prevent this block from re-triggering the update function.
+            _is_programmatic_update = True
+            slider_x.set_val(last_valid_values['x'])
+            slider_y.set_val(last_valid_values['y'])
+            slider_z.set_val(last_valid_values['z'])
+            _is_programmatic_update = False # Reset the flag
+
             angle_text.set_text("Angles: Unreachable")
             # The plot doesn't need to be cleared, as it will remain in the last valid state.
 
@@ -225,7 +248,6 @@ def test_leg_ik_interactive_2d():
     slider_x.on_changed(update)
     slider_y.on_changed(update)
     slider_z.on_changed(update)
-    slider_knee.on_changed(update)
 
     update(0) # Initial call to set limits
     plt.show()

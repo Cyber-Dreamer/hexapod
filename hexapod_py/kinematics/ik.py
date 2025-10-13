@@ -1,94 +1,102 @@
 import numpy as np
+from typing import List, Optional
 
 class HexapodKinematics:
 
-    def __init__(self, leg_lengths, hip_positions):
+    def __init__(self, segment_lengths, hip_positions, joint_limits):
 
-        self.leg_lengths = leg_lengths
+        self.segment_lengths = segment_lengths
         self.hip_positions = hip_positions
+        self.joint_limits = joint_limits
         self.optimal_stance = np.deg2rad([0.0, 0.0, -120.0])
+        
         # Pre-calculate the base angle for each hip from its position
         self.hip_base_angles = np.arctan2(np.array(self.hip_positions)[:, 1], np.array(self.hip_positions)[:, 0])
         
-    import numpy as np
-
-    @staticmethod
-    def leg_ik(point, l_coxa, l_femur, l_tibia, knee_direction=1):
+    def leg_ik(self, coordinate: np.ndarray) -> Optional[List[float]]:
         """
         Calculates the inverse kinematics for a single hexapod leg.
+        The coordinate should be in the leg's local reference frame, where
+        the coxa joint is at the origin (0,0,0).
 
         Args:
-            point (np.ndarray): A 3-element numpy array (x, y, z) representing the
-                                target coordinates for the foot tip relative to the
-                                coxa joint's origin.
-            l_coxa (float): The length of the coxa link.
-            l_femur (float): The length of the femur link.
-            l_tibia (float): The length of the tibia link.
-            knee_direction (int): The desired knee bend direction. -1 for "down" (standard),
-                                  1 for "up".
+            coordinate (np.ndarray): A 3-element numpy array (x, y, z) for the
+                                     target foot tip position.
 
         Returns:
-            tuple[float, float, float] | None: A tuple containing the calculated
-            angles (gamma, alpha, beta) in radians. Returns None if the point
-            is unreachable.
+            Optional[List[float]]: A list of 3 joint angles [gamma, alpha, beta]
+                                   in radians, or None if the position is unreachable.
         """
-        x, y, z = point
-        
-        # --- Define Joint Angle Limits in Radians ---
-        # Coxa: ±90°, Femur: ±110°, Tibia: ±120°
-        gamma_limit = np.deg2rad(90)
-        alpha_limit = np.deg2rad(110)
-        beta_limit = np.deg2rad(120)
+        x, y, z = coordinate
 
-        # --- Calculate Coxa Angle (gamma) ---
-        # Top-down view
+        # Calculating Coxa Angle (gamma)
+        # HOW: Angle from a top down view perspective
         gamma = np.arctan2(y, x)
 
-        # --- Calculate Femur and Tibia Angles (alpha, beta) ---
-        # Side view of the leg in its 2D plane
+        l_coxa, l_femur, l_tibia = self.segment_lengths
         
-        # Horizontal distance from coxa joint to foot tip
-        l_horizontal = np.sqrt(x**2 + y**2)
+        # --- Femur/Tibia Angle Calculation (alpha, beta) ---
+        # To simplify the 2D math, we can rotate the coordinate system by gamma.
+        # This makes the leg's horizontal component align with the X-axis,
+        # removing the complexity of handling negative x/y values.
+        x_rotated = np.sqrt(x**2 + y**2) - l_coxa
+        y_rotated = 0 # By definition after rotation
+        z_rotated = z
         
-        # Horizontal distance from femur joint to foot tip
-        x_prime = l_horizontal - l_coxa
-        
-        # Direct distance from femur joint to foot tip
-        l_hyp = np.sqrt(x_prime**2 + z**2)
+        # Direct distance from the femur joint to the foot tip in the rotated 2D plane
+        femur_to_foot_dist = np.sqrt(x_rotated**2 + z_rotated**2)
+
+        # --- Handle Special Case: Fully Extended Leg ---
+        # This avoids numerical instability in the Law of Cosines calculation when the
+        # leg is nearly straight.
+        if np.isclose(femur_to_foot_dist, l_femur + l_tibia, atol=1e-6):
+            # In the rotated frame, the horizontal distance is simply x_rotated
+            alpha = np.arctan2(z_rotated, x_rotated)
+            beta = 0.0
+            return [gamma, alpha, beta]
 
         # Check if the target is reachable
         # Use a small tolerance for floating point issues at full extension
-        if l_hyp > (l_femur + l_tibia) or l_hyp < abs(l_femur - l_tibia):
+        if femur_to_foot_dist > (l_femur + l_tibia) or femur_to_foot_dist < abs(l_femur - l_tibia):
             return None
 
-        # Angle of the hypotenuse 'l_hyp' from the horizontal plane
-        phi = np.arctan2(z, x_prime)
+        # --- Determine Knee Bend Direction ---
+        # The knee should bend away from the body's horizontal plane.
+        # If the target is below the plane (z < 0, normal walking), the knee bends down (standard).
+        # If the target is above the plane (z > 0, upside-down walking), the knee bends up.
+        knee_direction = -1 if z_rotated > 0 else 1
+
+        # Angle of the hypotenuse from the horizontal plane
+        phi = np.arctan2(z_rotated, x_rotated)
         
         # Use the Law of Cosines to find the angle at the knee (femur-tibia joint)
         # and the angle at the femur joint.
-        cos_beta_arg = (l_femur**2 + l_tibia**2 - l_hyp**2) / (2 * l_femur * l_tibia)
+        cos_beta_arg = (l_femur**2 + l_tibia**2 - femur_to_foot_dist**2) / (2 * l_femur * l_tibia)
+        
         # Clip to handle floating point inaccuracies at the boundaries
         beta_inner = np.arccos(np.clip(cos_beta_arg, -1.0, 1.0))
         # The angle inside the triangle at the tibia joint
         # The final tibia angle is measured from the extension of the femur.
-        # For a standard "knee down" bend (knee_direction=-1), this angle is negative.
-        # The formula is beta = beta_inner - pi.
-        beta = (beta_inner - np.pi) * knee_direction
+        # For a standard "knee down" bend (knee_direction=1), this angle is negative.
+        beta = -(np.pi - beta_inner) * knee_direction
 
-        cos_alpha_arg = (l_hyp**2 + l_femur**2 - l_tibia**2) / (2 * l_hyp * l_femur)
+        cos_alpha_arg = (femur_to_foot_dist**2 + l_femur**2 - l_tibia**2) / (2 * femur_to_foot_dist * l_femur)
+        
         # Clip to handle floating point inaccuracies at the boundaries
         alpha_inner = np.arccos(np.clip(cos_alpha_arg, -1.0, 1.0))
+        
         # The angle inside the triangle at the femur joint
         # The final femur angle is the sum of the hypotenuse angle and this inner angle
+        # The knee_direction determines if we add or subtract the inner angle from phi.
         alpha = phi + (alpha_inner * knee_direction)
 
         # --- Check Joint Limits ---
         # Note: The beta angle from this calculation is always positive (0 to pi).
         # If your servo can bend both ways, you might need a different convention.
-        if not (abs(gamma) <= gamma_limit and abs(alpha) <= alpha_limit and abs(beta) <= beta_limit):
+        if not (abs(gamma) <= self.joint_limits[0] and abs(alpha) <= self.joint_limits[1] and abs(beta) <= self.joint_limits[2]):
             return None
 
-        return (gamma, alpha, beta)
+        return [gamma, alpha, beta]
 
     def body_ik(self, translation, rotation, coxa_positions, default_foot_positions):
         """
