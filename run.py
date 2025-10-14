@@ -1,45 +1,95 @@
+"""
+Hexapod Master Runner
+=====================
+
+This is the main entry point for the hexapod control software.
+It allows you to launch different interfaces (like the simple UI or a web server)
+and connect them to different platforms (like the simulator or a physical robot).
+
+Examples:
+  # Run the simple PyBullet UI with the simulator (default)
+  python run.py
+
+  # Run the web interface with the simulator
+  python run.py --interface web --platform simulation
+
+  # Run the simple UI, preparing for a physical robot
+  python run.py --interface simple_ui --platform physical
+"""
+
 import argparse
-import asyncio
 import os
 import sys
 
 # Add the project root to the Python path
-project_root = os.path.abspath(os.path.dirname(__file__))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-from hexapod_py.web.server import run_web_server
-from hexapod_py.core.main import main as core_main
+# Import necessary components
+from hexapod_py.platform.hexapod_platform import HexapodPlatform
+from hexapod_py.simulation.simulator import HexapodSimulator
+from hexapod_py.locomotion.locomotion import HexapodLocomotion
+from hexapod_py.interfaces.simple_ui.gait_demo_controller import GaitDemoController
 
-async def main():
+# The web server needs to be imported carefully to be launched programmatically
+import uvicorn
+from hexapod_py.interfaces.web.server import app as web_app
+from hexapod_py.interfaces.web.server import platform as web_platform_global, locomotion as web_locomotion_global
+
+def main():
     parser = argparse.ArgumentParser(description="Run the Hexapod control system.")
-    parser.add_argument("--mode", type=str, choices=["robot", "simulation"],
-                        help="The mode to run the hexapod in (robot or simulation).")
+    parser.add_argument("--interface", type=str, choices=["simple_ui", "web"],
+                        help="The user interface to run.")
+    parser.add_argument("--platform", type=str, choices=["simulation", "physical"],
+                        help="The platform to control (simulation or physical robot).")
     args = parser.parse_args()
 
-    mode = args.mode
-    if not mode:
-        try:
-            mode = input("Please select a mode (robot/simulation): ").strip().lower()
-            while mode not in ["robot", "simulation"]:
-                print("Invalid mode. Please choose 'robot' or 'simulation'.")
-                mode = input("Please select a mode (robot/simulation): ").strip().lower()
-        except KeyboardInterrupt:
-            print("\nSelection cancelled by user. Exiting.")
-            return
+    # --- Fallback to interactive prompt if arguments are not provided ---
+    try:
+        if not args.interface:
+            choice = input("Select interface (1: Simple UI, 2: Web UI) [1]: ").strip()
+            if choice == '2':
+                args.interface = 'web'
+            else:
+                args.interface = 'simple_ui'
 
-    tasks = []
+        if not args.platform:
+            choice = input("Select platform (1: Simulation, 2: Physical) [1]: ").strip()
+            if choice == '2':
+                args.platform = 'physical'
+            else:
+                args.platform = 'simulation'
 
-    if mode == 'robot':
-        print("Running in robot mode")
-        tasks.append(asyncio.create_task(core_main()))
-        tasks.append(asyncio.create_task(run_web_server(mode='robot')))
-    elif mode == 'simulation':
-        print("Running in simulation mode")
-        tasks.append(asyncio.create_task(run_web_server(mode='simulation')))
+    except KeyboardInterrupt:
+        print("\nSelection cancelled. Exiting.")
+        sys.exit(0)
 
-    await asyncio.gather(*tasks)
+    # --- 1. Initialize Platform ---
+    platform: HexapodPlatform
+    if args.platform == 'simulation':
+        print("Initializing platform: HexapodSimulator")
+        platform = HexapodSimulator(gui=True)
+    elif args.platform == 'physical':
+        print("Initializing platform: PhysicalHexapod (Not Implemented)")
+        # from hexapod_py.platform.physical_robot import PhysicalHexapod
+        # platform = PhysicalHexapod()
+        print("Error: PhysicalHexapod is not yet implemented. Exiting.")
+        sys.exit(1)
+
+    # --- 2. Initialize Locomotion Controller ---
+    locomotion = HexapodLocomotion(gait_type='tripod')
+
+    # --- 3. Launch Selected Interface ---
+    if args.interface == 'simple_ui':
+        print(f"Launching interface: Simple UI Controller for {args.platform} platform.")
+        controller = GaitDemoController(platform, locomotion)
+        controller.run()
+    elif args.interface == 'web':
+        print(f"Launching interface: Web Server for {args.platform} platform.")
+        # Assign the created platform and locomotion to the web server's globals
+        globals()['web_platform_global'] = platform
+        globals()['web_locomotion_global'] = locomotion
+        platform.start() # The web server expects the platform to be started
+        uvicorn.run(web_app, host="127.0.0.1", port=8000)
 
 if __name__ == "__main__":
-    asyncio.run(main())
-
+    main()

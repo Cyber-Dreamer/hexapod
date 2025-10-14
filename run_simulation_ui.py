@@ -10,53 +10,30 @@ import sys
 import os
 
 # Add the project root to the Python path
-project_root = os.path.abspath(os.path.dirname(__file__))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-import time
 from hexapod_py.locomotion.locomotion import HexapodLocomotion
 from hexapod_py.simulation.simulator import HexapodSimulator
+from hexapod_py.interfaces.simple_ui.gait_demo_controller import GaitDemoController
 
 def main():
     """
-    Initializes and runs the hexapod simulation control loop with a UI.
+    Main function to initialize and run the hexapod gait simulation with a UI.
+
+    This script wires together the major components:
+    1. The simulation platform (`HexapodSimulator`).
+    2. The high-level locomotion logic (`HexapodLocomotion`).
+    3. The user interface controller (`GaitDemoController`).
     """
-    # 1. Initialize the simulator
-    simulator = HexapodSimulator(gui=True)
-    simulator.start()
+    # 1. Initialize the platform (the simulator in this case)
+    platform = HexapodSimulator(gui=True)
 
-    # 2. Add UI controls (sliders) to the simulation window
-    simulator.add_ui_controls()
-
-    # 3. Initialize the locomotion controller
-    # We can initialize with default values; they will be updated from the UI.
+    # 2. Initialize the locomotion controller
     locomotion = HexapodLocomotion(gait_type='tripod')
 
-    try:
-        print("Starting control loop with UI. Press Ctrl+C in terminal to exit.")
-        while True:
-            # 4. Read control values from the UI sliders
-            controls = simulator.read_ui_controls()
-
-            # Update locomotion parameters that can change at runtime
-            locomotion.body_height = controls['body_height']
-            locomotion.step_height = controls['step_height']
-
-            # 5. "Publish": The controller calculates joint angles based on UI input.
-            joint_angles = locomotion.run_gait(
-                vx=controls['vx'], vy=controls['vy'], omega=controls['omega'],
-                pitch=controls['pitch']
-            )
-
-            # 6. "Subscribe": The simulator applies the calculated joint angles.
-            simulator.set_joint_angles(joint_angles)
-
-            simulator.step()
-    except KeyboardInterrupt:
-        print("\nSimulation interrupted by user.")
-    finally:
-        simulator.stop()
+    # 3. Initialize the UI controller and run it
+    controller = GaitDemoController(platform, locomotion)
+    controller.run()
 
 if __name__ == "__main__":
     main()

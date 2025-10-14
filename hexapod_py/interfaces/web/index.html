@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexapod Control</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Hexapod Web Controller</h1>
+            <p>Mode: <span id="mode">{{ mode }}</span></p>
+        </header>
+
+        <main>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <h2>Front Camera (ID 0)</h2>
+                    <img src="/video_feed/0" alt="Front Camera Feed">
+                </div>
+                <div class="video-wrapper">
+                    <h2>Rear Camera (ID 1)</h2>
+                    <img src="/video_feed/1" alt="Rear Camera Feed">
+                </div>
+            </div>
+
+            <div class="controls-container">
+                <div class="joystick-container">
+                    <div id="joystick-zone" class="joystick-zone">
+                        <div id="joystick-handle" class="joystick-handle"></div>
+                    </div>
+                    <p>Movement (vx, vy)</p>
+                </div>
+                <div class="slider-container">
+                    <label for="omega-slider">Rotation (omega)</label>
+                    <input type="range" min="-1" max="1" value="0" step="0.05" class="slider" id="omega-slider">
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Sensor Data</p>
+            <pre id="sensor-data">Fetching...</pre>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const joystickZone = document.getElementById('joystick-zone');
+            const joystickHandle = document.getElementById('joystick-handle');
+            const omegaSlider = document.getElementById('omega-slider');
+
+            let controlState = { vx: 0, vy: 0, omega: 0 };
+            let isDragging = false;
+            let sendInterval;
+
+            const zoneRect = joystickZone.getBoundingClientRect();
+            const zoneCenterX = zoneRect.width / 2;
+            const zoneCenterY = zoneRect.height / 2;
+            const maxDistance = zoneRect.width / 2 - joystickHandle.offsetWidth / 2;
+
+            function sendMoveCommand() {
+                fetch('/move', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(controlState)
+                }).catch(console.error);
+            }
+
+            function startSending() {
+                if (!sendInterval) {
+                    sendInterval = setInterval(sendMoveCommand, 100); // Send command every 100ms
+                }
+            }
+
+            function stopSending() {
+                clearInterval(sendInterval);
+                sendInterval = null;
+                // Send a final stop command
+                controlState = { vx: 0, vy: 0, omega: parseFloat(omegaSlider.value) };
+                sendMoveCommand();
+            }
+
+            function handleMove(event) {
+                if (!isDragging) return;
+                event.preventDefault();
+
+                const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+                const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+                let dx = clientX - zoneRect.left - zoneCenterX;
+                let dy = clientY - zoneRect.top - zoneCenterY;
+
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > maxDistance) {
+                    dx = (dx / distance) * maxDistance;
+                    dy = (dy / distance) * maxDistance;
+                }
+
+                joystickHandle.style.transform = `translate(${dx}px, ${dy}px)`;
+
+                // Convert joystick position to control values (-1 to 1)
+                // Note: vy is inverted because screen Y is down, but robot Y is forward
+                controlState.vx = dx / maxDistance;
+                controlState.vy = -dy / maxDistance; // Invert Y-axis
+            }
+
+            function handleEnd(event) {
+                if (!isDragging) return;
+                isDragging = false;
+                joystickHandle.style.transform = 'translate(0, 0)';
+                joystickHandle.style.transition = 'transform 0.2s ease-out';
+                stopSending();
+            }
+
+            joystickZone.addEventListener('mousedown', (e) => { isDragging = true; joystickHandle.style.transition = ''; startSending(); handleMove(e); });
+            joystickZone.addEventListener('touchstart', (e) => { isDragging = true; joystickHandle.style.transition = ''; startSending(); handleMove(e); });
+
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+
+            omegaSlider.addEventListener('input', () => {
+                controlState.omega = parseFloat(omegaSlider.value);
+                if (!isDragging) { // If not moving, just send rotation
+                    sendMoveCommand();
+                }
+            });
+
+            // Fetch sensor data periodically
+            setInterval(() => {
+                fetch('/sensor_data')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('sensor-data').textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        document.getElementById('sensor-data').textContent = 'Error fetching sensor data.';
+                        console.error('Error:', error);
+                    });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

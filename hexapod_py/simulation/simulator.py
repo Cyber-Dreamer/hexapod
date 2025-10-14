@@ -3,9 +3,17 @@ import time
 import pybullet_data
 import os
 import numpy as np
+import sys
 
-class HexapodSimulator:
+# Add parent directory to path to import hexapod modules
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+from hexapod_py.platform.hexapod_platform import HexapodPlatform
+
+class HexapodSimulator(HexapodPlatform):
     def __init__(self, gui=True):
+        super().__init__() # Initialize the base class (sets up target_joint_angles)
         self.gui = gui
         self.physics_client = None
         self.robot_id = None
@@ -72,10 +80,10 @@ class HexapodSimulator:
         if not foot_links:
             print("Warning: No 'tibia' links found to set friction.")
 
-    def set_joint_angles(self, joint_angles):
+    def _apply_joint_angles(self):
         """
-        Sets the target position for each joint, using a profile
-        based on 80 kg-cm servo motors.
+        Applies the stored `self.target_joint_angles` to the PyBullet simulation
+        motors. This is the concrete implementation for the simulator.
         """
         # --- YOUR SERVO'S PROFILE ---
         STALL_TORQUE_NM = 7.85      # CORRECTED: 80 kg-cm converted to Nm
@@ -84,7 +92,7 @@ class HexapodSimulator:
         KD = 0.8                    # Derivative gain (high damping is good for stability)
         # ----------------------------------------
 
-        for leg_idx, leg_angles in enumerate(joint_angles):
+        for leg_idx, leg_angles in enumerate(self.target_joint_angles):
             if leg_angles is not None:
                 for joint_idx, angle in enumerate(leg_angles):
                     joint_name = self.leg_joint_names[leg_idx][joint_idx]
@@ -101,6 +109,14 @@ class HexapodSimulator:
                         )
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")
+
+    # The set_joint_angles method is now inherited from HexapodPlatform and
+    # simply updates self.target_joint_angles.
+
+    def step(self):
+        """Advances the simulation by one step, applying motor targets first."""
+        self._apply_joint_angles()
+        p.stepSimulation()
 
     def add_ui_controls(self):
         """Adds debug sliders to the GUI for real-time control."""
@@ -149,9 +165,6 @@ class HexapodSimulator:
             return int(p.readUserDebugParameter(self.gait_selector_id))
         return 0
 
-    def step(self):
-        p.stepSimulation()
-
     def stop(self):
         p.disconnect()
         print("Simulation stopped.")
@@ -192,6 +205,30 @@ class HexapodSimulator:
         )
         return rgba_img[:, :, :3]
 
+    def get_imu_data(self):
+        """
+        Simulates IMU data by getting the hexapod's base velocity from PyBullet.
+        Note: This provides angular velocity (gyro) and linear velocity (as a proxy
+        for acceleration), but does not include the effect of gravity that a real
+        accelerometer would measure.
+        """
+        if self.robot_id is None:
+            return None
+
+        try:
+            # Get linear and angular velocity of the base link
+            linear_velocity, angular_velocity = p.getBaseVelocity(self.robot_id)
+
+            # Format the data to match the expected IMU dictionary structure
+            imu_data = {
+                'accel': {'x': linear_velocity[0], 'y': linear_velocity[1], 'z': linear_velocity[2]},
+                'gyro':  {'x': angular_velocity[0], 'y': angular_velocity[1], 'z': angular_velocity[2]}
+            }
+            return imu_data
+        except p.error as e:
+            print(f"Warning: Could not get base velocity from PyBullet: {e}")
+            return None
+
 # Example of running the simulation with locomotion control
 if __name__ == "__main__":
     sim = HexapodSimulator(gui=True)
@@ -207,13 +244,21 @@ if __name__ == "__main__":
         [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 4
         [0.0, np.deg2rad(45), np.deg2rad(-90)]   # Leg 5
     ]
-    sim.set_joint_angles(stand_angles)
+    sim.set_joint_angles(stand_angles) # Set the target state
 
     try:
         # Run simulation for a few seconds
-        for i in range(240 * 10): # 10 seconds
+        for i in range(240 * 5): # 5 seconds
             sim.step()
             time.sleep(1./240.)
+
+            # Example of getting sensor data
+            if i % 240 == 0: # Every second
+                imu_data = sim.get_imu_data()
+                if imu_data:
+                    print(f"IMU Data at {i/240:.1f}s: {imu_data}")
+                # Note: get_camera_image is not called here to avoid spamming the console
+                # with image data, but it can be called similarly.
     except KeyboardInterrupt:
         pass
     finally:
