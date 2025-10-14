@@ -64,6 +64,9 @@ def test_gait_interactive():
 
     # --- Text for displaying gait info ---
     info_text = fig.text(0.82, 0.95, "", verticalalignment='top', fontfamily='monospace')
+    # --- Text for displaying joint angles ---
+    angle_text_str = "Joint Angles (deg):\n" + "\n".join([f"Leg {i}: --" for i in range(6)])
+    angle_text = fig.text(0.82, 0.55, angle_text_str, verticalalignment='top', fontfamily='monospace')
 
     # --- Sliders ---
     slider_axes = {
@@ -101,6 +104,15 @@ def test_gait_interactive():
 
     radio_buttons.on_clicked(select_gait)
 
+    # --- Stance/Height Update Callback ---
+    def update_stance_params(val):
+        """Callback to update stance-related parameters only when their sliders change."""
+        standoff = sliders['standoff'].val
+        body_height = sliders['body_h'].val
+        locomotion.body_height = body_height
+        # Only recalculate stance when these specific sliders are adjusted
+        locomotion.recalculate_stance(standoff_distance=standoff)
+
     # --- Reset Button ---
     ax_reset = plt.axes([0.05, 0.02, 0.15, 0.04], facecolor=dark_grey)
     reset_button = Button(ax_reset, 'Reset Sliders', color=dark_grey, hovercolor='0.5')
@@ -113,6 +125,22 @@ def test_gait_interactive():
 
     reset_button.on_clicked(reset_sliders)
 
+    # --- Pause Button ---
+    ax_pause = plt.axes([0.82, 0.02, 0.15, 0.04], facecolor=dark_grey)
+    pause_button = Button(ax_pause, 'Pause', color=dark_grey, hovercolor='0.5')
+    is_paused = False
+
+    def toggle_pause(event):
+        nonlocal is_paused
+        if is_paused:
+            ani.resume()
+            pause_button.label.set_text('Pause')
+        else:
+            ani.pause()
+            pause_button.label.set_text('Resume')
+        is_paused = not is_paused
+        fig.canvas.draw_idle()
+
     # --- Radio Buttons for Knee Direction ---
     ax_knee_radio = plt.axes([0.82, 0.6, 0.15, 0.15], facecolor=dark_grey)
     knee_radio = RadioButtons(ax_knee_radio, ('Knee Down (-1)', 'Knee Up (+1)'), active=0)
@@ -123,6 +151,11 @@ def test_gait_interactive():
         locomotion.knee_direction = knee_direction_map[label]
 
     knee_radio.on_clicked(select_knee_direction)
+    
+    # --- Animation Setup ---
+    # The FuncAnimation object needs to be defined before we can connect the pause button.
+    # We will define it as None first and then assign it.
+    ani = None
 
     # --- Animation Update Function ---
     def update(frame):
@@ -132,19 +165,13 @@ def test_gait_interactive():
         omega = sliders['omega'].val
         roll = sliders['roll'].val
         pitch = sliders['pitch'].val
-        step_height = sliders['step_h'].val
-        standoff = sliders['standoff'].val
-        body_height = sliders['body_h'].val
+        step_height = sliders['step_h'].val # Step height can change mid-gait
 
         # Normalize the direction vector if it's greater than 1
         dir_vec = np.array([vx, vy])
         if np.linalg.norm(dir_vec) > 1.0:
             dir_vec = dir_vec / np.linalg.norm(dir_vec)
             vx, vy = dir_vec
-
-        # Update locomotion parameters from sliders
-        locomotion.recalculate_stance(standoff_distance=standoff)
-        locomotion.body_height = body_height
 
         # 2. Run the gait logic to get joint angles
         all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, step_height=step_height)
@@ -168,6 +195,16 @@ def test_gait_interactive():
                 lines[i].set_data([], [])
                 lines[i].set_3d_properties([])
 
+        # Update angle text display
+        angle_strings = []
+        for i, angles in enumerate(all_angles):
+            if angles is not None:
+                angle_strings.append(f"L{i}: {np.rad2deg(angles)[0]:6.1f}, {np.rad2deg(angles)[1]:6.1f}, {np.rad2deg(angles)[2]:6.1f}")
+            else:
+                angle_strings.append(f"L{i}: Unreachable")
+        angle_text.set_text("Joint Angles (deg):\n" + "\n".join(angle_strings))
+
+
         # Update info text
         info_text.set_text(
             f"Gait: {locomotion.gait_type.capitalize()}\n"
@@ -179,10 +216,18 @@ def test_gait_interactive():
             f"Pitch: {np.rad2deg(pitch):.1f}°"
         )
 
-        return lines + leg_texts + [body_line, info_text]
+        return lines + leg_texts + [body_line, info_text, angle_text]
 
     # Create and start the animation
     ani = FuncAnimation(fig, update, frames=None, blit=False, interval=30, repeat=True)
+
+    # Now that 'ani' is created, connect the callbacks that need it
+    pause_button.on_clicked(toggle_pause)
+    sliders['standoff'].on_changed(update_stance_params)
+    sliders['body_h'].on_changed(update_stance_params)
+
+    # Initial call to set the stance from slider defaults
+    update_stance_params(None)
 
     plt.show()
 

@@ -31,8 +31,7 @@ class HexapodKinematics:
         gamma = np.arctan2(y, abs(x))
 
         # 2. Reduce to 2D side-view problem
-        x_in_leg_frame = x * np.cos(gamma) + y * np.sin(gamma)
-        x_prime = x_in_leg_frame - l_coxa
+        x_prime = x - l_coxa
         z_prime = z
         
         dist_femur_to_foot = np.sqrt(x_prime**2 + z_prime**2)

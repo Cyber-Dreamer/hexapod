@@ -36,11 +36,9 @@ class HexapodSimulator:
 
         # Add a floor
         plane_id = p.loadURDF("plane.urdf")
-        # Set friction to simulate rubber on rubber (kinetic friction coeff ~1.0)
         p.changeDynamics(plane_id, -1, lateralFriction=2.0)
 
         # Add the 'simulation' directory to the search path.
-        # This allows PyBullet to find 'robot.urdf' and resolve the 'package://' paths for meshes.
         p.setAdditionalSearchPath(self.package_path)
 
         # Load URDF model
@@ -61,9 +59,7 @@ class HexapodSimulator:
 
     def _set_foot_friction(self, lateral_friction=2.0, spinning_friction=0.1, rolling_friction=0.1):
         """Increases the friction of the foot links."""
-        # The links that make contact with the ground are the "tibia" links in this URDF.
         foot_links = [name for name in self.link_name_to_id.keys() if 'tibia' in name]
-
         for link_name in foot_links:
             link_id = self.link_name_to_id[link_name]
             p.changeDynamics(
@@ -73,17 +69,21 @@ class HexapodSimulator:
                 spinningFriction=spinning_friction,
                 rollingFriction=rolling_friction
             )
-            print(f"Set friction for link '{link_name}' (ID: {link_id}) to lateral={lateral_friction}, spinning={spinning_friction}, rolling={rolling_friction}")
-
         if not foot_links:
             print("Warning: No 'tibia' links found to set friction.")
 
     def set_joint_angles(self, joint_angles):
         """
-        Sets the target position for each joint.
-        :param joint_angles: A list of 6 lists, where each inner list contains
-                             the [coxa, femur, tibia] angles for a leg.
+        Sets the target position for each joint, using a profile
+        based on 80 kg-cm servo motors.
         """
+        # --- YOUR SERVO'S PROFILE ---
+        STALL_TORQUE_NM = 7.85      # CORRECTED: 80 kg-cm converted to Nm
+        MAX_VELOCITY_RAD_S = 10.0   # A reasonable guess for a powerful motor (tune if you know the speed spec)
+        KP = 0.2                    # Proportional gain (start lower for high-torque motors)
+        KD = 0.8                    # Derivative gain (high damping is good for stability)
+        # ----------------------------------------
+
         for leg_idx, leg_angles in enumerate(joint_angles):
             if leg_angles is not None:
                 for joint_idx, angle in enumerate(leg_angles):
@@ -93,11 +93,12 @@ class HexapodSimulator:
                             bodyIndex=self.robot_id,
                             jointIndex=self.joint_name_to_id[joint_name],
                             controlMode=p.POSITION_CONTROL,
-                            targetPosition=angle,      # The desired angle for the joint
-                            force=50,                 # Realistic torque for an 80kg-cm servo (~7.85 Nm)
-                            positionGain=1.0,          # High gain for stiff, responsive control
-                            velocityGain=0.05,          # Reduced damping to mimic aggressive servo behavior
-                            maxVelocity=5.236)         # 60 deg / 0.2s = 300 deg/s = 5.236 rad/s
+                            targetPosition=angle,
+                            force=STALL_TORQUE_NM,
+                            maxVelocity=MAX_VELOCITY_RAD_S,
+                            positionGain=KP,
+                            velocityGain=KD
+                        )
                     else:
                         print(f"Warning: Joint '{joint_name}' not found in URDF.")
 
@@ -106,7 +107,6 @@ class HexapodSimulator:
         if not self.gui:
             print("Cannot add UI controls in non-GUI mode.")
             return
-
         self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
         self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
         self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
@@ -121,15 +121,13 @@ class HexapodSimulator:
         if not self.gui:
             return
         self.gait_selector_id = p.addUserDebugParameter("Gait", 0, len(gait_options) - 1, 0)
-        # This is a trick to label the radio buttons in PyBullet
-        p.setDebugObjectColor(self.gait_selector_id, -1, objectDebugColorRGB=[0,0,0]) # Hide the slider
+        p.setDebugObjectColor(self.gait_selector_id, -1, objectDebugColorRGB=[0,0,0])
         for i, option in enumerate(gait_options):
             p.addUserDebugText(option.capitalize(), [0, -1.5 - i*0.5, 0], textColorRGB=[1,1,0], parentObjectUniqueId=self.gait_selector_id, parentLinkIndex=i)
 
     def read_ui_controls(self):
         """Reads the current values from the GUI sliders."""
         if not self.gui or not self.debug_param_ids:
-            # Return default values if no GUI or controls are present
             return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
 
         controls = {
@@ -159,76 +157,61 @@ class HexapodSimulator:
         print("Simulation stopped.")
 
     def get_camera_image(self, camera_id, width=640, height=480):
-        """
-        Gets an image from a camera attached to the robot.
-        :param camera_id: 0 for front camera, 1 for rear camera.
-        :param width: Image width.
-        :param height: Image height.
-        :return: An RGB image as a numpy array.
-        """
+        """Gets an image from a camera attached to the robot."""
         if self.robot_id is None:
             return None
-
-        # Get the position and orientation of the robot's base
+        
         base_pos, base_orn = p.getBasePositionAndOrientation(self.robot_id)
         rot_matrix = p.getMatrixFromQuaternion(base_orn)
         rot_matrix = np.array(rot_matrix).reshape(3, 3)
 
-        # Define camera properties relative to the robot's body
         if camera_id == 0:  # Front camera
-            # Positioned at the front, looking forward
             camera_offset = [0.2, 0, 0.05]
             target_offset = [1.0, 0, 0.0]
         elif camera_id == 1:  # Rear camera
-            # Positioned at the back, looking backward
             camera_offset = [-0.2, 0, 0.05]
             target_offset = [-1.0, 0, 0.0]
         else:
             print(f"Warning: Invalid camera_id: {camera_id}")
             return None
 
-        # Transform camera position and target to world coordinates
         camera_pos_world = base_pos + rot_matrix.dot(camera_offset)
         target_pos_world = base_pos + rot_matrix.dot(target_offset)
-        
-        # The camera's "up" vector is the Z-axis of the robot's body frame
         camera_up_vector_world = rot_matrix.dot([0, 0, 1])
 
-        # Compute the view matrix
         view_matrix = p.computeViewMatrix(
             cameraEyePosition=camera_pos_world,
             cameraTargetPosition=target_pos_world,
             cameraUpVector=camera_up_vector_world
         )
-
-        # Compute the projection matrix
         projection_matrix = p.computeProjectionMatrixFOV(
             fov=60.0, aspect=width/height, nearVal=0.1, farVal=10.0
         )
-
-        # Get the camera image
         _, _, rgba_img, _, _ = p.getCameraImage(
-            width, height, view_matrix, projection_matrix, renderer=p.ER_BULLET_HARDWARE_OPENGL
+            width, height, view_matrix, projection_matrix, renderer=p.ER_TINY_RENDERER
         )
-
-        # Convert RGBA to RGB
         return rgba_img[:, :, :3]
 
 # Example of running the simulation with locomotion control
 if __name__ == "__main__":
-    # This main block is now for demonstration.
-    # A separate script will handle the control loop.
     sim = HexapodSimulator(gui=True)
     sim.start()
 
-    # Example: Set legs to a "zero" position (may not be stable)
-    # This demonstrates how set_joint_angles would be used.
-    zero_angles = [[0.0, np.deg2rad(-30), np.deg2rad(30)]] * 6
-    sim.set_joint_angles(zero_angles)
+    # Example: Set legs to a "stand" position
+    # The angles are [coxa, femur, tibia] for each of the 6 legs
+    stand_angles = [
+        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 0
+        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 1
+        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 2
+        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 3
+        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 4
+        [0.0, np.deg2rad(45), np.deg2rad(-90)]   # Leg 5
+    ]
+    sim.set_joint_angles(stand_angles)
 
     try:
-        # Run for a few seconds
-        for _ in range(1000):
+        # Run simulation for a few seconds
+        for i in range(240 * 10): # 10 seconds
             sim.step()
             time.sleep(1./240.)
     except KeyboardInterrupt:
