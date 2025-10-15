@@ -4,57 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hexapod Control</title>
-    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Hexapod Control Interface</h1>
-
     <div class="container">
-        <div class="controls">
-            <h2>Movement</h2>
-            <div class="buttons">
-                <button onclick="move('forward')">Forward</button>
-                <button onclick="move('backward')">Backward</button>
-                <button onclick="move('left')">Strafe Left</button>
-                <button onclick="move('right')">Strafe Right</button>
-                <button onclick="move('stop')" class="stop">Stop</button>
+        <header>
+            <h1>Hexapod Control</h1>
+            <div class="status-bar">
+                <p><strong>Mode:</strong> <span id="mode">{{ mode }}</span></p>
+                <p><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></p>
             </div>
-            <p>Status: <span id="status">Idle</span></p>
-        </div>
+        </header>
 
-        {% if mode == 'simulation' %}
-        <div class="video-feed">
-            <h2>Camera Feed</h2>
-            <img src="/video_feed/0" alt="Video Stream" width="640" height="480">
-        </div>
-        {% endif %}
+        <main>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <h2>Front Camera</h2>
+                    <img id="front-camera-feed" src="/video_feed/0" alt="Front Camera Feed">
+                </div>
+                <div class="video-wrapper">
+                    <h2>Rear Camera</h2>
+                    <img id="rear-camera-feed" src="/video_feed/1" alt="Rear Camera Feed">
+                </div>
+            </div>
 
-        <div class="sensor-data">
-            <h2>Sensor Data</h2>
-            <div id="gps-data"></div>
-            <div id="gyro-data"></div>
-        </div>
+            <div class="controls-container">
+                <div class="joystick-container">
+                    <div id="joystick-zone" class="joystick-zone">
+                        <div id="joystick-handle" class="joystick-handle"></div>
+                    </div>
+                    <div class="joystick-data">
+                        <p><strong>Forward/Backward (Vx):</strong> <span id="vx-value">0.00</span></p>
+                        <p><strong>Strafe (Vy):</strong> <span id="vy-value">0.00</span></p>
+                        <p><strong>Turn (Omega):</strong> <span id="omega-value">0.00</span></p>
+                    </div>
+                </div>
+                <div class="buttons-container">
+                    <button id="locomotion-toggle-btn" class="control-btn start">START</button>
+                </div>
+            </div>
+
+            <div class="sensor-data">
+                <h2>IMU Data</h2>
+                <pre id="imu-data">Fetching data...</pre>
+            </div>
+        </main>
+
+        <footer>
+            <p>Hexapod Control Interface</p>
+        </footer>
     </div>
 
-    <script>
-        function move(direction) {
-            fetch(`/move/${direction}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('status').innerText = data.status;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        function fetchSensorData() {
-            fetch('/sensor_data')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('gps-data').innerText = `GPS: Lat ${data.gps_data.lat}, Lon ${data.gps_data.lon}`;
-                    document.getElementById('gyro-data').innerText = `Gyro: X ${data.gyro_data.x}, Y ${data.gyro_data.y}, Z ${data.gyro_data.z}`;
-                });
-        }
-        // setInterval(fetchSensorData, 2000); // Fetch sensor data every 2 seconds
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
+    <script src="/static/main.js"></script>
 </body>
 </html>

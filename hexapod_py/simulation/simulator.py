@@ -3,6 +3,7 @@ import time
 import pybullet_data
 import os
 import numpy as np
+import threading
 import sys
 
 # Add parent directory to path to import hexapod modules
@@ -21,6 +22,9 @@ class HexapodSimulator(HexapodPlatform):
         self.link_name_to_id = {}
         self.debug_param_ids = {}
         self.gait_selector_id = None
+        self._is_running = False
+        self._simulation_thread = None
+        self._latest_imu_data = None # Cache for sensor data
 
         # This mapping translates the locomotion leg order (0-5) to the URDF joint names.
         # Locomotion Order: 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
@@ -53,7 +57,44 @@ class HexapodSimulator(HexapodPlatform):
         self.robot_id = p.loadURDF("robot.urdf", basePosition=[0, 0, 0.4])
         self._map_joint_names_to_ids()
         self._set_foot_friction()
+
+        # Start the simulation loop in a separate thread
+        self._is_running = True
+        self._simulation_thread = threading.Thread(target=self._simulation_loop)
+        self._simulation_thread.start()
+
         print(f"Simulation started. Robot ID: {self.robot_id}")
+
+    def _simulation_loop(self):
+        """
+        The main loop for the simulation, running in a separate thread.
+        It applies motor commands and steps the physics engine at a fixed rate.
+        """
+        while self._is_running:
+            # Update motors and sensors, then step the simulation
+            self._apply_joint_angles()
+            self._update_sensors()
+            p.stepSimulation()
+            time.sleep(1./240.)
+
+    def _update_sensors(self):
+        """
+        Internal method to fetch sensor data from PyBullet at each simulation step
+        and cache it.
+        """
+        if self.robot_id is None:
+            return
+
+        # Update IMU data
+        try:
+            linear_velocity, angular_velocity = p.getBaseVelocity(self.robot_id)
+            self._latest_imu_data = {
+                'accel': {'x': linear_velocity[0], 'y': linear_velocity[1], 'z': linear_velocity[2]},
+                'gyro':  {'x': angular_velocity[0], 'y': angular_velocity[1], 'z': angular_velocity[2]}
+            }
+        except p.error:
+            # If there's an error, set data to None to indicate it's stale
+            self._latest_imu_data = None
 
     def _map_joint_names_to_ids(self):
         """Creates maps from joint/link names to their PyBullet IDs."""
@@ -65,9 +106,16 @@ class HexapodSimulator(HexapodPlatform):
             # The link index is the same as the joint index it's a child of.
             self.link_name_to_id[link_name] = joint_info[0]
 
-    def _set_foot_friction(self, lateral_friction=2.0, spinning_friction=0.1, rolling_friction=0.1):
-        """Increases the friction of the foot links."""
-        foot_links = [name for name in self.link_name_to_id.keys() if 'tibia' in name]
+    def _set_foot_friction(self, lateral_friction=2.0, spinning_friction=0.5, rolling_friction=0.1):
+        """
+        Increases the friction of the foot links to prevent slipping.
+        The URDF uses 'foot_#' for tibia joints, so the links are named 'foot_link_#'.
+        """
+        if not self.robot_id:
+            print("Error: Robot not loaded, cannot set foot friction.")
+            return
+
+        foot_links = [name for name in self.link_name_to_id.keys() if 'foot_link' in name]
         for link_name in foot_links:
             link_id = self.link_name_to_id[link_name]
             p.changeDynamics(
@@ -78,7 +126,7 @@ class HexapodSimulator(HexapodPlatform):
                 rollingFriction=rolling_friction
             )
         if not foot_links:
-            print("Warning: No 'tibia' links found to set friction.")
+            print("Warning: No 'foot_link' links found to set friction. Robot may be unstable.")
 
     def _apply_joint_angles(self):
         """
@@ -113,64 +161,33 @@ class HexapodSimulator(HexapodPlatform):
     # The set_joint_angles method is now inherited from HexapodPlatform and
     # simply updates self.target_joint_angles.
 
-    def step(self):
-        """Advances the simulation by one step, applying motor targets first."""
-        self._apply_joint_angles()
-        p.stepSimulation()
-
-    def add_ui_controls(self):
-        """Adds debug sliders to the GUI for real-time control."""
-        if not self.gui:
-            print("Cannot add UI controls in non-GUI mode.")
-            return
-        self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
-        self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
-        self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
-        self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.15, 0.3, 0.20)
-        self.debug_param_ids['step_height'] = p.addUserDebugParameter("Step Height (m)", 0.01, 0.08, 0.04)
-        self.debug_param_ids['standoff'] = p.addUserDebugParameter("Standoff (m)", 0.2, 0.5, 0.28)
-        self.debug_param_ids['roll'] = p.addUserDebugParameter("Roll (rad)", -0.5, 0.5, 0.0)
-        self.debug_param_ids['pitch'] = p.addUserDebugParameter("Pitch (rad)", -0.5, 0.5, 0.0)
-
-    def add_gait_selection_ui(self, gait_options):
-        """Adds a radio button UI to select a gait."""
-        if not self.gui:
-            return
-        self.gait_selector_id = p.addUserDebugParameter("Gait", 0, len(gait_options) - 1, 0)
-        p.setDebugObjectColor(self.gait_selector_id, -1, objectDebugColorRGB=[0,0,0])
-        for i, option in enumerate(gait_options):
-            p.addUserDebugText(option.capitalize(), [0, -1.5 - i*0.5, 0], textColorRGB=[1,1,0], parentObjectUniqueId=self.gait_selector_id, parentLinkIndex=i)
-
-    def read_ui_controls(self):
-        """Reads the current values from the GUI sliders."""
-        if not self.gui or not self.debug_param_ids:
-            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
-
-        controls = {
-            'vx': p.readUserDebugParameter(self.debug_param_ids['vx']),
-            'vy': p.readUserDebugParameter(self.debug_param_ids['vy']),
-            'omega': p.readUserDebugParameter(self.debug_param_ids['omega']),
-            'body_height': p.readUserDebugParameter(self.debug_param_ids['body_height']),
-            'pitch': p.readUserDebugParameter(self.debug_param_ids['pitch']),
-            'step_height': p.readUserDebugParameter(self.debug_param_ids['step_height']),
-            'standoff': p.readUserDebugParameter(self.debug_param_ids['standoff'])
-        }
-        if 'roll' in self.debug_param_ids:
-            controls['roll'] = p.readUserDebugParameter(self.debug_param_ids['roll'])
-        return controls
-
-    def read_gait_selection_ui(self):
-        """Reads the selected gait index from the radio button UI."""
-        if self.gait_selector_id is not None:
-            return int(p.readUserDebugParameter(self.gait_selector_id))
-        return 0
-
     def stop(self):
-        p.disconnect()
-        print("Simulation stopped.")
+        if self._is_running:
+            self._is_running = False
+            if self._simulation_thread:
+                self._simulation_thread.join() # Wait for the thread to finish
+            self._simulation_thread = None
+            p.disconnect()
+            print("Simulation stopped.")
 
     def get_camera_image(self, camera_id, width=640, height=480):
-        """Gets an image from a camera attached to the robot."""
+        return self._capture_camera_image(camera_id, width, height)
+
+    def get_front_camera_image(self, width=640, height=480):
+        return self.get_camera_image(0, width, height)
+
+    def get_rear_camera_image(self, width=640, height=480):
+        return self.get_camera_image(1, width, height)
+
+    def _capture_camera_image(self, camera_id, width=640, height=480):
+        """
+        Internal method to capture an image from a virtual camera.
+        
+        :param camera_id: 0 for front, 1 for rear.
+        :param width: Image width.
+        :param height: Image height.
+        :return: A numpy array of the image or None.
+        """
         if self.robot_id is None:
             return None
         
@@ -207,29 +224,14 @@ class HexapodSimulator(HexapodPlatform):
 
     def get_imu_data(self):
         """
-        Simulates IMU data by getting the hexapod's base velocity from PyBullet.
-        Note: This provides angular velocity (gyro) and linear velocity (as a proxy
-        for acceleration), but does not include the effect of gravity that a real
-        accelerometer would measure.
+        Retrieves the latest cached IMU data.
+
+        The data is updated in the background by the simulation loop. This method
+        provides a non-blocking way to access the most recent sensor readings.
         """
-        if self.robot_id is None:
-            return None
+        return self._latest_imu_data
 
-        try:
-            # Get linear and angular velocity of the base link
-            linear_velocity, angular_velocity = p.getBaseVelocity(self.robot_id)
-
-            # Format the data to match the expected IMU dictionary structure
-            imu_data = {
-                'accel': {'x': linear_velocity[0], 'y': linear_velocity[1], 'z': linear_velocity[2]},
-                'gyro':  {'x': angular_velocity[0], 'y': angular_velocity[1], 'z': angular_velocity[2]}
-            }
-            return imu_data
-        except p.error as e:
-            print(f"Warning: Could not get base velocity from PyBullet: {e}")
-            return None
-
-# Example of running the simulation with locomotion control
+# Example of running the simulator in isolation
 if __name__ == "__main__":
     sim = HexapodSimulator(gui=True)
     sim.start()
@@ -237,28 +239,23 @@ if __name__ == "__main__":
     # Example: Set legs to a "stand" position
     # The angles are [coxa, femur, tibia] for each of the 6 legs
     stand_angles = [
-        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 0
-        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 1
-        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 2
-        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 3
-        [0.0, np.deg2rad(45), np.deg2rad(-90)],  # Leg 4
-        [0.0, np.deg2rad(45), np.deg2rad(-90)]   # Leg 5
+        [0.0, np.deg2rad(30), np.deg2rad(-90)],  # Leg 0
+        [0.0, np.deg2rad(30), np.deg2rad(-90)],  # Leg 1
+        [0.0, np.deg2rad(30), np.deg2rad(-90)],  # Leg 2
+        [0.0, np.deg2rad(30), np.deg2rad(-90)],  # Leg 3
+        [0.0, np.deg2rad(30), np.deg2rad(-90)],  # Leg 4
+        [0.0, np.deg2rad(30), np.deg2rad(-90)]   # Leg 5
     ]
     sim.set_joint_angles(stand_angles) # Set the target state
 
     try:
-        # Run simulation for a few seconds
-        for i in range(240 * 5): # 5 seconds
-            sim.step()
-            time.sleep(1./240.)
-
-            # Example of getting sensor data
-            if i % 240 == 0: # Every second
-                imu_data = sim.get_imu_data()
-                if imu_data:
-                    print(f"IMU Data at {i/240:.1f}s: {imu_data}")
-                # Note: get_camera_image is not called here to avoid spamming the console
-                # with image data, but it can be called similarly.
+        # Run simulation indefinitely until the user closes the window or presses Ctrl+C
+        print("Simulator running. Holding stand pose. Press Ctrl+C to stop.")
+        while True:
+            # The simulation now runs in a background thread.
+            # This main loop is only for keeping the script alive.
+            # In a real application, this loop would contain control logic.
+            time.sleep(1)
     except KeyboardInterrupt:
         pass
     finally:

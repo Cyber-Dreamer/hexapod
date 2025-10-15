@@ -24,19 +24,31 @@ from hexapod_py.locomotion.locomotion import HexapodLocomotion
 platform: Optional[HexapodPlatform] = None
 locomotion: Optional[HexapodLocomotion] = None
 control_values: Dict[str, float] = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0}
+locomotion_enabled: bool = False
 
 app = FastAPI()
 
 # --- Path Setup for Static Files and Templates ---
 # Get the directory where this server.py file is located
-interface_dir = os.path.dirname(__file__)
-web_dir = os.path.abspath(os.path.join(interface_dir, '..')) # Go up one level to hexapod_py/interfaces
+server_dir = os.path.dirname(__file__)
+static_dir = os.path.join(server_dir, "static")
+templates_dir = os.path.join(server_dir, "templates")
 
 # Mount static files
-app.mount("/static", StaticFiles(directory=os.path.join(web_dir, "web", "static")), name="static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Templates
-templates = Jinja2Templates(directory=os.path.join(web_dir, "web", "templates"))
+templates = Jinja2Templates(directory=templates_dir)
+
+def setup_server(p: HexapodPlatform, l: HexapodLocomotion):
+    """
+    Initializes the web server with the necessary platform and locomotion objects.
+    This function is called by the main runner script before starting the server.
+    """
+    global platform, locomotion
+    platform = p
+    locomotion = l
+    print("Web server configured with platform and locomotion instances.")
 
 async def control_loop():
     """
@@ -45,20 +57,22 @@ async def control_loop():
     """
     while True:
         if platform and locomotion:
-            # 1. Run gait logic to get target joint angles
-            joint_angles = locomotion.run_gait(
-                vx=control_values['vx'],
-                vy=control_values['vy'],
-                omega=control_values['omega']
-            )
+            if locomotion_enabled:
+                # 1. If enabled, run gait logic with current control values
+                joint_angles = locomotion.run_gait(
+                    vx=control_values['vx'],
+                    vy=control_values['vy'],
+                    omega=control_values['omega']
+                )
+            else:
+                # 2. If disabled, command the robot to stand still
+                # Reset control values to zero to prevent sudden movement on re-enabling
+                control_values = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0}
+                # Generate a "stand" pose by running gait with zero velocity
+                joint_angles = locomotion.run_gait(vx=0, vy=0, omega=0)
 
-            # 2. Set the target angles on the platform
+            # 3. Set the target angles on the platform
             platform.set_joint_angles(joint_angles)
-
-            # 3. If the platform has a 'step' method (like the simulator), call it.
-            #    A physical robot might have its own threaded update loop.
-            if hasattr(platform, 'step') and callable(platform.step):
-                platform.step()
 
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
@@ -84,13 +98,22 @@ async def move(request: Request):
     control_values['omega'] = data.get('omega', 0.0)
     return {"status": "success", "received": control_values}
 
+@app.post("/toggle_locomotion")
+async def toggle_locomotion():
+    """Toggles the locomotion system between enabled and disabled (emergency stop)."""
+    global locomotion_enabled
+    locomotion_enabled = not locomotion_enabled
+    status = "enabled" if locomotion_enabled else "disabled"
+    print(f"Locomotion has been {status}.")
+    return {"status": f"locomotion_{status}"}
+
 @app.get("/sensor_data")
 async def sensor_data():
     """Streams sensor data to the client (e.g., IMU)."""
     if platform and hasattr(platform, 'get_imu_data'):
         imu_data = platform.get_imu_data()
-        return {"imu": imu_data if imu_data else {}}
-    return {"imu": {}}
+        return {"imu": imu_data if imu_data else {}, "locomotion_enabled": locomotion_enabled}
+    return {"imu": {}, "locomotion_enabled": locomotion_enabled}
 
 @app.get("/video_feed/{camera_id}")
 async def video_feed(camera_id: int):
@@ -107,33 +130,3 @@ async def video_feed(camera_id: int):
                 await asyncio.sleep(1/30)
         return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return HTMLResponse(content="<h1>Camera not available on this platform.</h1>", status_code=404)
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run Hexapod Web Server")
-    parser.add_argument(
-        '--mode',
-        type=str,
-        default='simulation',
-        choices=['simulation', 'physical'],
-        help='The platform to run the web server with.'
-    )
-    args = parser.parse_args()
-
-    # --- Initialize Platform and Locomotion ---
-    if args.mode == 'simulation':
-        print("Starting in SIMULATION mode.")
-        platform = HexapodSimulator(gui=True)
-    elif args.mode == 'physical':
-        print("Starting in PHYSICAL mode. (PhysicalHexapod class not yet implemented)")
-        # from hexapod_py.platform.physical_robot import PhysicalHexapod
-        # platform = PhysicalHexapod() # This is where you'd instantiate the real robot
-        # For now, we'll exit if physical is chosen but not implemented.
-        print("Error: PhysicalHexapod not implemented. Exiting.")
-        sys.exit(1)
-
-    platform.start()
-    locomotion = HexapodLocomotion(gait_type='tripod')
-
-    uvicorn.run(app, host="127.0.0.1", port=8000)

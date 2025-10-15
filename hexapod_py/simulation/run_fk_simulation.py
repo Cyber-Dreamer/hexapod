@@ -21,11 +21,12 @@ if project_root not in sys.path:
 
 from hexapod_py.simulation.simulator import HexapodSimulator
 
-def add_fk_controls(sim):
+def add_fk_controls(sim_gui=True):
     """Adds debug sliders for all 18 joints (3 per leg)."""
-    if not sim.gui:
+    if not sim_gui:
         print("Cannot add UI controls in non-GUI mode.")
-        return
+        return {}
+    debug_param_ids = {}
 
     # Locomotion Order: 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
     leg_names = ["RL", "ML", "FL", "FR", "MR", "RR"]
@@ -40,14 +41,15 @@ def add_fk_controls(sim):
             param_name = f"L{leg_idx}_{leg_names[leg_idx]}_{joint_names[joint_idx]}"
             limit = angle_limits[joint_idx]
             # Add slider and store its ID
-            sim.debug_param_ids[param_name] = p.addUserDebugParameter(
+            debug_param_ids[param_name] = p.addUserDebugParameter(
                 param_name, -limit, limit, 0
             )
+    return debug_param_ids
 
-def read_fk_controls(sim):
+def read_fk_controls(debug_param_ids, sim_gui=True):
     """Reads the angle values from all 18 sliders and returns them in radians."""
     all_angles_rad = [[0.0] * 3 for _ in range(6)]
-    if not sim.gui or not sim.debug_param_ids:
+    if not sim_gui or not debug_param_ids:
         return all_angles_rad
 
     leg_names = ["RL", "ML", "FL", "FR", "MR", "RR"]
@@ -56,7 +58,7 @@ def read_fk_controls(sim):
     for leg_idx in range(6):
         for joint_idx in range(3):
             param_name = f"L{leg_idx}_{leg_names[leg_idx]}_{joint_names[joint_idx]}"
-            angle_deg = p.readUserDebugParameter(sim.debug_param_ids[param_name])
+            angle_deg = p.readUserDebugParameter(debug_param_ids[param_name])
             all_angles_rad[leg_idx][joint_idx] = np.deg2rad(angle_deg)
     
     return all_angles_rad
@@ -67,19 +69,19 @@ def main():
 
     try:
         sim.start()
-        # Use a local helper to add specific controls for FK
-        add_fk_controls(sim)
+        # Add specific controls for FK and get their IDs
+        fk_control_ids = add_fk_controls(sim_gui=sim.gui)
 
         while True:
             # 1. Read joint angles from UI controls
-            all_angles_rad = read_fk_controls(sim)
+            all_angles_rad = read_fk_controls(fk_control_ids, sim_gui=sim.gui)
 
             # 2. Set joint motor targets in PyBullet
             sim.set_joint_angles(all_angles_rad)
 
-            # 3. Step the simulation
-            sim.step()
-            time.sleep(1./240.)
+            # The simulator now runs its own step loop in the background.
+            # We just need to sleep here to prevent this loop from running too fast.
+            time.sleep(1./100.)
 
     except Exception as e:
         print(f"An error occurred: {e}")

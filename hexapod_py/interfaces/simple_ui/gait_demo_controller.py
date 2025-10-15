@@ -54,7 +54,10 @@ class GaitDemoController:
         self.debug_param_ids['pitch'] = p.addUserDebugParameter("Pitch (rad)", -0.5, 0.5, 0.0)
 
     def _read_ui_controls(self):
-        """Reads the current values from the GUI sliders."""
+        """
+        Reads the current values from the GUI sliders.
+        Returns a dictionary of default values if not in GUI mode.
+        """
         if not self.sim or not self.sim.gui or not self.debug_param_ids:
             return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
 
@@ -100,12 +103,9 @@ class GaitDemoController:
                 # 4. Send joint angles to the platform (simulator or real robot)
                 self.platform.set_joint_angles(all_angles_rad)
 
-                # 5. If we are running a simulation, step it forward
-                if self.sim:
-                    self.sim.step()
-
-                # Pace the loop to run at a consistent rate
-                time.sleep(1./240.)
+                # The platform (simulator) now runs its own update loop.
+                # We just need to pace the controller's command generation rate.
+                time.sleep(1./100.) # Send commands at 100Hz
 
         except Exception as e:
             print(f"An error occurred in the control loop: {e}")

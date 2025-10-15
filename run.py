@@ -32,8 +32,7 @@ from hexapod_py.interfaces.simple_ui.gait_demo_controller import GaitDemoControl
 
 # The web server needs to be imported carefully to be launched programmatically
 import uvicorn
-from hexapod_py.interfaces.web.server import app as web_app
-from hexapod_py.interfaces.web.server import platform as web_platform_global, locomotion as web_locomotion_global
+from hexapod_py.interfaces.web import server
 
 def main():
     parser = argparse.ArgumentParser(description="Run the Hexapod control system.")
@@ -85,11 +84,10 @@ def main():
         controller.run()
     elif args.interface == 'web':
         print(f"Launching interface: Web Server for {args.platform} platform.")
-        # Assign the created platform and locomotion to the web server's globals
-        globals()['web_platform_global'] = platform
-        globals()['web_locomotion_global'] = locomotion
+        # Set up the web server with the platform and locomotion instances
+        server.setup_server(p=platform, l=locomotion)
         platform.start() # The web server expects the platform to be started
-        uvicorn.run(web_app, host="127.0.0.1", port=8000)
+        uvicorn.run(server.app, host="127.0.0.1", port=8000)
 
 if __name__ == "__main__":
     main()

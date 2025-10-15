@@ -61,6 +61,28 @@ class HexapodPlatform(ABC):
         pass
 
     @abstractmethod
+    def get_front_camera_image(self, width: int = 640, height: int = 480) -> Optional[Any]:
+        """
+        Captures an image from the front-facing camera.
+
+        :param width: The desired width of the image.
+        :param height: The desired height of the image.
+        :return: An image object (e.g., a numpy array) or None if capture fails.
+        """
+        pass
+
+    @abstractmethod
+    def get_rear_camera_image(self, width: int = 640, height: int = 480) -> Optional[Any]:
+        """
+        Captures an image from the rear-facing camera.
+
+        :param width: The desired width of the image.
+        :param height: The desired height of the image.
+        :return: An image object (e.g., a numpy array) or None if capture fails.
+        """
+        pass
+
+    @abstractmethod
     def get_imu_data(self) -> Optional[Dict[str, Dict[str, float]]]:
         """
         Retrieves data from the Inertial Measurement Unit (IMU).
