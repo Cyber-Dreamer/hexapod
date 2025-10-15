@@ -6,6 +6,7 @@ import asyncio
 import uvicorn
 import os
 import sys
+import time
 from typing import Optional, Dict
 import numpy as np
 import cv2
@@ -64,15 +65,14 @@ async def control_loop():
                     vy=control_values['vy'],
                     omega=control_values['omega']
                 )
+                # Set the target angles on the platform
+                platform.set_joint_angles(joint_angles)
             else:
-                # 2. If disabled, command the robot to stand still
-                # Reset control values to zero to prevent sudden movement on re-enabling
-                control_values = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0}
-                # Generate a "stand" pose by running gait with zero velocity
-                joint_angles = locomotion.run_gait(vx=0, vy=0, omega=0)
-
-            # 3. Set the target angles on the platform
-            platform.set_joint_angles(joint_angles)
+                # 2. If disabled, do nothing. This allows the robot to hold its last
+                # commanded position. On startup, this will be the simulator's
+                # initial standing pose, preventing the "collapse" behavior.
+                # We also reset control values to prevent sudden movement on re-enabling.
+                control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0})
 
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
@@ -93,6 +93,7 @@ async def move(request: Request):
     """Receives movement commands from the web UI."""
     global control_values
     data = await request.json()
+    print(f"Received move command: {data}, locomotion_enabled: {locomotion_enabled}")
     control_values['vx'] = data.get('vx', 0.0)
     control_values['vy'] = data.get('vy', 0.0)
     control_values['omega'] = data.get('omega', 0.0)
@@ -119,14 +120,42 @@ async def sensor_data():
 async def video_feed(camera_id: int):
     """Streams video from a specified camera on the platform."""
     if platform and hasattr(platform, 'get_camera_image'):
-        async def generate():
+        # This function is now synchronous. FastAPI will run it in a separate
+        # thread from the main async event loop, which is the correct way to
+        # handle a blocking, long-running response. We use time.sleep()
+        # to pace the stream.
+        def generate():
             while True:
-                img_arr = platform.get_camera_image(camera_id)
-                if img_arr is not None:
-                    _, jpeg = cv2.imencode('.jpg', img_arr)
-                    frame = jpeg.tobytes()
+                frame_bytes = None
+                if isinstance(platform, HexapodSimulator):
+                    # --- Generate a dummy frame for simulation to save resources ---
+                    width, height = 640, 480
+                    # Create a black image
+                    img = np.zeros((height, width, 3), dtype=np.uint8)
+                    
+                    # Add text indicating which camera it is
+                    text = f"Dummy Feed: Cam {camera_id}"
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    text_size = cv2.getTextSize(text, font, 1, 2)[0]
+                    text_x = (width - text_size[0]) // 2
+                    text_y = (height + text_size[1]) // 2
+                    cv2.putText(img, text, (text_x, text_y), font, 1, (255, 255, 255), 2)
+
+                    _, jpeg = cv2.imencode('.jpg', img)
+                    frame_bytes = jpeg.tobytes()
+                else:
+                    # --- Capture real frame from platform (physical robot or otherwise) ---
+                    img_arr = platform.get_camera_image(camera_id)
+                    if img_arr is not None:
+                        bgr_img = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR)
+                        _, jpeg = cv2.imencode('.jpg', bgr_img)
+                        frame_bytes = jpeg.tobytes()
+
+                if frame_bytes:
                     yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-                await asyncio.sleep(1/30)
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                
+                time.sleep(1/15.) # Pace the stream to ~15 FPS
+
         return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return HTMLResponse(content="<h1>Camera not available on this platform.</h1>", status_code=404)

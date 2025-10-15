@@ -1,6 +1,6 @@
 import asyncio
 from ..gait.controller import GaitController
-from ..sensors.base import AsyncSensor
+from ..hardware.sensors.base import AsyncSensor
 
 async def gait_task():
     gait = GaitController()

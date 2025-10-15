@@ -1,93 +1,71 @@
-"""
-Hexapod Master Runner
-=====================
-
-This is the main entry point for the hexapod control software.
-It allows you to launch different interfaces (like the simple UI or a web server)
-and connect them to different platforms (like the simulator or a physical robot).
-
-Examples:
-  # Run the simple PyBullet UI with the simulator (default)
-  python run.py
-
-  # Run the web interface with the simulator
-  python run.py --interface web --platform simulation
-
-  # Run the simple UI, preparing for a physical robot
-  python run.py --interface simple_ui --platform physical
-"""
 
 import argparse
 import os
 import sys
+import subprocess
+import time
+import zmq
 
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# Import necessary components
-from hexapod_py.platform.hexapod_platform import HexapodPlatform
-from hexapod_py.simulation.simulator import HexapodSimulator
 from hexapod_py.locomotion.locomotion import HexapodLocomotion
 from hexapod_py.interfaces.simple_ui.gait_demo_controller import GaitDemoController
-
-# The web server needs to be imported carefully to be launched programmatically
-import uvicorn
-from hexapod_py.interfaces.web import server
+from hexapod_py.platform.client import PlatformClient
 
 def main():
     parser = argparse.ArgumentParser(description="Run the Hexapod control system.")
     parser.add_argument("--interface", type=str, choices=["simple_ui", "web"],
-                        help="The user interface to run.")
+                        default="simple_ui", help="The user interface to run.")
     parser.add_argument("--platform", type=str, choices=["simulation", "physical"],
-                        help="The platform to control (simulation or physical robot).")
+                        default="simulation", help="The platform to control.")
     args = parser.parse_args()
 
-    # --- Fallback to interactive prompt if arguments are not provided ---
+    platform_process = None
+    platform_client = None
     try:
-        if not args.interface:
-            choice = input("Select interface (1: Simple UI, 2: Web UI) [1]: ").strip()
-            if choice == '2':
-                args.interface = 'web'
-            else:
-                args.interface = 'simple_ui'
+        # --- 1. Launch the selected platform server ---
+        if args.platform == 'simulation':
+            print("Launching Simulation Server...")
+            platform_process = subprocess.Popen(
+                [sys.executable, "-m", "hexapod_py.platform.simulation.simulator"],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Give the server a moment to start and bind sockets
+            time.sleep(2)
+        elif args.platform == 'physical':
+            print("Error: Physical platform server is not yet implemented.")
+            sys.exit(1)
 
-        if not args.platform:
-            choice = input("Select platform (1: Simulation, 2: Physical) [1]: ").strip()
-            if choice == '2':
-                args.platform = 'physical'
-            else:
-                args.platform = 'simulation'
+        # --- 2. Initialize client and controllers ---
+        platform_client = PlatformClient()
+        locomotion = HexapodLocomotion(gait_type='tripod')
 
+        # --- 3. Launch the selected interface ---
+        if args.interface == 'simple_ui':
+            print("Launching interface: Simple UI Controller")
+            controller = GaitDemoController(platform_client, locomotion)
+            controller.run()
+        elif args.interface == 'web':
+            print("Warning: The web interface has not been migrated yet.")
+
+    except zmq.error.ZMQError as e:
+        print(f"\nError: Could not connect to the platform server. {e}")
+        print("Please make sure the simulator process started correctly.")
     except KeyboardInterrupt:
-        print("\nSelection cancelled. Exiting.")
-        sys.exit(0)
-
-    # --- 1. Initialize Platform ---
-    platform: HexapodPlatform
-    if args.platform == 'simulation':
-        print("Initializing platform: HexapodSimulator")
-        platform = HexapodSimulator(gui=True)
-    elif args.platform == 'physical':
-        print("Initializing platform: PhysicalHexapod (Not Implemented)")
-        # from hexapod_py.platform.physical_robot import PhysicalHexapod
-        # platform = PhysicalHexapod()
-        print("Error: PhysicalHexapod is not yet implemented. Exiting.")
-        sys.exit(1)
-
-    # --- 2. Initialize Locomotion Controller ---
-    locomotion = HexapodLocomotion(gait_type='tripod')
-
-    # --- 3. Launch Selected Interface ---
-    if args.interface == 'simple_ui':
-        print(f"Launching interface: Simple UI Controller for {args.platform} platform.")
-        controller = GaitDemoController(platform, locomotion)
-        controller.run()
-    elif args.interface == 'web':
-        print(f"Launching interface: Web Server for {args.platform} platform.")
-        # Set up the web server with the platform and locomotion instances
-        server.setup_server(p=platform, l=locomotion)
-        platform.start() # The web server expects the platform to be started
-        uvicorn.run(server.app, host="127.0.0.1", port=8000)
+        print("\nCaught KeyboardInterrupt, shutting down...")
+    finally:
+        print("\nCleaning up...")
+        if platform_client:
+            platform_client.stop()
+        if platform_process:
+            print("Terminating platform server process...")
+            platform_process.terminate()
+            stdout, stderr = platform_process.communicate(timeout=5)
+            if stdout:
+                print(f"[Server STDOUT]:\n{stdout.decode()}")
+            if stderr:
+                print(f"[Server STDERR]:\n{stderr.decode()}")
+        print("Cleanup complete.")
 
 if __name__ == "__main__":
     main()

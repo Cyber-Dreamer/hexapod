@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from sensors.base import AsyncSensor
+from hardware.sensors.base import AsyncSensor
 
 @pytest.mark.asyncio
 async def test_sensor_read():

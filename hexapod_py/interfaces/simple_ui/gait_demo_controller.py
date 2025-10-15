@@ -20,7 +20,7 @@ if project_root not in sys.path:
 
 from hexapod_py.platform.hexapod_platform import HexapodPlatform
 from hexapod_py.locomotion.locomotion import HexapodLocomotion
-from hexapod_py.simulation.simulator import HexapodSimulator # Used for type checking
+from hexapod_py.platform.simulation.simulator import HexapodSimulator # Used for type checking
 
 class GaitDemoController:
     """

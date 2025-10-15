@@ -6,7 +6,7 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from sensors.camera import CameraSensor
+    from hardware.sensors.camera import CameraSensor
 except (ImportError, RuntimeError) as e:
     print(f"Could not import CameraSensor: {e}")
     print("Please ensure picamera2 is installed (`sudo apt install python3-picamera2`) and you are running on a Raspberry Pi.")

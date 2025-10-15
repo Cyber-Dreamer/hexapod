@@ -8,9 +8,9 @@ import atexit
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from sensors.gps import GPS
-    from sensors.gyro import Gyro
-    from sensors.camera import CameraSensor
+    from hardware.sensors.gps import GPS
+    from hardware.sensors.gyro import Gyro
+    from hardware.sensors.camera import CameraSensor
 except (ImportError, RuntimeError, ModuleNotFoundError) as e:
     print(f"Error importing sensor modules: {e}")
     print("Please ensure all sensor dependencies are installed and you are on a Raspberry Pi.")
