@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Request, Response
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect
+from fastapi.staticfiles import StaticFiles 
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 import asyncio
@@ -17,16 +17,61 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from hexapod_py.platform.hexapod_platform import HexapodPlatform
-from hexapod_py.simulation.simulator import HexapodSimulator
 from hexapod_py.locomotion.locomotion import HexapodLocomotion
 
 # --- Global Variables ---
 # These will be initialized in the main execution block
 platform: Optional[HexapodPlatform] = None
-locomotion: Optional[HexapodLocomotion] = None
-control_values: Dict[str, float] = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0}
+locomotion: Optional[HexapodLocomotion] = None 
+control_values: Dict[str, float] = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 150.0}
 locomotion_enabled: bool = False
+last_joint_angles: Optional[Dict[str, float]] = None
+server_mode: str = "Unknown"
 
+class CameraStreamer:
+    """Manages broadcasting camera frames to multiple WebSocket clients."""
+    def __init__(self):
+        self.connections: Dict[int, list[WebSocket]] = {}
+        self.locks: Dict[int, asyncio.Lock] = {}
+        self.broadcasting_tasks: Dict[int, asyncio.Task] = {}
+
+    async def add_client(self, camera_id: int, websocket: WebSocket):
+        if camera_id not in self.connections:
+            self.connections[camera_id] = []
+            self.locks[camera_id] = asyncio.Lock()
+        
+        async with self.locks[camera_id]:
+            self.connections[camera_id].append(websocket)
+        
+        if camera_id not in self.broadcasting_tasks or self.broadcasting_tasks[camera_id].done():
+            self.broadcasting_tasks[camera_id] = asyncio.create_task(self._broadcast_frames(camera_id))
+
+    async def remove_client(self, camera_id: int, websocket: WebSocket):
+        async with self.locks[camera_id]:
+            self.connections[camera_id].remove(websocket)
+        
+        if not self.connections[camera_id]:
+            if camera_id in self.broadcasting_tasks:
+                self.broadcasting_tasks[camera_id].cancel()
+                del self.broadcasting_tasks[camera_id]
+
+    async def _broadcast_frames(self, camera_id: int):
+        while True:
+            frame_bytes = await get_frame_bytes(camera_id)
+            if frame_bytes:
+                async with self.locks[camera_id]:
+                    for connection in self.connections[camera_id]:
+                        try:
+                            await connection.send_bytes(frame_bytes)
+                        except WebSocketDisconnect:
+                            # The main handler will catch this and remove the client
+                            pass
+                        except Exception:
+                            # Handle other potential sending errors
+                            pass
+            await asyncio.sleep(1/30.) # Limit to ~30 FPS
+
+camera_streamer = CameraStreamer()
 app = FastAPI()
 
 # --- Path Setup for Static Files and Templates ---
@@ -38,17 +83,22 @@ templates_dir = os.path.join(server_dir, "templates")
 # Mount static files
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+# Also mount the simulation's meshes directory so the URDF loader can find the STL files
+simulation_dir = os.path.join(project_root, "hexapod_py", "platform", "simulation")
+app.mount("/simulation_assets", StaticFiles(directory=simulation_dir), name="simulation_assets")
+
 # Templates
 templates = Jinja2Templates(directory=templates_dir)
 
-def setup_server(p: HexapodPlatform, l: HexapodLocomotion):
+def setup_server(p: HexapodPlatform, l: HexapodLocomotion, mode: str):
     """
     Initializes the web server with the necessary platform and locomotion objects.
     This function is called by the main runner script before starting the server.
     """
-    global platform, locomotion
+    global platform, locomotion, server_mode
     platform = p
     locomotion = l
+    server_mode = mode
     print("Web server configured with platform and locomotion instances.")
 
 async def control_loop():
@@ -57,8 +107,14 @@ async def control_loop():
     It reads control values, runs the gait logic, and updates the platform.
     """
     while True:
+        global last_joint_angles
         if platform and locomotion:
             if locomotion_enabled:
+                # Update locomotion parameters that can be changed live
+                # Convert meters from UI to millimeters for the locomotion module
+                if 'body_height' in control_values:
+                    locomotion.body_height = control_values['body_height']
+                    locomotion.recalculate_stance()
                 # 1. If enabled, run gait logic with current control values
                 joint_angles = locomotion.run_gait(
                     vx=control_values['vx'],
@@ -67,12 +123,13 @@ async def control_loop():
                 )
                 # Set the target angles on the platform
                 platform.set_joint_angles(joint_angles)
+                last_joint_angles = joint_angles
             else:
                 # 2. If disabled, do nothing. This allows the robot to hold its last
                 # commanded position. On startup, this will be the simulator's
                 # initial standing pose, preventing the "collapse" behavior.
                 # We also reset control values to prevent sudden movement on re-enabling.
-                control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0})
+                control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0}) # Keep height
 
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
@@ -85,8 +142,7 @@ async def startup_event():
 @app.get("/")
 async def index(request: Request):
     """Serves the main control page."""
-    mode = "Simulation" if isinstance(platform, HexapodSimulator) else "Physical Robot"
-    return templates.TemplateResponse("index.html", {"request": request, "mode": mode})
+    return templates.TemplateResponse("index.html", {"request": request, "mode": server_mode})
 
 @app.post("/move")
 async def move(request: Request):
@@ -97,6 +153,7 @@ async def move(request: Request):
     control_values['vx'] = data.get('vx', 0.0)
     control_values['vy'] = data.get('vy', 0.0)
     control_values['omega'] = data.get('omega', 0.0)
+    control_values['body_height'] = data.get('body_height', 150.0)
     return {"status": "success", "received": control_values}
 
 @app.post("/toggle_locomotion")
@@ -113,49 +170,44 @@ async def sensor_data():
     """Streams sensor data to the client (e.g., IMU)."""
     if platform and hasattr(platform, 'get_imu_data'):
         imu_data = platform.get_imu_data()
-        return {"imu": imu_data if imu_data else {}, "locomotion_enabled": locomotion_enabled}
-    return {"imu": {}, "locomotion_enabled": locomotion_enabled}
+        return {
+            "imu": imu_data if imu_data else {}, 
+            "locomotion_enabled": locomotion_enabled,
+            "joint_angles": last_joint_angles
+        }
+    return {"imu": {}, "locomotion_enabled": locomotion_enabled, "joint_angles": None}
 
-@app.get("/video_feed/{camera_id}")
-async def video_feed(camera_id: int):
-    """Streams video from a specified camera on the platform."""
+async def get_frame_bytes(camera_id: int) -> Optional[bytes]:
+    """Helper function to get encoded frame bytes for a camera."""
     if platform and hasattr(platform, 'get_camera_image'):
-        # This function is now synchronous. FastAPI will run it in a separate
-        # thread from the main async event loop, which is the correct way to
-        # handle a blocking, long-running response. We use time.sleep()
-        # to pace the stream.
-        def generate():
-            while True:
-                frame_bytes = None
-                if isinstance(platform, HexapodSimulator):
-                    # --- Generate a dummy frame for simulation to save resources ---
-                    width, height = 640, 480
-                    # Create a black image
-                    img = np.zeros((height, width, 3), dtype=np.uint8)
-                    
-                    # Add text indicating which camera it is
-                    text = f"Dummy Feed: Cam {camera_id}"
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    text_size = cv2.getTextSize(text, font, 1, 2)[0]
-                    text_x = (width - text_size[0]) // 2
-                    text_y = (height + text_size[1]) // 2
-                    cv2.putText(img, text, (text_x, text_y), font, 1, (255, 255, 255), 2)
+        if server_mode != "Simulation":
+            img_arr = await asyncio.to_thread(platform.get_camera_image, camera_id)
+            if img_arr is not None:
+                bgr_img = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR)
+                is_success, jpeg = cv2.imencode('.jpg', bgr_img)
+                if is_success:
+                    return jpeg.tobytes()
+        else:
+            try:
+                placeholder_path = os.path.join(static_dir, "images", "placeholder_camera.png")
+                img = cv2.imread(placeholder_path)
+                if img is not None:
+                    if camera_id == 1:
+                        img = cv2.flip(img, 1)
+                    is_success, jpeg = cv2.imencode('.jpg', img)
+                    if is_success:
+                        return jpeg.tobytes()
+            except Exception:
+                return None
+    return None
 
-                    _, jpeg = cv2.imencode('.jpg', img)
-                    frame_bytes = jpeg.tobytes()
-                else:
-                    # --- Capture real frame from platform (physical robot or otherwise) ---
-                    img_arr = platform.get_camera_image(camera_id)
-                    if img_arr is not None:
-                        bgr_img = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR)
-                        _, jpeg = cv2.imencode('.jpg', bgr_img)
-                        frame_bytes = jpeg.tobytes()
-
-                if frame_bytes:
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
-                
-                time.sleep(1/15.) # Pace the stream to ~15 FPS
-
-        return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return HTMLResponse(content="<h1>Camera not available on this platform.</h1>", status_code=404)
+@app.websocket("/ws/video/{camera_id}")
+async def websocket_video_feed(websocket: WebSocket, camera_id: int):
+    await websocket.accept()
+    await camera_streamer.add_client(camera_id, websocket)
+    try:
+        while True:
+            await websocket.receive_text() # Keep connection alive
+    except WebSocketDisconnect:
+        print(f"Client disconnected from camera {camera_id}")
+        await camera_streamer.remove_client(camera_id, websocket)

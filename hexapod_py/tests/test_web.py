@@ -5,12 +5,13 @@ from flask import Flask, render_template_string, Response, jsonify
 import atexit
 
 # Add the project root to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.insert(0, project_root)
 
 try:
-    from hardware.sensors.gps import GPS
-    from hardware.sensors.gyro import Gyro
-    from hardware.sensors.camera import CameraSensor
+    from hexapod_py.platform.hardware.sensors.gps import GPS
+    from hexapod_py.platform.hardware.sensors.gyro import Gyro
+    from hexapod_py.platform.hardware.sensors.camera import CameraSensor
 except (ImportError, RuntimeError, ModuleNotFoundError) as e:
     print(f"Error importing sensor modules: {e}")
     print("Please ensure all sensor dependencies are installed and you are on a Raspberry Pi.")

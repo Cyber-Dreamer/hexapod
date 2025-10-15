@@ -1,101 +1,353 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const joystickZone = document.getElementById('joystick-zone');
+    // --- Element References ---
+    const mainViewContainer = document.getElementById('main-view');
+    const previewContainer = document.getElementById('preview-container');
     const vxValue = document.getElementById('vx-value');
     const vyValue = document.getElementById('vy-value');
-    const imuDataElem = document.getElementById('imu-data');
+    const omegaValue = document.getElementById('omega-value');
+    const imuVisContainer = document.getElementById('imu-visualization');
     const locomotionToggleBtn = document.getElementById('locomotion-toggle-btn');
     const locomotionStatusElem = document.getElementById('locomotion-status');
 
+    // --- State ---
     let controlData = { vx: 0, vy: 0, omega: 0 };
     let sendInterval = null;
+    let views = {}; // To hold our view elements
 
-    // --- NippleJS Joystick Setup ---
+    // --- View Management ---
+    function setupViews() {
+        const frontCamCanvas = document.createElement('canvas');
+        const rearCamCanvas = document.createElement('canvas');
+        setupWebSocketVideo(frontCamCanvas, 0);
+        setupWebSocketVideo(rearCamCanvas, 1);
+
+        const robot3D = document.createElement('canvas');
+
+        views = {
+            'front-cam': { id: 'front-cam', el: frontCamCanvas, label: 'Front Cam' },
+            'rear-cam': { id: 'rear-cam', el: rearCamCanvas, label: 'Rear Cam' },
+            '3d-view': { id: '3d-view', el: robot3D, label: '3D View' }
+        };
+
+        // Set initial view
+        switchView('front-cam');
+    }
+
+    function switchView(mainViewId) {
+        // Clear containers
+        mainViewContainer.innerHTML = '';
+        previewContainer.innerHTML = '';
+
+        // Set main view
+        mainViewContainer.appendChild(views[mainViewId].el);
+        
+        // Set preview views
+        for (const id in views) {
+            if (id !== mainViewId) {
+                const previewWrapper = document.createElement('div');
+                previewWrapper.className = 'preview-view';
+                previewWrapper.appendChild(views[id].el);
+
+                const label = document.createElement('div');
+                label.className = 'preview-label';
+                label.textContent = views[id].label;
+                previewWrapper.appendChild(label);
+
+                previewWrapper.onclick = () => switchView(id);
+                previewContainer.appendChild(previewWrapper);
+            }
+        }
+    }
+
+    // --- WebSocket Video ---
+    function setupWebSocketVideo(canvas, cameraId) {
+        const ctx = canvas.getContext('2d');
+        let ws;
+        let noSignalTimeout;
+        let noiseInterval;
+
+        function connect() {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${wsProtocol}//${window.location.host}/ws/video/${cameraId}`);
+            ws.binaryType = 'blob';
+
+            ws.onopen = () => {
+                console.log(`WebSocket connected for camera ${cameraId}`);
+                // Set a timeout to show error if no frame is received
+                noSignalTimeout = setTimeout(showErrorState, 2000);
+            };
+
+            ws.onmessage = (event) => {
+                // First frame received, clear the no-signal timeout and any error state
+                clearTimeout(noSignalTimeout);
+                clearInterval(noiseInterval);
+
+                createImageBitmap(event.data).then(imageBitmap => {
+                    canvas.width = imageBitmap.width;
+                    canvas.height = imageBitmap.height;
+                    ctx.drawImage(imageBitmap, 0, 0);
+                });
+            };
+
+            ws.onclose = () => {
+                console.log(`WebSocket disconnected for camera ${cameraId}. Reconnecting...`);
+                showErrorState();
+                setTimeout(connect, 3000); // Attempt to reconnect after 3 seconds
+            };
+
+            ws.onerror = (err) => {
+                console.error(`WebSocket error for camera ${cameraId}:`, err);
+                ws.close(); // This will trigger the onclose handler for reconnection
+            };
+        }
+
+        function showErrorState() {
+            clearInterval(noiseInterval);
+            const w = canvas.width || 320;
+            const h = canvas.height || 240;
+            canvas.width = w;
+            canvas.height = h;
+
+            // Draw error icon (a simple broken camera)
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, w, h);
+            ctx.strokeStyle = '#888';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(w * 0.3, h * 0.3, w * 0.4, h * 0.4);
+            ctx.beginPath();
+            ctx.moveTo(w * 0.3, h * 0.3);
+            ctx.lineTo(w * 0.7, h * 0.7);
+            ctx.stroke();
+            ctx.fillStyle = '#888';
+            ctx.font = '16px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('NO SIGNAL', w / 2, h * 0.85);
+
+            // Draw a single frame of static noise
+            drawStaticNoise(w, h);
+        }
+
+        function drawStaticNoise(w, h) {
+            const noiseData = ctx.createImageData(w, h);
+            const buffer = new Uint32Array(noiseData.data.buffer);
+            const len = buffer.length;
+            // Use a dark grey (0x33) for the noise instead of bright white
+            const darkGrey = 0xFF333333; 
+            for (let i = 0; i < len; i++) {
+                if (Math.random() > 0.5) {
+                    buffer[i] = darkGrey;
+                }
+            }
+            ctx.putImageData(noiseData, 0, 0);
+        }
+
+        connect();
+    }
+    // --- Joystick Setup ---
     const joystickOptions = {
-        zone: joystickZone,
         mode: 'static',
         position: { left: '50%', top: '50%' },
         color: 'dodgerblue',
         size: 150,
+        threshold: 0.1,
     };
 
-    const manager = nipplejs.create(joystickOptions);
-
-    manager.on('start', () => {
-        // Start sending data to the server at 20Hz
-        if (!sendInterval) {
-            sendInterval = setInterval(sendMovementCommand, 50); // 20Hz
-        }
+    // Left Joystick (Movement)
+    const joystickLeft = nipplejs.create({ ...joystickOptions, zone: document.getElementById('joystick-zone-left') });
+    joystickLeft.on('start end', (evt) => {
+        controlData.vx = 0;
+        controlData.vy = 0;
+        updateJoystickUI();
+        if (evt.type === 'start') startSendingInterval();
+        else stopSendingInterval();
+    }).on('move', (evt, data) => {
+        const normalizedDistance = Math.min(data.distance, joystickOptions.size / 2) / (joystickOptions.size / 2);
+        controlData.vx = Math.sin(data.angle.radian) * normalizedDistance;
+        controlData.vy = Math.cos(data.angle.radian) * normalizedDistance;
+        updateJoystickUI();
     });
 
-    manager.on('move', (evt, data) => {
-        if (data.distance > 0) {
-            const angleRad = data.angle.radian;
-            const force = Math.min(data.force, 1.0); // Clamp force to max 1.0
-
-            // Map joystick position to vx, vy, and omega
-            // Y-axis on joystick controls forward/backward (vx)
-            // X-axis on joystick controls strafing (vy)
-            // We'll use a separate mechanism for turning (omega) for simplicity,
-            // but for now, we can map it to X-axis as well.
-            controlData.vx = Math.sin(angleRad) * force;
-            controlData.vy = Math.cos(angleRad) * force;
-            
-            // Let's use X-axis for turning when strafing is minimal
-            // This is a simple mapping, can be improved.
-            controlData.omega = -Math.cos(angleRad) * force;
-
-            // Update UI
-            vxValue.textContent = controlData.vx.toFixed(2);
-            vyValue.textContent = controlData.vy.toFixed(2);
-            document.getElementById('omega-value').textContent = controlData.omega.toFixed(2);
-        }
+    // Right Joystick (Rotation)
+    const joystickRight = nipplejs.create({ ...joystickOptions, zone: document.getElementById('joystick-zone-right') });
+    joystickRight.on('start end', (evt) => {
+        controlData.omega = 0;
+        updateJoystickUI();
+        if (evt.type === 'start') startSendingInterval();
+        else stopSendingInterval();
+    }).on('move', (evt, data) => {
+        controlData.omega = -data.vector.x; // Invert for intuitive control
+        updateJoystickUI();
     });
 
-    manager.on('end', () => {
-        // Stop sending data and reset values
-        if (sendInterval) {
-            clearInterval(sendInterval);
-            sendInterval = null;
-        }
-        controlData = { vx: 0, vy: 0, omega: 0 };
-        sendMovementCommand(); // Send one last command to stop movement
-
-        // Reset UI
-        vxValue.textContent = '0.00';
-        vyValue.textContent = '0.00';
-        document.getElementById('omega-value').textContent = '0.00';
-    });
+    function updateJoystickUI() {
+        vxValue.textContent = controlData.vx.toFixed(2);
+        vyValue.textContent = controlData.vy.toFixed(2);
+        omegaValue.textContent = controlData.omega.toFixed(2);
+    }
 
     // --- Server Communication ---
+    function startSendingInterval() {
+        if (!sendInterval) {
+            sendMovementCommand();
+            sendInterval = setInterval(sendMovementCommand, 50); // 20Hz
+        }
+    }
+
+    function stopSendingInterval() {
+        // Use a small timeout to catch if the other joystick is still active
+        setTimeout(() => {
+            if (joystickLeft.isPressed || joystickRight.isPressed) return;
+            clearInterval(sendInterval);
+            sendInterval = null;
+            sendMovementCommand(); // Send final zero state
+        }, 100);
+    }
+
     function sendMovementCommand() {
         fetch('/move', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(controlData),
-        }).catch(err => console.error('Failed to send movement command:', err));
+        }).catch(err => console.error('Move command failed:', err));
     }
 
-    // --- Locomotion Toggle Button ---
     locomotionToggleBtn.addEventListener('click', () => {
         fetch('/toggle_locomotion', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Locomotion toggled:', data.status);
-                // The status will be updated by the sensor poll
-            })
-            .catch(err => console.error('Failed to toggle locomotion:', err));
+            .catch(err => console.error('Toggle locomotion failed:', err));
     });
 
-    // --- Sensor and Status Polling ---
+    // --- 3D Renderer ---
+    let scene, camera, renderer, controls, hexapodModel;
+    let imuScene, imuCamera, imuRenderer, imuArrow;
+
+    function init3D() {
+        const canvas = views['3d-view'].el;
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x2c2c2c);
+
+        camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Initial aspect ratio, will be updated
+        camera.position.set(0, -400, 250);
+        camera.lookAt(0, 0, 0);
+
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+
+        // OrbitControls for mouse interaction
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(50, -100, 100);
+        scene.add(directionalLight);
+
+        // Ground grid
+        const gridHelper = new THREE.GridHelper(1000, 20);
+        scene.add(gridHelper);
+
+        // Load the URDF model
+        const loader = new THREE.URDFLoader();
+        loader.load('/static/urdf/hexapod_description.urdf', robot => {
+            hexapodModel = robot;
+            // The URDF is scaled in meters, so we scale it up to millimeters
+            hexapodModel.scale.set(1000, 1000, 1000); 
+            scene.add(hexapodModel);
+        });
+        
+        // Resize handler
+        new ResizeObserver(() => {
+            // This will trigger whenever the main-view container (and our canvas) changes size
+            const { width, height } = mainViewContainer.getBoundingClientRect();
+            if (width > 0 && height > 0) {
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+        }).observe(mainViewContainer);
+
+        animate3D();
+    }
+
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        if (controls) controls.update();
+        renderer.render(scene, camera);
+    }
+
+    function update3DModel(joint_angles) {
+        if (!joint_angles || !hexapodModel) return;
+
+        for (const jointName in joint_angles) {
+            const joint = hexapodModel.joints[jointName];
+            if (joint) {
+                // Set the joint angle. The axis is defined in the URDF.
+                joint.setJointValue(joint_angles[jointName]);
+            }
+        }
+    }
+
+    // --- IMU Visualization ---
+    function initIMUVis() {
+        imuScene = new THREE.Scene();
+        imuScene.background = new THREE.Color(0x2c2c2c);
+
+        const { clientWidth, clientHeight } = imuVisContainer;
+        imuCamera = new THREE.PerspectiveCamera(50, clientWidth / clientHeight, 0.1, 1000);
+        imuCamera.position.z = 5;
+
+        imuRenderer = new THREE.WebGLRenderer({ antialias: true });
+        imuRenderer.setSize(clientWidth, clientHeight);
+        imuVisContainer.appendChild(imuRenderer.domElement);
+
+        // Lighting
+        const imuLight = new THREE.AmbientLight(0xffffff, 1.0);
+        imuScene.add(imuLight);
+
+        // Arrow Helper
+        const dir = new THREE.Vector3(0, 1, 0); // Pointing up initially
+        const origin = new THREE.Vector3(0, 0, 0);
+        const length = 2;
+        const hex = 0x007bff; // Primary color
+        imuArrow = new THREE.ArrowHelper(dir, origin, length, hex, 0.5, 0.3);
+        imuScene.add(imuArrow);
+
+        // Ground grid
+        const gridHelper = new THREE.GridHelper(4, 4);
+        gridHelper.rotation.x = Math.PI / 2;
+        imuScene.add(gridHelper);
+
+        new ResizeObserver(() => {
+            const { clientWidth, clientHeight } = imuVisContainer;
+            imuCamera.aspect = clientWidth / clientHeight;
+            imuCamera.updateProjectionMatrix();
+            imuRenderer.setSize(clientWidth, clientHeight);
+        }).observe(imuVisContainer);
+
+        animateIMU();
+    }
+
+    function animateIMU() {
+        requestAnimationFrame(animateIMU);
+        imuRenderer.render(imuScene, imuCamera);
+    }
+
+    // --- Data Polling ---
     function pollSensorData() {
         fetch('/sensor_data')
             .then(response => response.json())
             .then(data => {
-                // Update IMU data
-                imuDataElem.textContent = JSON.stringify(data.imu, null, 2);
+                const { imu, locomotion_enabled, joint_angles } = data;
+
+                // Update IMU visualization
+                if (imu && imuArrow) {
+                    const { roll, pitch, yaw } = imu;
+                    // Set rotation using Euler angles. Order is important (YXZ for aerospace).
+                    imuArrow.rotation.set(pitch, yaw, -roll, 'YXZ');
+                }
 
                 // Update locomotion status and button appearance
-                if (data.locomotion_enabled) {
+                if (locomotion_enabled) {
                     locomotionStatusElem.textContent = 'ENABLED';
                     locomotionStatusElem.className = 'enabled';
                     locomotionToggleBtn.textContent = 'STOP';
@@ -106,14 +358,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     locomotionToggleBtn.textContent = 'START';
                     locomotionToggleBtn.className = 'control-btn start';
                 }
+
+                // Update 3D model
+                update3DModel(joint_angles);
             })
             .catch(err => {
-                imuDataElem.textContent = 'Error fetching sensor data.';
                 console.error('Sensor poll error:', err);
             });
     }
 
-    // Poll for sensor data every 500ms
-    setInterval(pollSensorData, 500);
-    pollSensorData(); // Initial call
+    // --- Initialization ---
+    function init() {
+        setupViews();
+        init3D();
+        initIMUVis();
+        pollSensorData(); // Initial call
+        setInterval(pollSensorData, 200); // Poll more frequently for smoother 3D updates
+    }
+
+    init();
 });

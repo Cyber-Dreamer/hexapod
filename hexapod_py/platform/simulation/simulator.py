@@ -120,7 +120,22 @@ class HexapodSimulator(HexapodPlatform):
             p.disconnect()
             print("Simulation stopped.")
 
-    # ... (rest of the methods are unchanged) ...
+    def _map_joint_names_to_ids(self):
+        for i in range(p.getNumJoints(self.robot_id)):
+            joint_info = p.getJointInfo(self.robot_id, i)
+            joint_name = joint_info[1].decode('UTF-8')
+            self.joint_name_to_id[joint_name] = joint_info[0]
+            link_name = joint_info[12].decode('UTF-8')
+            self.link_name_to_id[link_name] = joint_info[0]
+
+    def get_imu_data(self):
+        """
+        Returns the latest IMU data.
+        This method is required by the HexapodPlatform abstract base class
+        for in-process use cases.
+        """
+        return self._latest_imu_data
+
     def _update_sensors(self):
         if self.robot_id is None: return
         try:
@@ -131,14 +146,6 @@ class HexapodSimulator(HexapodPlatform):
             }
         except p.error:
             self._latest_imu_data = None
-
-    def _map_joint_names_to_ids(self):
-        for i in range(p.getNumJoints(self.robot_id)):
-            joint_info = p.getJointInfo(self.robot_id, i)
-            joint_name = joint_info[1].decode('UTF-8')
-            self.joint_name_to_id[joint_name] = joint_info[0]
-            link_name = joint_info[12].decode('UTF-8')
-            self.link_name_to_id[link_name] = joint_info[0]
 
     def _set_foot_friction(self, lateral_friction=2.0, spinning_friction=0.5, rolling_friction=0.1):
         if not self.robot_id: return

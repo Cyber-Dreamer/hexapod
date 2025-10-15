@@ -5,54 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hexapod Control</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- URDFLoader and OrbitControls must be included after three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/urdf-loader@0.10.0/build/URDFLoader.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Hexapod Control</h1>
             <div class="status-bar">
+                <button id="locomotion-toggle-btn" class="control-btn start">START</button>
                 <p><strong>Mode:</strong> <span id="mode">{{ mode }}</span></p>
                 <p><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></p>
             </div>
         </header>
 
         <main>
-            <div class="video-container">
-                <div class="video-wrapper">
-                    <h2>Front Camera</h2>
-                    <img id="front-camera-feed" src="/video_feed/0" alt="Front Camera Feed">
+            <div class="view-container">
+                <div id="main-view" class="main-view">
+                    <!-- Main view content will be injected here by JS -->
                 </div>
-                <div class="video-wrapper">
-                    <h2>Rear Camera</h2>
-                    <img id="rear-camera-feed" src="/video_feed/1" alt="Rear Camera Feed">
+                <div id="preview-container" class="preview-container">
+                    <!-- Preview views will be injected here by JS -->
                 </div>
-            </div>
-
-            <div class="controls-container">
-                <div class="joystick-container">
-                    <div id="joystick-zone" class="joystick-zone">
-                        <div id="joystick-handle" class="joystick-handle"></div>
+                <div class="controls-container">
+                    <div class="joystick-area">
+                        <div id="joystick-zone-left" class="joystick-zone"></div>
+                        <p>Movement (vx, vy)</p>
                     </div>
+                    <div class="joystick-area">
+                        <div id="joystick-zone-right" class="joystick-zone"></div>
+                        <p>Rotation (omega)</p>
+                    </div>
+                </div>
+                <!-- This container is for the data readout, which is positioned independently -->
+                <div class="buttons-container">
                     <div class="joystick-data">
                         <p><strong>Forward/Backward (Vx):</strong> <span id="vx-value">0.00</span></p>
                         <p><strong>Strafe (Vy):</strong> <span id="vy-value">0.00</span></p>
                         <p><strong>Turn (Omega):</strong> <span id="omega-value">0.00</span></p>
                     </div>
                 </div>
-                <div class="buttons-container">
-                    <button id="locomotion-toggle-btn" class="control-btn start">START</button>
-                </div>
-            </div>
-
-            <div class="sensor-data">
-                <h2>IMU Data</h2>
-                <pre id="imu-data">Fetching data...</pre>
             </div>
         </main>
 
-        <footer>
-            <p>Hexapod Control Interface</p>
-        </footer>
+        <div class="sensor-data">
+            <h2>IMU Orientation</h2>
+            <div id="imu-visualization"></div>
+        </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
