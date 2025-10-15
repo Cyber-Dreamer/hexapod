@@ -1,10 +1,12 @@
 
 import zmq
+import threading
 import msgpack
 
 # Define TCP socket addresses (must match the server)
 JOINT_ANGLES_SOCKET_PATH = "tcp://127.0.0.1:5555"
 IMU_DATA_SOCKET_PATH = "tcp://127.0.0.1:5556"
+CAMERA_SOCKET_PATH = "tcp://127.0.0.1:5557"
 
 class PlatformClient:
     """
@@ -12,6 +14,7 @@ class PlatformClient:
     It mimics the HexapodPlatform interface for compatibility with controllers.
     """
     def __init__(self):
+        self.cam_socket_lock = threading.Lock()
         self.context = zmq.Context()
         
         self.req_socket = self.context.socket(zmq.REQ)
@@ -20,9 +23,15 @@ class PlatformClient:
         self.sub_socket = self.context.socket(zmq.SUB)
         self.sub_socket.connect(IMU_DATA_SOCKET_PATH)
         self.sub_socket.setsockopt_string(zmq.SUBSCRIBE, "sensor.imu")
+
+        self.cam_socket = self.context.socket(zmq.SUB)
+        self.cam_socket.connect(CAMERA_SOCKET_PATH)
+        self.cam_socket.setsockopt_string(zmq.SUBSCRIBE, "camera.front")
+        self.cam_socket.setsockopt_string(zmq.SUBSCRIBE, "camera.rear")
         
         self.poller = zmq.Poller()
         self.poller.register(self.sub_socket, zmq.POLLIN)
+        self.poller.register(self.cam_socket, zmq.POLLIN)
 
         print(f"PlatformClient connected to services.")
 
@@ -46,10 +55,31 @@ class PlatformClient:
             return msgpack.unpackb(message, raw=False)
         return None
 
+    def get_camera_image(self, camera_id):
+        """
+        Performs a non-blocking read for the latest camera frame.
+        Returns the raw JPEG bytes.
+        """
+        with self.cam_socket_lock:
+            target_topic = b"camera.front" if camera_id == 0 else b"camera.rear"
+            latest_frame = None
+
+            # Check for new messages without blocking forever
+            socks = dict(self.poller.poll(1))
+            if self.cam_socket in socks:
+                # We have at least one message. Drain the socket to get the most recent one.
+                # The `poll(0)` will check for messages that are already queued.
+                while self.cam_socket in dict(self.poller.poll(0)):
+                    msg_topic, msg_data = self.cam_socket.recv_multipart()
+                    # Keep the frame if it matches our target topic
+                    if msg_topic == target_topic:
+                        latest_frame = msg_data
+
+            # Return the last frame found for the topic, or None if no new frame was available.
+            return latest_frame
+
     def start(self):
         pass
 
     def stop(self):
-        self.req_socket.close()
-        self.sub_socket.close()
         self.context.term()

@@ -50,6 +50,7 @@ def main():
         args = parser.parse_args()
 
     platform_process = None
+    camera_process = None
     platform_client = None
     try:
         # --- 1. Launch the selected platform server ---
@@ -63,6 +64,13 @@ def main():
         elif args.platform == 'physical':
             print("Error: Physical platform server is not yet implemented.")
             sys.exit(1)
+
+        # --- Launch the camera server for the selected platform ---
+        print(f"Launching Camera Server for {args.platform} platform...")
+        camera_process = subprocess.Popen(
+            [sys.executable, "-m", "hexapod_py.platform.camera_server", "--platform", args.platform],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(2) # Give it a moment to start
 
         # --- 2. Initialize client and controllers ---
         platform_client = PlatformClient()
@@ -92,6 +100,13 @@ def main():
         print("\nCleaning up...")
         if platform_client:
             platform_client.stop()
+        if camera_process:
+            print("Terminating camera server process...")
+            camera_process.terminate()
+            stdout, stderr = camera_process.communicate(timeout=5)
+            if stdout: print(f"[CamServer STDOUT]:\n{stdout.decode()}")
+            if stderr: print(f"[CamServer STDERR]:\n{stderr.decode()}")
+
         if platform_process:
             print("Terminating platform server process...")
             platform_process.terminate()

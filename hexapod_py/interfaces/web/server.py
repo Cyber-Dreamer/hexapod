@@ -8,6 +8,7 @@ import os
 import sys
 import time
 from typing import Optional, Dict
+import logging
 import numpy as np
 import cv2
 
@@ -35,16 +36,16 @@ class CameraStreamer:
         self.locks: Dict[int, asyncio.Lock] = {}
         self.broadcasting_tasks: Dict[int, asyncio.Task] = {}
 
-    async def add_client(self, camera_id: int, websocket: WebSocket):
+    async def add_client(self, camera_id: int, websocket: WebSocket, fps: int = 30):
         if camera_id not in self.connections:
             self.connections[camera_id] = []
             self.locks[camera_id] = asyncio.Lock()
         
         async with self.locks[camera_id]:
             self.connections[camera_id].append(websocket)
-        
+
         if camera_id not in self.broadcasting_tasks or self.broadcasting_tasks[camera_id].done():
-            self.broadcasting_tasks[camera_id] = asyncio.create_task(self._broadcast_frames(camera_id))
+            self.broadcasting_tasks[camera_id] = asyncio.create_task(self._broadcast_frames(camera_id, fps))
 
     async def remove_client(self, camera_id: int, websocket: WebSocket):
         async with self.locks[camera_id]:
@@ -55,21 +56,31 @@ class CameraStreamer:
                 self.broadcasting_tasks[camera_id].cancel()
                 del self.broadcasting_tasks[camera_id]
 
-    async def _broadcast_frames(self, camera_id: int):
-        while True:
-            frame_bytes = await get_frame_bytes(camera_id)
-            if frame_bytes:
-                async with self.locks[camera_id]:
-                    for connection in self.connections[camera_id]:
+    async def _broadcast_frames(self, camera_id: int, fps: int):
+        """Continuously fetches frames and sends them to connected clients."""
+        logging.info(f"Starting frame broadcast for camera {camera_id} at {fps} FPS.")
+        try:
+            delay = 1.0 / fps
+            while True:
+                frame_bytes = await get_frame_bytes(camera_id)
+                if frame_bytes:
+                    # Use a copy of the list to avoid issues if a client disconnects
+                    # during iteration.
+                    async with self.locks[camera_id]:
+                        connections_to_send = self.connections[camera_id][:]
+
+                    for connection in connections_to_send:
                         try:
                             await connection.send_bytes(frame_bytes)
-                        except WebSocketDisconnect:
-                            # The main handler will catch this and remove the client
-                            pass
-                        except Exception:
-                            # Handle other potential sending errors
-                            pass
-            await asyncio.sleep(1/30.) # Limit to ~30 FPS
+                        except (WebSocketDisconnect, ConnectionResetError):
+                            # These are expected when a client closes the connection.
+                            # The remove_client logic will handle cleanup.
+                            logging.info(f"Client disconnected during send on camera {camera_id}.")
+                await asyncio.sleep(delay)
+        except asyncio.CancelledError:
+            logging.info(f"Broadcast task for camera {camera_id} was cancelled.")
+        except Exception as e:
+            logging.error(f"!!! Unhandled exception in broadcast task for camera {camera_id}: {e}", exc_info=True)
 
 camera_streamer = CameraStreamer()
 app = FastAPI()
@@ -107,7 +118,7 @@ async def control_loop():
     It reads control values, runs the gait logic, and updates the platform.
     """
     while True:
-        global last_joint_angles
+        global last_joint_angles, locomotion_enabled
         if platform and locomotion:
             if locomotion_enabled:
                 # Update locomotion parameters that can be changed live
@@ -138,6 +149,10 @@ async def control_loop():
 async def startup_event():
     """Starts the background control loop when the server starts."""
     asyncio.create_task(control_loop())
+
+@app.on_event("shutdown")
+def shutdown_event():
+    """Releases the webcam when the server shuts down."""
 
 @app.get("/")
 async def index(request: Request):
@@ -177,37 +192,23 @@ async def sensor_data():
         }
     return {"imu": {}, "locomotion_enabled": locomotion_enabled, "joint_angles": None}
 
-async def get_frame_bytes(camera_id: int) -> Optional[bytes]:
-    """Helper function to get encoded frame bytes for a camera."""
-    if platform and hasattr(platform, 'get_camera_image'):
-        if server_mode != "Simulation":
-            img_arr = await asyncio.to_thread(platform.get_camera_image, camera_id)
-            if img_arr is not None:
-                bgr_img = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR)
-                is_success, jpeg = cv2.imencode('.jpg', bgr_img)
-                if is_success:
-                    return jpeg.tobytes()
-        else:
-            try:
-                placeholder_path = os.path.join(static_dir, "images", "placeholder_camera.png")
-                img = cv2.imread(placeholder_path)
-                if img is not None:
-                    if camera_id == 1:
-                        img = cv2.flip(img, 1)
-                    is_success, jpeg = cv2.imencode('.jpg', img)
-                    if is_success:
-                        return jpeg.tobytes()
-            except Exception:
-                return None
-    return None
-
 @app.websocket("/ws/video/{camera_id}")
-async def websocket_video_feed(websocket: WebSocket, camera_id: int):
+async def websocket_video_feed(websocket: WebSocket, camera_id: int, fps: int = 30):
     await websocket.accept()
-    await camera_streamer.add_client(camera_id, websocket)
+    await camera_streamer.add_client(camera_id, websocket, fps)
     try:
         while True:
             await websocket.receive_text() # Keep connection alive
     except WebSocketDisconnect:
         print(f"Client disconnected from camera {camera_id}")
         await camera_streamer.remove_client(camera_id, websocket)
+
+async def get_frame_bytes(camera_id: int) -> Optional[bytes]:
+    """Helper function to get encoded frame bytes for a camera."""
+    # The platform client now handles all communication (ZMQ) and returns
+    # the raw JPEG bytes directly from the dedicated camera_server.
+    if platform and hasattr(platform, 'get_camera_image'):
+        # Run the blocking ZMQ call in a thread to not block the event loop
+        frame_bytes = await asyncio.to_thread(platform.get_camera_image, camera_id)
+        return frame_bytes
+    return None
