@@ -24,7 +24,14 @@ from hexapod_py.locomotion.locomotion import HexapodLocomotion
 # These will be initialized in the main execution block
 platform: Optional[HexapodPlatform] = None
 locomotion: Optional[HexapodLocomotion] = None 
-control_values: Dict[str, float] = {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 150.0}
+control_values: Dict[str, float] = {
+    'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 
+    'body_height': 150.0, 
+    'standoff': 400.0,
+    'step_height': 40.0,
+    'pitch': 0.0,
+    'roll': 0.0
+}
 locomotion_enabled: bool = False
 last_joint_angles: Optional[Dict[str, float]] = None
 server_mode: str = "Unknown"
@@ -120,28 +127,70 @@ async def control_loop():
     while True:
         global last_joint_angles, locomotion_enabled
         if platform and locomotion:
+            # Update locomotion parameters that can be changed live from the UI
+            new_body_height = control_values.get('body_height', locomotion.body_height)
+            new_standoff = control_values.get('standoff', locomotion.standoff_distance)
+            new_step_height = control_values.get('step_height', locomotion.step_height)
+
+            # Recalculate stance if body height or standoff has changed
+            if new_body_height != locomotion.body_height or new_standoff != locomotion.standoff_distance:
+                locomotion.body_height = new_body_height
+                locomotion.recalculate_stance(standoff_distance=new_standoff)
+            
+            # Update step height for the current gait
+            if new_step_height != locomotion.step_height:
+                locomotion.step_height = new_step_height
+
             if locomotion_enabled:
-                # Update locomotion parameters that can be changed live
-                # Convert meters from UI to millimeters for the locomotion module
-                if 'body_height' in control_values:
-                    locomotion.body_height = control_values['body_height']
-                    locomotion.recalculate_stance()
                 # 1. If enabled, run gait logic with current control values
                 joint_angles = locomotion.run_gait(
                     vx=control_values['vx'],
                     vy=control_values['vy'],
-                    omega=control_values['omega']
+                    omega=control_values['omega'],
+                    roll=control_values.get('roll', 0.0),
+                    pitch=control_values.get('pitch', 0.0),
+                    step_height=locomotion.step_height
                 )
-                # Set the target angles on the platform
-                platform.set_joint_angles(joint_angles)
-                last_joint_angles = joint_angles
             else:
-                # 2. If disabled, do nothing. This allows the robot to hold its last
-                # commanded position. On startup, this will be the simulator's
-                # initial standing pose, preventing the "collapse" behavior.
-                # We also reset control values to prevent sudden movement on re-enabling.
-                control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0}) # Keep height
+                # 2. If disabled, switch to stationary body IK mode.
+                # The left joystick controls body translation (tx, ty)
+                # The right joystick controls body orientation (roll, pitch)
+                max_translation = 50.0 # mm
+                max_rotation = np.deg2rad(20.0) # radians
 
+                translation = np.array([
+                    control_values['vy'] * max_translation, # vy is forward/backward -> maps to body tx
+                    control_values['vx'] * max_translation, # vx is strafe -> maps to body ty
+                    0.0 # tz is not controlled by joystick
+                ])
+                rotation = np.array([
+                    control_values['roll'] * max_rotation,
+                    control_values['pitch'] * max_rotation,
+                    0.0 # yaw is not controlled in this mode
+                ])
+
+                # Calculate the required joint angles for the body pose
+                joint_angles = locomotion.set_body_pose(translation, rotation)
+
+            # Convert joint angles (which may be numpy arrays) to a list of lists
+            # for serialization, as msgpack cannot handle numpy arrays directly.
+            joint_angles_list = []
+            if joint_angles is not None:
+                joint_angles_list = [arr.tolist() if isinstance(arr, np.ndarray) else arr for arr in joint_angles]
+
+            # Set the target angles on the platform
+            platform.set_joint_angles(joint_angles_list)
+            
+            # Convert the list of lists into a dictionary for the UI's 3D model
+            # The URDF loader expects joint names.
+            joint_names = [
+                'coxa', 'femur', 'tibia'
+            ]
+            last_joint_angles = {}
+            if joint_angles is not None:
+                for i, leg_angles in enumerate(joint_angles):
+                    for j, angle in enumerate(leg_angles):
+                        last_joint_angles[f'leg_{i}_{joint_names[j]}_joint'] = angle
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
 
@@ -164,11 +213,14 @@ async def move(request: Request):
     """Receives movement commands from the web UI."""
     global control_values
     data = await request.json()
-    print(f"Received move command: {data}, locomotion_enabled: {locomotion_enabled}")
     control_values['vx'] = data.get('vx', 0.0)
     control_values['vy'] = data.get('vy', 0.0)
     control_values['omega'] = data.get('omega', 0.0)
-    control_values['body_height'] = data.get('body_height', 150.0)
+    control_values['body_height'] = data.get('body_height', control_values['body_height'])
+    control_values['standoff'] = data.get('standoff', control_values['standoff'])
+    control_values['step_height'] = data.get('step_height', control_values['step_height'])
+    control_values['pitch'] = data.get('pitch', 0.0)
+    control_values['roll'] = data.get('roll', 0.0)
     return {"status": "success", "received": control_values}
 
 @app.post("/toggle_locomotion")
@@ -178,6 +230,15 @@ async def toggle_locomotion():
     locomotion_enabled = not locomotion_enabled
     status = "enabled" if locomotion_enabled else "disabled"
     print(f"Locomotion has been {status}.")
+    # When disabling, reset movement values to prevent sudden lurching
+    if not locomotion_enabled:
+        control_values.update({
+            'vx': 0.0, 
+            'vy': 0.0, 
+            'omega': 0.0,
+            'pitch': 0.0,
+            'roll': 0.0
+        })
     return {"status": f"locomotion_{status}"}
 
 @app.get("/sensor_data")

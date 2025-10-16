@@ -5,14 +5,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const vxValue = document.getElementById('vx-value');
     const vyValue = document.getElementById('vy-value');
     const omegaValue = document.getElementById('omega-value');
+    const pitchValue = document.getElementById('pitch-value');
     const imuVisContainer = document.getElementById('imu-visualization');
     const locomotionToggleBtn = document.getElementById('locomotion-toggle-btn');
+    const rightJoystickLabel = document.getElementById('right-joystick-label');
+    const omegaLabel = document.getElementById('omega-label');
     const locomotionStatusElem = document.getElementById('locomotion-status');
 
+    // Settings Panel
+    const settingsBtn = document.getElementById('settings-btn');
+    const closeSettingsBtn = document.getElementById('close-settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+
+    // Sliders
+    const bodyHeightSlider = document.getElementById('body-height-slider');
+    const standoffSlider = document.getElementById('standoff-slider');
+    const stepHeightSlider = document.getElementById('step-height-slider');
+    const bodyHeightValue = document.getElementById('body-height-value');
+    const standoffValue = document.getElementById('standoff-value');
+    const stepHeightValue = document.getElementById('step-height-value');
+
     // --- State ---
-    let controlData = { vx: 0, vy: 0, omega: 0 };
+    let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 150, standoff: 400, step_height: 40 };
     let sendInterval = null;
     let views = {}; // To hold our view elements
+
+    // --- Event Listeners ---
+    settingsBtn.addEventListener('click', () => settingsPanel.classList.add('visible'));
+    closeSettingsBtn.addEventListener('click', () => settingsPanel.classList.remove('visible'));
+
 
     // --- View Management ---
     function setupViews() {
@@ -171,11 +192,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const joystickRight = nipplejs.create({ ...joystickOptions, zone: document.getElementById('joystick-zone-right') });
     joystickRight.on('start end', (evt) => {
         controlData.omega = 0;
+        controlData.roll = 0;
+        controlData.pitch = 0;
         updateJoystickUI();
         if (evt.type === 'start') startSendingInterval();
         else stopSendingInterval();
     }).on('move', (evt, data) => {
-        controlData.omega = -data.vector.x; // Invert for intuitive control
+        // When locomotion is enabled, X is omega. When disabled, X is roll.
+        if (locomotionStatusElem.textContent === 'ENABLED') {
+            controlData.omega = -data.vector.x;
+            controlData.roll = 0;
+        } else {
+            controlData.omega = 0;
+            controlData.roll = -data.vector.x;
+        }
+        // NippleJS Y is negative for 'up', so we invert it for positive pitch
+        controlData.pitch = -data.vector.y; 
         updateJoystickUI();
     });
 
@@ -183,6 +215,34 @@ document.addEventListener('DOMContentLoaded', function () {
         vxValue.textContent = controlData.vx.toFixed(2);
         vyValue.textContent = controlData.vy.toFixed(2);
         omegaValue.textContent = controlData.omega.toFixed(2);
+        pitchValue.textContent = controlData.pitch.toFixed(2);
+    }
+
+    function setupSliders() {
+        // Initialize slider values from state
+        bodyHeightSlider.value = controlData.body_height;
+        standoffSlider.value = controlData.standoff;
+        stepHeightSlider.value = controlData.step_height;
+        updateSliderUI();
+
+        bodyHeightSlider.addEventListener('input', handleSliderChange);
+        standoffSlider.addEventListener('input', handleSliderChange);
+        stepHeightSlider.addEventListener('input', handleSliderChange);
+    }
+
+    function handleSliderChange() {
+        controlData.body_height = parseFloat(bodyHeightSlider.value);
+        controlData.standoff = parseFloat(standoffSlider.value);
+        controlData.step_height = parseFloat(stepHeightSlider.value);
+        updateSliderUI();
+        // Send an immediate update when a slider is moved
+        sendMovementCommand();
+    }
+
+    function updateSliderUI() {
+        bodyHeightValue.textContent = `${controlData.body_height.toFixed(0)} mm`;
+        standoffValue.textContent = `${controlData.standoff.toFixed(0)} mm`;
+        stepHeightValue.textContent = `${controlData.step_height.toFixed(0)} mm`;
     }
 
     // --- Server Communication ---
@@ -213,8 +273,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     locomotionToggleBtn.addEventListener('click', () => {
         fetch('/toggle_locomotion', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // The server responds with the new status, e.g., "locomotion_enabled".
+                // We can use this to update the UI immediately instead of waiting for the next poll.
+                const isEnabled = data.status === 'locomotion_enabled';
+                updateLocomotionStatusUI(isEnabled);
+            })
             .catch(err => console.error('Toggle locomotion failed:', err));
     });
+
+    function updateLocomotionStatusUI(isEnabled) {
+        if (isEnabled) {
+            locomotionStatusElem.textContent = 'ENABLED';
+            locomotionStatusElem.className = 'enabled';
+            locomotionToggleBtn.textContent = 'STOP';
+            locomotionToggleBtn.className = 'control-btn stop';
+        } else {
+            locomotionStatusElem.textContent = 'DISABLED';
+            locomotionStatusElem.className = 'disabled';
+            locomotionToggleBtn.textContent = 'START';
+            locomotionToggleBtn.className = 'control-btn start';
+        }
+    }
 
     // --- 3D Renderer ---
     let scene, camera, renderer, controls, hexapodModel;
@@ -347,16 +428,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Update locomotion status and button appearance
-                if (locomotion_enabled) {
-                    locomotionStatusElem.textContent = 'ENABLED';
-                    locomotionStatusElem.className = 'enabled';
-                    locomotionToggleBtn.textContent = 'STOP';
-                    locomotionToggleBtn.className = 'control-btn stop';
-                } else {
-                    locomotionStatusElem.textContent = 'DISABLED';
-                    locomotionStatusElem.className = 'disabled';
-                    locomotionToggleBtn.textContent = 'START';
-                    locomotionToggleBtn.className = 'control-btn start';
+                updateLocomotionStatusUI(locomotion_enabled);
+                if (locomotion_enabled) { // This part only updates joystick labels
+                    rightJoystickLabel.textContent = 'Rotation (omega)';
+                    omegaLabel.textContent = 'Turn (Omega):';
+                } else { // This part only updates joystick labels
+                    rightJoystickLabel.textContent = 'Tilt (roll/pitch)';
+                    // In body IK mode, the omega value is repurposed as roll.
+                    // We'll just relabel it for clarity.
+                    omegaLabel.textContent = 'Roll:';
                 }
 
                 // Update 3D model
@@ -370,6 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Initialization ---
     function init() {
         setupViews();
+        setupSliders();
         init3D();
         initIMUVis();
         pollSensorData(); // Initial call

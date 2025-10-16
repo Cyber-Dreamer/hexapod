@@ -80,9 +80,18 @@ class HexapodLocomotion:
         This is a wrapper around the body_ik function that uses the robot's
         default standing positions as the reference.
         """
-        # Note: We pass self.default_foot_positions, which are the fixed world
-        # coordinates for the feet to stay planted on.
-        return self.kinematics.body_ik(translation, rotation, self.kinematics.hip_positions, self.default_foot_positions)
+        # 1. Calculate the target position for each foot in its local leg coordinate system.
+        #    We pass self.default_foot_positions, which are the fixed world
+        #    coordinates for the feet to stay planted on.
+        new_foot_targets_local = self.kinematics.body_ik(translation, rotation, self.kinematics.hip_positions, self.default_foot_positions)
+
+        # 2. For each leg, calculate the joint angles to reach its new target position.
+        all_angles = []
+        for i in range(6):
+            angles = self.kinematics.leg_ik(new_foot_targets_local[i], knee_direction=self.knee_direction)
+            all_angles.append(angles if angles is not None else self.default_joint_angles[i])
+
+        return all_angles
     
     def run_gait(self, vx, vy, omega, roll=0.0, pitch=0.0, step_height=None):
         if self.current_gait:

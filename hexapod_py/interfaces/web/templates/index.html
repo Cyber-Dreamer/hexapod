@@ -15,6 +15,7 @@
         <header>
             <h1>Hexapod Control</h1>
             <div class="status-bar">
+                <button id="settings-btn" class="control-btn settings">Settings</button>
                 <button id="locomotion-toggle-btn" class="control-btn start">START</button>
                 <p><strong>Mode:</strong> <span id="mode">{{ mode }}</span></p>
                 <p><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></p>
@@ -36,7 +37,7 @@
                     </div>
                     <div class="joystick-area">
                         <div id="joystick-zone-right" class="joystick-zone"></div>
-                        <p>Rotation (omega)</p>
+                        <p id="right-joystick-label">Rotation (omega)</p>
                     </div>
                 </div>
                 <!-- This container is for the data readout, which is positioned independently -->
@@ -44,7 +45,8 @@
                     <div class="joystick-data">
                         <p><strong>Forward/Backward (Vx):</strong> <span id="vx-value">0.00</span></p>
                         <p><strong>Strafe (Vy):</strong> <span id="vy-value">0.00</span></p>
-                        <p><strong>Turn (Omega):</strong> <span id="omega-value">0.00</span></p>
+                        <p><strong id="omega-label">Turn (Omega):</strong> <span id="omega-value">0.00</span></p>
+                        <p><strong>Pitch:</strong> <span id="pitch-value">0.00</span></p>
                     </div>
                 </div>
             </div>
@@ -55,6 +57,26 @@
             <div id="imu-visualization"></div>
         </div>
 
+    </div>
+
+    <!-- Settings Panel (initially hidden) -->
+    <div id="settings-panel" class="settings-panel">
+        <div class="settings-header">
+            <h2>Gait Parameters</h2>
+            <button id="close-settings-btn">&times;</button>
+        </div>
+        <div class="slider-group">
+            <label for="body-height-slider">Body Height: <span id="body-height-value">150 mm</span></label>
+            <input type="range" id="body-height-slider" min="100" max="250" value="150" class="slider">
+        </div>
+        <div class="slider-group">
+            <label for="standoff-slider">Standoff Distance: <span id="standoff-value">400 mm</span></label>
+            <input type="range" id="standoff-slider" min="300" max="500" value="400" class="slider">
+        </div>
+        <div class="slider-group">
+            <label for="step-height-slider">Step Height: <span id="step-height-value">40 mm</span></label>
+            <input type="range" id="step-height-slider" min="10" max="80" value="40" class="slider">
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
