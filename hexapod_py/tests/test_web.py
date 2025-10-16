@@ -1,8 +1,10 @@
 import os
 import sys
 import time
+import threading
 from flask import Flask, render_template_string, Response, jsonify
 import atexit
+import lgpio
 
 # Add the project root to the Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -14,8 +16,97 @@ try:
     from hexapod_py.platform.hardware.sensors.camera import CameraSensor
 except (ImportError, RuntimeError, ModuleNotFoundError) as e:
     print(f"Error importing sensor modules: {e}")
-    print("Please ensure all sensor dependencies are installed and you are on a Raspberry Pi.")
-    sys.exit(1)
+    # Non-fatal, the web server can run without them
+
+# --- HX711 Weight Sensor Code ---
+# GPIO pins
+DATA_PIN = 12
+CLOCK_PIN = 21
+
+# lgpio handles
+try:
+    h = lgpio.gpiochip_open(0)
+    lgpio.gpio_claim_input(h, DATA_PIN)
+    lgpio.gpio_claim_output(h, CLOCK_PIN)
+    print("lgpio initialized for HX711.")
+except Exception as e:
+    h = None
+    print(f"Could not initialize lgpio for HX711: {e}")
+
+class HX711:
+    def __init__(self, dout, pd_sck):
+        self.dout = dout
+        self.pd_sck = pd_sck
+        self.offset = 0
+        self.scale = 1
+        if h:
+            lgpio.gpio_write(h, self.pd_sck, 0)
+
+    def is_ready(self):
+        if not h: return False
+        return lgpio.gpio_read(h, self.dout) == 0
+
+    def read(self):
+        if not h: return 0
+        while not self.is_ready():
+            pass
+        count = 0
+        for i in range(24):
+            lgpio.gpio_write(h, self.pd_sck, 1)
+            lgpio.gpio_write(h, self.pd_sck, 0)
+            count = count << 1
+            if lgpio.gpio_read(h, self.dout):
+                count += 1
+        lgpio.gpio_write(h, self.pd_sck, 1)
+        lgpio.gpio_write(h, self.pd_sck, 0)
+        if count & 0x800000:
+            count = ~count & 0xFFFFFF
+            count += 1
+            count *= -1
+        return count
+
+    def tare(self, times=10):
+        if not h: return
+        total = 0
+        for _ in range(times):
+            total += self.read()
+        self.offset = total / times
+
+    def get_weight(self, times=1):
+        if not h: return 0
+        total = 0
+        for _ in range(times):
+            total += self.read()
+        reading = (total / times) - self.offset
+        return reading / self.scale
+
+    def set_scale(self, scale):
+        self.scale = scale
+
+# --- Global variables for sensor data ---
+latest_weight_data = {"weight": 0, "on_ground": False}
+data_lock = threading.Lock()
+
+# --- Weight Sensor Thread ---
+def weight_sensor_thread():
+    if not h:
+        print("Weight sensor not initialized, thread exiting.")
+        return
+
+    hx = HX711(dout=DATA_PIN, pd_sck=CLOCK_PIN)
+    print("Taring weight sensor...")
+    hx.tare()
+    print("Tare done.")
+    hx.set_scale(92)  # You should calibrate this!
+    CONTACT_THRESHOLD = 100 # Grams
+
+    while True:
+        val = hx.get_weight(5)
+        is_on_ground = val > CONTACT_THRESHOLD
+        with data_lock:
+            latest_weight_data["weight"] = f"{val:.2f}"
+            latest_weight_data["on_ground"] = is_on_ground
+        time.sleep(0.5)
 
 app = Flask(__name__)
 
@@ -78,9 +169,19 @@ HTML = """
                     } else {
                         gyroDiv.innerHTML = 'Gyro not available.';
                     }
+
+                    const weightDiv = document.getElementById('weight-data');
+                    if (data.weight_data) {
+                        weightDiv.innerHTML = `
+                            On Ground: ${data.weight_data.on_ground}<br>
+                            Weight: ${data.weight_data.weight} g
+                        `;
+                    } else {
+                        weightDiv.innerHTML = 'Weight sensor not available.';
+                    }
                 });
         }
-        setInterval(updateSensorData, 2000); // Update every 2 seconds
+        setInterval(updateSensorData, 1000); // Update every second
     </script>
 </head>
 <body>
@@ -88,15 +189,15 @@ HTML = """
     <div class="container">
         <div class="sensor-card">
             <span class="label">GPS:</span><br>
-            {% if gps_data %}
-                <div id="gps-data">Loading GPS data...</div>
-            {% else %}
-                <div id="gps-data">No GPS fix or GPS not available.</div>
-            {% endif %}
+            <div id="gps-data">Loading GPS data...</div>
         </div>
         <div class="sensor-card">
             <span class="label">Gyro/Accel (MPU6050):</span><br>
-            <div id="gyro-data">{% if gyro_data %}Loading Gyro data...{% else %}Gyro not available.{% endif %}</div>
+            <div id="gyro-data">Loading Gyro data...</div>
+        </div>
+        <div class="sensor-card">
+            <span class="label">Leg Weight Sensor:</span><br>
+            <div id="weight-data">Loading weight data...</div>
         </div>
     </div>
     <h2>Camera Feeds</h2>
@@ -118,27 +219,24 @@ def gen_frames(cam_id):
     if not camera:
         return
     while True:
-        time.sleep(1/60) # Limit to ~60fps to avoid overwhelming the client/network
+        time.sleep(1/60)
         frame = camera.capture_image()
-        if frame is None:
-            continue
-        # Encode with 70% quality for a good balance of compression and quality
+        if frame is None: continue
         jpeg_bytes = camera.encode_to_jpeg(frame, quality=70)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + jpeg_bytes + b'\r\n')
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpeg_bytes + b'\r\n')
 
 @app.route('/')
 def index():
-    gps_data, _ = gps.read() if gps else (None, None)
-    gyro_data = gyro.read() if gyro else None
-    return render_template_string(HTML, gps_data=gps_data, gyro_data=gyro_data, cameras=cameras.keys())
+    return render_template_string(HTML, cameras=cameras.keys())
 
 @app.route('/sensor_data')
 def sensor_data():
     """Endpoint to fetch sensor data as JSON."""
     gps_data, _ = gps.read() if gps else (None, None)
     gyro_data = gyro.read() if gyro else None
-    return jsonify(gps_data=gps_data, gyro_data=gyro_data)
+    with data_lock:
+        weight_data_copy = latest_weight_data.copy()
+    return jsonify(gps_data=gps_data, gyro_data=gyro_data, weight_data=weight_data_copy)
 
 @app.route('/video_feed/<int:cam_id>')
 def video_feed(cam_id):
@@ -149,7 +247,13 @@ def cleanup():
     print("Shutting down... Releasing resources.")
     for cam_id, cam in cameras.items():
         cam.release()
+    if h:
+        lgpio.gpiochip_close(h)
 
 if __name__ == "__main__":
+    # Start the weight sensor thread
+    w_thread = threading.Thread(target=weight_sensor_thread, daemon=True)
+    w_thread.start()
+
     atexit.register(cleanup)
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
