@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const rightJoystickLabel = document.getElementById('right-joystick-label');
     const omegaLabel = document.getElementById('omega-label');
     const locomotionStatusElem = document.getElementById('locomotion-status');
+    const gpsStatusElem = document.getElementById('gps-status');
+    const imuAccelElem = document.getElementById('imu-accel-data');
+    const imuGyroElem = document.getElementById('imu-gyro-data');
 
     // Settings Panel
     const settingsBtn = document.getElementById('settings-btn');
@@ -22,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const standoffSlider = document.getElementById('standoff-slider');
     const stepHeightSlider = document.getElementById('step-height-slider');
     const bodyHeightValue = document.getElementById('body-height-value');
+    const aiVisionToggle = document.getElementById('ai-vision-toggle');
+    const aiVisionLabel = document.getElementById('ai-vision-label');
     const standoffValue = document.getElementById('standoff-value');
     const stepHeightValue = document.getElementById('step-height-value');
 
@@ -38,44 +43,60 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- View Management ---
     function setupViews() {
         const frontCamCanvas = document.createElement('canvas');
+        frontCamCanvas.id = 'front-cam-canvas';
         const rearCamCanvas = document.createElement('canvas');
-        setupWebSocketVideo(frontCamCanvas, 0);
-        setupWebSocketVideo(rearCamCanvas, 1);
-
+        rearCamCanvas.id = 'rear-cam-canvas';
         const robot3D = document.createElement('canvas');
+        robot3D.id = '3d-view-canvas';
 
         views = {
             'front-cam': { id: 'front-cam', el: frontCamCanvas, label: 'Front Cam' },
             'rear-cam': { id: 'rear-cam', el: rearCamCanvas, label: 'Rear Cam' },
             '3d-view': { id: '3d-view', el: robot3D, label: '3D View' }
         };
+        
+        // Initialize all views and their websockets at low FPS
+        for (const id in views) {
+            const view = views[id];
+            const previewWrapper = document.createElement('div');
+            previewWrapper.className = 'preview-view';
+            previewWrapper.appendChild(view.el);
 
+            const label = document.createElement('div');
+            label.className = 'preview-label';
+            label.textContent = view.label;
+            previewWrapper.appendChild(label);
+            previewWrapper.onclick = () => switchView(id);
+            
+            // Store the wrapper for later use
+            view.previewWrapper = previewWrapper;
+
+            // Initialize websockets for camera views
+            if (id === 'front-cam') setupWebSocketVideo(view.el, 0);
+            if (id === 'rear-cam') setupWebSocketVideo(view.el, 1);
+        }
+        
         // Set initial view
         switchView('front-cam');
     }
 
     function switchView(mainViewId) {
-        // Clear containers
+        // Detach all view elements before re-arranging them
         mainViewContainer.innerHTML = '';
         previewContainer.innerHTML = '';
 
-        // Set main view
-        mainViewContainer.appendChild(views[mainViewId].el);
-        
-        // Set preview views
         for (const id in views) {
-            if (id !== mainViewId) {
-                const previewWrapper = document.createElement('div');
-                previewWrapper.className = 'preview-view';
-                previewWrapper.appendChild(views[id].el);
-
-                const label = document.createElement('div');
-                label.className = 'preview-label';
-                label.textContent = views[id].label;
-                previewWrapper.appendChild(label);
-
-                previewWrapper.onclick = () => switchView(id);
-                previewContainer.appendChild(previewWrapper);
+            const view = views[id];
+            
+            // Ensure the canvas is always inside its wrapper first.
+            // This prevents the canvas from being orphaned when it was a main view.
+            if (!view.previewWrapper.contains(view.el)) {
+                view.previewWrapper.prepend(view.el);
+            }
+            if (id === mainViewId) {
+                mainViewContainer.appendChild(view.el);
+            } else {
+                previewContainer.appendChild(view.previewWrapper);
             }
         }
     }
@@ -95,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ws.onopen = () => {
                 console.log(`WebSocket connected for camera ${cameraId}`);
                 // Set a timeout to show error if no frame is received
-                noSignalTimeout = setTimeout(showErrorState, 2000);
+                noSignalTimeout = setTimeout(showErrorState, 5000); // Increased timeout
             };
 
             ws.onmessage = (event) => {
@@ -104,9 +125,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearInterval(noiseInterval);
 
                 createImageBitmap(event.data).then(imageBitmap => {
-                    canvas.width = imageBitmap.width;
-                    canvas.height = imageBitmap.height;
-                    ctx.drawImage(imageBitmap, 0, 0);
+                    // Set the canvas drawing buffer size to match its display size
+                    canvas.width = canvas.clientWidth;
+                    canvas.height = canvas.clientHeight;
+
+                    // Calculate the aspect ratio of the video and the canvas
+                    const videoAspectRatio = imageBitmap.width / imageBitmap.height;
+                    const canvasAspectRatio = canvas.width / canvas.height;
+                    let renderWidth = canvas.width;
+                    let renderHeight = canvas.height;
+
+                    // Adjust dimensions to maintain aspect ratio (like 'object-fit: contain')
+                    if (videoAspectRatio > canvasAspectRatio) {
+                        renderHeight = canvas.width / videoAspectRatio;
+                    } else {
+                        renderWidth = canvas.height * videoAspectRatio;
+                    }
+
+                    // Center the image on the canvas
+                    const x = (canvas.width - renderWidth) / 2;
+                    const y = (canvas.height - renderHeight) / 2;
+
+                    // Clear the canvas and draw the new frame scaled correctly
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imageBitmap, x, y, renderWidth, renderHeight);
                 });
             };
 
@@ -162,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.putImageData(noiseData, 0, 0);
         }
 
+        canvas.webSocket = ws;
         connect();
     }
     // --- Joystick Setup ---
@@ -283,6 +326,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(err => console.error('Toggle locomotion failed:', err));
     });
 
+    aiVisionToggle.addEventListener('change', () => {
+        fetch('/toggle_ai_vision', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                const isEnabled = data.status === 'ai_vision_enabled';
+                updateAIVisionStatusUI(isEnabled);
+            });
+    });
+
     function updateLocomotionStatusUI(isEnabled) {
         if (isEnabled) {
             locomotionStatusElem.textContent = 'ENABLED';
@@ -294,6 +346,15 @@ document.addEventListener('DOMContentLoaded', function () {
             locomotionStatusElem.className = 'disabled';
             locomotionToggleBtn.textContent = 'START';
             locomotionToggleBtn.className = 'control-btn start';
+        }
+    }
+
+    function updateAIVisionStatusUI(isEnabled) {
+        aiVisionToggle.checked = isEnabled;
+        if (isEnabled) {
+            aiVisionLabel.textContent = 'AI Vision (ON)';
+        } else {
+            aiVisionLabel.textContent = 'AI Vision (OFF)';
         }
     }
 
@@ -418,17 +479,37 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/sensor_data')
             .then(response => response.json())
             .then(data => {
-                const { imu, locomotion_enabled, joint_angles } = data;
+                const { imu, gps, locomotion_enabled, ai_vision_enabled, joint_angles } = data;
 
                 // Update IMU visualization
-                if (imu && imuArrow) {
-                    const { roll, pitch, yaw } = imu;
-                    // Set rotation using Euler angles. Order is important (YXZ for aerospace).
-                    imuArrow.rotation.set(pitch, yaw, -roll, 'YXZ');
+                if (imu) {
+                    if (imu.gyro && imuArrow) {
+                    // The server sends raw gyro data, not processed Euler angles.
+                    // We'll use the raw gyro values for a basic visualization.
+                    // A proper implementation would involve a filter (e.g., Kalman) on the server.
+                        // Scale down the raw gyro values to make them usable as angles for visualization
+                        const scale = 0.001;
+                        // Set rotation using Euler angles. Order is important (YXZ for aerospace).
+                        imuArrow.rotation.set(imu.gyro.y * scale, imu.gyro.z * scale, -imu.gyro.x * scale, 'YXZ');
+                    }
+                    // Update text readouts regardless of the 3D arrow
+                    imuGyroElem.textContent = imu.gyro ? `${imu.gyro.x}, ${imu.gyro.y}, ${imu.gyro.z}` : '--';
+                    imuAccelElem.textContent = imu.accel ? `${imu.accel.x}, ${imu.accel.y}, ${imu.accel.z}` : '--';
+                } else {
+                    imuGyroElem.textContent = '--';
+                    imuAccelElem.textContent = '--';
+                }
+
+                // Update GPS status
+                if (gps && gps.lat && gps.lon) {
+                    gpsStatusElem.textContent = `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`;
+                } else {
+                    gpsStatusElem.textContent = 'No Fix';
                 }
 
                 // Update locomotion status and button appearance
                 updateLocomotionStatusUI(locomotion_enabled);
+                updateAIVisionStatusUI(ai_vision_enabled);
                 if (locomotion_enabled) { // This part only updates joystick labels
                     rightJoystickLabel.textContent = 'Rotation (omega)';
                     omegaLabel.textContent = 'Turn (Omega):';

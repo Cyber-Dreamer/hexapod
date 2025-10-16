@@ -19,6 +19,7 @@
                 <button id="locomotion-toggle-btn" class="control-btn start">START</button>
                 <p><strong>Mode:</strong> <span id="mode">{{ mode }}</span></p>
                 <p><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></p>
+                <p><strong>GPS:</strong> <span id="gps-status">No Signal</span></p>
             </div>
         </header>
 
@@ -55,6 +56,10 @@
         <div class="sensor-data">
             <h2>IMU Orientation</h2>
             <div id="imu-visualization"></div>
+            <div class="imu-readout">
+                <p><strong>Accel (x,y,z):</strong> <span id="imu-accel-data">--</span></p>
+                <p><strong>Gyro (x,y,z):</strong> <span id="imu-gyro-data">--</span></p>
+            </div>
         </div>
 
     </div>
@@ -76,6 +81,14 @@
         <div class="slider-group">
             <label for="step-height-slider">Step Height: <span id="step-height-value">40 mm</span></label>
             <input type="range" id="step-height-slider" min="10" max="80" value="40" class="slider">
+        </div>
+        <div class="settings-divider"></div>
+        <div class="toggle-group">
+            <label id="ai-vision-label" for="ai-vision-toggle">AI Vision (OFF)</label>
+            <label class="switch">
+                <input type="checkbox" id="ai-vision-toggle">
+                <span class="switch-slider"></span>
+            </label>
         </div>
     </div>
 

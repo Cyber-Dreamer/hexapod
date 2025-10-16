@@ -10,7 +10,6 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from hexapod_py.locomotion.locomotion import HexapodLocomotion # noqa: E402
-from hexapod_py.interfaces.simple_ui.gait_demo_controller import GaitDemoController # noqa: E402
 from hexapod_py.platform.client import PlatformClient # noqa: E402
 from hexapod_py.interfaces.web.server import setup_server # noqa: E402
 import uvicorn # noqa: E402
@@ -28,68 +27,63 @@ def main():
         class Args:
             pass
         args = Args()
-
-        # Interface choice
-        i_choice = input("Choose interface (1: simple_ui, 2: web) [default: 2]: ").strip()
-        # Set the interface on the args object
-        args.interface = 'simple_ui' if i_choice == '1' else 'web'
-
-        # Set the platform on the args object
         args.platform = platform
-        print(f"\nStarting with: platform='{args.platform}', interface='{args.interface}'\n")
+        print(f"\nStarting with: platform='{args.platform}', interface='web'\n")
 
     else:
         parser = argparse.ArgumentParser(
             description="Run the Hexapod control system.",
             formatter_class=argparse.RawTextHelpFormatter
         )
-        parser.add_argument("--interface", type=str, choices=["simple_ui", "web"],
-                            default="web", help="The user interface to run.")
         parser.add_argument("--platform", type=str, choices=["simulation", "physical"],
                             default="simulation", help="The platform to control.")
         args = parser.parse_args()
+        print(f"\nStarting with: platform='{args.platform}', interface='web'\n")
 
     platform_process = None
     camera_process = None
     platform_client = None
+    project_root_dir = os.path.abspath(os.path.dirname(__file__))
+
     try:
         # --- 1. Launch the selected platform server ---
         if args.platform == 'simulation':
             print("Launching Simulation Server...")
             platform_process = subprocess.Popen(
                 [sys.executable, "-m", "hexapod_py.platform.simulation.simulator"],
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=project_root_dir)
             # Give the server a moment to start and bind sockets
             time.sleep(2)
         elif args.platform == 'physical':
-            print("Error: Physical platform server is not yet implemented.")
-            sys.exit(1)
+            print("Launching Hardware Platform Server...")
+            platform_process = subprocess.Popen(
+                [sys.executable, "-m", "hexapod_py.platform.hardware.server"],
+                cwd=project_root_dir)
+            time.sleep(3) # Give it time to initialize hardware
 
         # --- Launch the camera server for the selected platform ---
         print(f"Launching Camera Server for {args.platform} platform...")
         camera_process = subprocess.Popen(
-            [sys.executable, "-m", "hexapod_py.platform.camera_server", "--platform", args.platform],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            [sys.executable, "-m", "hexapod_py.platform.camera_server",
+             "--platform", args.platform,
+             "--width", "1920",
+             "--height", "1080"],
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, 
+            cwd=project_root_dir)
         time.sleep(2) # Give it a moment to start
 
         # --- 2. Initialize client and controllers ---
         platform_client = PlatformClient()
         locomotion = HexapodLocomotion(gait_type='tripod')
 
-        # --- 3. Launch the selected interface ---
-        if args.interface == 'simple_ui':
-            print("Launching interface: Simple UI Controller")
-            controller = GaitDemoController(platform_client, locomotion)
-            controller.run()
-        elif args.interface == 'web':
-            print("Launching interface: Web UI")
-            mode_name = "Simulation" if args.platform == 'simulation' else "Physical Robot"
-            # Configure the web server with the platform client and locomotion controller
-            setup_server(platform_client, locomotion, mode=mode_name)
-            # Run the FastAPI server using uvicorn
-            # Note: This will block the main thread, which is fine for the web UI.
-            # The platform runs in a separate process.
-            uvicorn.run("hexapod_py.interfaces.web.server:app", host="0.0.0.0", port=8000, log_level="info")
+        # --- 3. Launch the web interface ---
+        print("Launching interface: Web UI")
+        mode_name = "Simulation" if args.platform == 'simulation' else "Physical Robot"
+        # Configure the web server with the platform client and locomotion controller
+        setup_server(platform_client, locomotion, mode=mode_name)
+        # Run the FastAPI server using uvicorn
+        uvicorn.run("hexapod_py.interfaces.web.server:app", host="0.0.0.0", port=8000, log_level="info")
 
     except zmq.error.ZMQError as e:
         print(f"\nError: Could not connect to the platform server. {e}")

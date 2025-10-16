@@ -32,7 +32,9 @@ control_values: Dict[str, float] = {
     'pitch': 0.0,
     'roll': 0.0
 }
-locomotion_enabled: bool = False
+locomotion_enabled: bool = False # Gait movement vs. body posing
+ai_vision_enabled: bool = False  # AI object detection toggle
+object_detector: Optional['ObjectDetector'] = None
 last_joint_angles: Optional[Dict[str, float]] = None
 server_mode: str = "Unknown"
 
@@ -41,9 +43,9 @@ class CameraStreamer:
     def __init__(self):
         self.connections: Dict[int, list[WebSocket]] = {}
         self.locks: Dict[int, asyncio.Lock] = {}
-        self.broadcasting_tasks: Dict[int, asyncio.Task] = {}
+        self.broadcast_tasks: Dict[int, asyncio.Task] = {}
 
-    async def add_client(self, camera_id: int, websocket: WebSocket, fps: int = 30):
+    async def add_client(self, camera_id: int, websocket: WebSocket):
         if camera_id not in self.connections:
             self.connections[camera_id] = []
             self.locks[camera_id] = asyncio.Lock()
@@ -51,23 +53,23 @@ class CameraStreamer:
         async with self.locks[camera_id]:
             self.connections[camera_id].append(websocket)
 
-        if camera_id not in self.broadcasting_tasks or self.broadcasting_tasks[camera_id].done():
-            self.broadcasting_tasks[camera_id] = asyncio.create_task(self._broadcast_frames(camera_id, fps))
+        if camera_id not in self.broadcast_tasks or self.broadcast_tasks[camera_id].done():
+            self.broadcast_tasks[camera_id] = asyncio.create_task(self._broadcast_frames(camera_id))
 
     async def remove_client(self, camera_id: int, websocket: WebSocket):
         async with self.locks[camera_id]:
             self.connections[camera_id].remove(websocket)
         
         if not self.connections[camera_id]:
-            if camera_id in self.broadcasting_tasks:
-                self.broadcasting_tasks[camera_id].cancel()
-                del self.broadcasting_tasks[camera_id]
+            if camera_id in self.broadcast_tasks:
+                self.broadcast_tasks[camera_id].cancel()
+                del self.broadcast_tasks[camera_id]
 
-    async def _broadcast_frames(self, camera_id: int, fps: int):
+    async def _broadcast_frames(self, camera_id: int):
         """Continuously fetches frames and sends them to connected clients."""
-        logging.info(f"Starting frame broadcast for camera {camera_id} at {fps} FPS.")
+        logging.info(f"Starting frame broadcast for camera {camera_id}.")
         try:
-            delay = 1.0 / fps
+            delay = 1.0 / 30 # Aim for 30 FPS
             while True:
                 frame_bytes = await get_frame_bytes(camera_id)
                 if frame_bytes:
@@ -82,7 +84,9 @@ class CameraStreamer:
                         except (WebSocketDisconnect, ConnectionResetError):
                             # These are expected when a client closes the connection.
                             # The remove_client logic will handle cleanup.
-                            logging.info(f"Client disconnected during send on camera {camera_id}.")
+                            pass # Noisy log, can be disabled.
+                
+                # Wait for the next frame.
                 await asyncio.sleep(delay)
         except asyncio.CancelledError:
             logging.info(f"Broadcast task for camera {camera_id} was cancelled.")
@@ -113,11 +117,16 @@ def setup_server(p: HexapodPlatform, l: HexapodLocomotion, mode: str):
     Initializes the web server with the necessary platform and locomotion objects.
     This function is called by the main runner script before starting the server.
     """
-    global platform, locomotion, server_mode
+    global platform, locomotion, server_mode, object_detector
     platform = p
     locomotion = l
     server_mode = mode
     print("Web server configured with platform and locomotion instances.")
+    # Initialize the object detector only if on the physical robot
+    if server_mode == "Physical Robot":
+        from hexapod_py.platform.hardware.ai_vision import ObjectDetector
+        # object_detector = ObjectDetector() # Temporarily disabled to avoid model loading issues.
+        print("!!! AI Vision initialization is temporarily disabled in server.py !!!")
 
 async def control_loop():
     """
@@ -241,25 +250,38 @@ async def toggle_locomotion():
         })
     return {"status": f"locomotion_{status}"}
 
+@app.post("/toggle_ai_vision")
+async def toggle_ai_vision():
+    """Toggles the AI vision processing for the front camera."""
+    global ai_vision_enabled
+    ai_vision_enabled = not ai_vision_enabled
+    status = "enabled" if ai_vision_enabled else "disabled"
+    return {"status": f"ai_vision_{status}"}
+
 @app.get("/sensor_data")
 async def sensor_data():
     """Streams sensor data to the client (e.g., IMU)."""
-    if platform and hasattr(platform, 'get_imu_data'):
+    if platform:
         imu_data = platform.get_imu_data()
+        gps_data = platform.get_gps_data() if hasattr(platform, 'get_gps_data') else None
         return {
             "imu": imu_data if imu_data else {}, 
+            "gps": gps_data if gps_data else {},
             "locomotion_enabled": locomotion_enabled,
+            "ai_vision_enabled": ai_vision_enabled,
             "joint_angles": last_joint_angles
         }
-    return {"imu": {}, "locomotion_enabled": locomotion_enabled, "joint_angles": None}
+    return {"imu": {}, "gps": {}, "locomotion_enabled": locomotion_enabled, "ai_vision_enabled": ai_vision_enabled, "joint_angles": None}
 
 @app.websocket("/ws/video/{camera_id}")
-async def websocket_video_feed(websocket: WebSocket, camera_id: int, fps: int = 30):
+async def websocket_video_feed(websocket: WebSocket, camera_id: int):
     await websocket.accept()
-    await camera_streamer.add_client(camera_id, websocket, fps)
+    await camera_streamer.add_client(camera_id, websocket)
     try:
         while True:
-            await websocket.receive_text() # Keep connection alive
+            # Keep the connection alive. The server is pushing frames.
+            # We can add client-to-server messages here later if needed.
+            await websocket.receive_text() # This will block until a message is received or the client disconnects
     except WebSocketDisconnect:
         print(f"Client disconnected from camera {camera_id}")
         await camera_streamer.remove_client(camera_id, websocket)
@@ -271,5 +293,23 @@ async def get_frame_bytes(camera_id: int) -> Optional[bytes]:
     if platform and hasattr(platform, 'get_camera_image'):
         # Run the blocking ZMQ call in a thread to not block the event loop
         frame_bytes = await asyncio.to_thread(platform.get_camera_image, camera_id)
+
+        # If AI vision is on for the front camera on the physical robot, process the frame
+        if ai_vision_enabled and camera_id == 0 and object_detector:
+            try:
+                if frame_bytes:
+                    # 1. Decode JPEG bytes to a numpy array
+                    np_arr = np.frombuffer(frame_bytes, np.uint8)
+                    frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+                    # 2. Run detection
+                    processed_frame = object_detector.detect(frame)
+
+                    # 3. Re-encode to JPEG bytes
+                    _, new_frame_bytes = cv2.imencode('.jpg', processed_frame, [int(cv2.IMWRITE_JPEG_QUALITY), 85])
+                    frame_bytes = new_frame_bytes.tobytes()
+            except Exception as e:
+                logging.error(f"AI vision processing failed: {e}. Falling back to original frame.")
+
         return frame_bytes
     return None

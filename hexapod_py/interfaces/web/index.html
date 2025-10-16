@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +15,10 @@
         </header>
 
         <main>
-            <div class="video-container">
-                <div class="video-wrapper">
-                    <h2>Front Camera (ID 0)</h2>
-                    <img src="/video_feed/0" alt="Front Camera Feed">
-                </div>
-                <div class="video-wrapper">
-                    <h2>Rear Camera (ID 1)</h2>
-                    <img src="/video_feed/1" alt="Rear Camera Feed">
-                </div>
+            <!-- Main View and Previews will be dynamically inserted here by main.js -->
+            <div class="view-container">
+                <div id="main-view"></div>
+                <div id="preview-container"></div>
             </div>
 
             <div class="controls-container">

@@ -1,0 +1,9 @@
+[2025-10-16 17:59:57.914] [6643] [HailoRT] [info] [vdevice.cpp:523] [create] Creating vdevice with params: device_count: 1, scheduling_algorithm: NONE, multi_process_service: false
+[2025-10-16 17:59:57.935] [6643] [HailoRT] [info] [device.cpp:49] [Device] OS Version: Linux 6.12.47+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.47-1+rpt1~bookworm (2025-09-16) aarch64
+[2025-10-16 17:59:57.939] [6643] [HailoRT] [info] [control.cpp:108] [control__parse_identify_results] firmware_version is: 4.20.0
+[2025-10-16 17:59:57.940] [6643] [HailoRT] [info] [vdevice.cpp:651] [create] VDevice Infos: 0001:01:00.0
+[2025-10-16 17:59:57.945] [6643] [HailoRT] [error] [hef.cpp:476] [parse_hef_header_before_distinct] CHECK_SUCCESS failed with status=HAILO_FILE_OPERATION_FAILURE(14)
+[2025-10-16 17:59:57.945] [6643] [HailoRT] [error] [hef.cpp:533] [parse_hef_file] CHECK_SUCCESS failed with status=HAILO_FILE_OPERATION_FAILURE(14)
+[2025-10-16 17:59:57.946] [6643] [HailoRT] [error] [hef.cpp:1002] [Impl] Failed parsing HEF file
+[2025-10-16 17:59:57.946] [6643] [HailoRT] [error] [hef.cpp:314] [create] Failed creating HEF
+[2025-10-16 17:59:57.946] [6643] [HailoRT] [error] [hef.cpp:170] [create] CHECK_SUCCESS failed with status=HAILO_FILE_OPERATION_FAILURE(14)
