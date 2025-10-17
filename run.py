@@ -61,25 +61,35 @@ def main():
                 cwd=project_root_dir)
             time.sleep(3) # Give it time to initialize hardware
 
-        # --- Launch the camera server for the selected platform ---
+        # --- 1.5 Launch the correct camera server for the selected platform ---
         print(f"Launching Camera Server for {args.platform} platform...")
+        if args.platform == 'simulation':
+            camera_module = "hexapod_py.platform.simulation.camera_server"
+            camera_args = []
+        else: # physical
+            camera_module = "hexapod_py.platform.hardware.camera_server"
+            camera_args = ["--width", "1280", "--height", "720", "--quality", "75"]
+
         camera_process = subprocess.Popen(
-            [sys.executable, "-m", "hexapod_py.platform.camera_server",
-             "--platform", args.platform,
-             "--width", "1920",
-             "--height", "1080"],
+            [sys.executable, "-m", camera_module] + camera_args,
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE, 
             cwd=project_root_dir)
+
         time.sleep(2) # Give it a moment to start
 
         # --- 2. Initialize client and controllers ---
         platform_client = PlatformClient()
+        # Start the client's background threads to listen for sensor data
+        platform_client.start()
         locomotion = HexapodLocomotion(gait_type='tripod')
 
         # --- 3. Launch the web interface ---
         print("Launching interface: Web UI")
         mode_name = "Simulation" if args.platform == 'simulation' else "Physical Robot"
+        
+        # The web server runs in the main thread. The platform client runs in the background.
+        
         # Configure the web server with the platform client and locomotion controller
         setup_server(platform_client, locomotion, mode=mode_name)
         # Run the FastAPI server using uvicorn
@@ -93,7 +103,7 @@ def main():
     finally:
         print("\nCleaning up...")
         if platform_client:
-            platform_client.stop()
+            platform_client.stop() # This will stop the client's background threads
         if camera_process:
             print("Terminating camera server process...")
             camera_process.terminate()

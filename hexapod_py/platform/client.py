@@ -54,11 +54,13 @@ class PlatformClient:
             try:
                 socks = dict(poller.poll(100)) # Poll with a timeout
                 if self.sub_socket in socks:
-                    topic_bytes, message_bytes = self.sub_socket.recv_multipart()
-                    topic = topic_bytes.decode('utf-8')
-                    data = msgpack.unpackb(message_bytes, raw=False)
-                    with self._sensor_data_lock:
-                        self._latest_sensor_data[topic] = data
+                    # Drain the socket to get the most recent message if multiple are queued
+                    while self.sub_socket in dict(poller.poll(0)):
+                        topic_bytes, message_bytes = self.sub_socket.recv_multipart()
+                        topic = topic_bytes.decode('utf-8')
+                        data = msgpack.unpackb(message_bytes, raw=False)
+                        with self._sensor_data_lock:
+                            self._latest_sensor_data[topic] = data
             except zmq.error.ContextTerminated:
                 break # Exit cleanly on shutdown
 

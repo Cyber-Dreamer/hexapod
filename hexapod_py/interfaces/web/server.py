@@ -8,7 +8,7 @@ import os
 import sys
 import time
 from typing import Optional, Dict
-import logging
+import logging, json
 import numpy as np
 import cv2
 
@@ -93,8 +93,86 @@ class CameraStreamer:
         except Exception as e:
             logging.error(f"!!! Unhandled exception in broadcast task for camera {camera_id}: {e}", exc_info=True)
 
+class SensorDataStreamer:
+    """Manages broadcasting sensor data to multiple WebSocket clients."""
+    def __init__(self):
+        self.connections: list[WebSocket] = []
+        self.lock = asyncio.Lock()
+        self.broadcast_task: Optional[asyncio.Task] = None
+
+    async def add_client(self, websocket: WebSocket):
+        async with self.lock:
+            self.connections.append(websocket)
+        if not self.broadcast_task or self.broadcast_task.done():
+            self.broadcast_task = asyncio.create_task(self._broadcast_data())
+            logging.info("Started sensor data broadcast task.")
+
+    async def remove_client(self, websocket: WebSocket):
+        async with self.lock:
+            if websocket in self.connections:
+                self.connections.remove(websocket)
+        
+        if not self.connections and self.broadcast_task:
+            self.broadcast_task.cancel()
+            self.broadcast_task = None
+            logging.info("Stopped sensor data broadcast task (no clients).")
+
+    async def _broadcast_data(self):
+        """Continuously gathers sensor data and sends it to connected clients."""
+        last_broadcast_time = time.time()
+        try:
+            while True:
+                if platform:
+                    imu_data = platform.get_imu_data()
+                    gps_data = platform.get_gps_data() if hasattr(platform, 'get_gps_data') else {}
+
+                    # Calculate pitch and roll and add it to the IMU data
+                    if imu_data and imu_data.get("accel"):
+                        orientation = _calculate_pitch_roll_from_accel(imu_data["accel"])
+                        imu_data.update(orientation)
+                    
+                    data_packet = {
+                        "imu": imu_data if imu_data else {}, 
+                        "gps": gps_data if gps_data else {},
+                        "locomotion_enabled": locomotion_enabled,
+                        "ai_vision_enabled": ai_vision_enabled,
+                        "joint_angles": last_joint_angles
+                    }
+                    message = json.dumps(data_packet)
+                    
+                    # Ensure 'dt' is present for the frontend IMU calculation.
+                    # If the platform doesn't provide it, calculate it here as a fallback.
+                    if data_packet["imu"] and "dt" not in data_packet["imu"]:
+                        current_time = time.time()
+                        data_packet["imu"]["dt"] = current_time - last_broadcast_time
+                        last_broadcast_time = current_time
+
+                    async with self.lock:
+                        connections_to_send = self.connections[:]
+                    
+                    for connection in connections_to_send:
+                        await connection.send_text(message)
+                
+                await asyncio.sleep(1.0 / 50) # Broadcast at 50Hz
+        except asyncio.CancelledError:
+            logging.info("Sensor data broadcast task was cancelled.")
+
 camera_streamer = CameraStreamer()
+sensor_streamer = SensorDataStreamer()
 app = FastAPI()
+
+def _calculate_pitch_roll_from_accel(accel_data: Dict[str, float]) -> Dict[str, float]:
+    """
+    Calculates pitch and roll from accelerometer data.
+    This is a simple approach and is susceptible to noise from linear acceleration.
+    A proper sensor fusion filter (Kalman, Madgwick) would be more robust.
+    """
+    if not accel_data or 'x' not in accel_data or 'y' not in accel_data or 'z' not in accel_data:
+        return {}
+    accel_x, accel_y, accel_z = accel_data['x'], accel_data['y'], accel_data['z']
+    pitch = np.arctan2(-accel_x, np.sqrt(accel_y * accel_y + accel_z * accel_z))
+    roll = np.arctan2(accel_y, accel_z)
+    return {"pitch": pitch, "roll": roll} # in radians
 
 # --- Path Setup for Static Files and Templates ---
 # Get the directory where this server.py file is located
@@ -258,21 +336,20 @@ async def toggle_ai_vision():
     status = "enabled" if ai_vision_enabled else "disabled"
     return {"status": f"ai_vision_{status}"}
 
-@app.get("/sensor_data")
-async def sensor_data():
-    """Streams sensor data to the client (e.g., IMU)."""
-    if platform:
-        imu_data = platform.get_imu_data()
-        gps_data = platform.get_gps_data() if hasattr(platform, 'get_gps_data') else None
-        return {
-            "imu": imu_data if imu_data else {}, 
-            "gps": gps_data if gps_data else {},
-            "locomotion_enabled": locomotion_enabled,
-            "ai_vision_enabled": ai_vision_enabled,
-            "joint_angles": last_joint_angles
-        }
-    return {"imu": {}, "gps": {}, "locomotion_enabled": locomotion_enabled, "ai_vision_enabled": ai_vision_enabled, "joint_angles": None}
-
+@app.websocket("/ws/sensors")
+async def websocket_sensor_feed(websocket: WebSocket):
+    """Handles WebSocket connections for the main sensor data stream."""
+    await websocket.accept()
+    await sensor_streamer.add_client(websocket)
+    try:
+        while True:
+            # Keep the connection alive. The server is pushing data.
+            # We can listen for client messages here if needed in the future.
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        print("Sensor data client disconnected.")
+        await sensor_streamer.remove_client(websocket)
+        
 @app.websocket("/ws/video/{camera_id}")
 async def websocket_video_feed(websocket: WebSocket, camera_id: int):
     await websocket.accept()

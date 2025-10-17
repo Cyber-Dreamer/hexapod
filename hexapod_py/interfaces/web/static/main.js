@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- State ---
     let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 150, standoff: 400, step_height: 40 };
     let sendInterval = null;
+    let sensorData = { imu: {} }; // Shared state for sensor data
     let views = {}; // To hold our view elements
 
     // --- Event Listeners ---
@@ -149,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Clear the canvas and draw the new frame scaled correctly
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(imageBitmap, x, y, renderWidth, renderHeight);
+
+                    // Only draw the overlay if this canvas is the current main view
+                    if (canvas.parentElement === mainViewContainer) {
+                        drawIMUOverlayIcon(ctx, canvas.width, canvas.height, sensorData.imu);
+                    }
                 });
             };
 
@@ -206,6 +212,102 @@ document.addEventListener('DOMContentLoaded', function () {
 
         canvas.webSocket = ws;
         connect();
+    }
+
+    function drawIMUOverlayIcon(ctx, w, h, imuData) {
+        const iconWidth = 120; // Overall width of the combined icon
+        const iconHeight = 60; // Overall height of the combined icon
+        const padding = 10;
+        const iconLeft = padding;
+        const iconTop = padding;
+
+        const accel = imuData.accel || { x: 0, y: 0, z: 0 };
+        const gyro = imuData.gyro || { x: 0, y: 0, z: 0 };
+
+        // --- Background for the combined icon ---
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'; // Semi-transparent black background
+        ctx.fillRect(iconLeft, iconTop, iconWidth, iconHeight);
+
+        // --- Acceleration Arrow (Left part of the icon area) ---
+        const arrowCenterX = iconLeft + iconWidth * 0.25; // Center of the left quarter
+        const arrowCenterY = iconTop + iconHeight / 2;
+        const arrowLength = iconHeight * 0.4; // Length of the arrow body
+
+        // Calculate the angle of the apparent gravity vector in the XY plane
+        // When the robot is static, the accelerometer measures the negative of the gravity vector.
+        // If accel.x is positive, it means the robot is tilted nose-down (gravity pulling forward).
+        // If accel.y is positive, it means the robot is tilted left-side-down (gravity pulling left).
+        // So, the arrow should point in the direction of (accel.x, accel.y)
+        const accelMagnitudeXY = Math.sqrt(accel.x * accel.x + accel.y * accel.y);
+        let accelArrowAngle = 0;
+        if (accelMagnitudeXY > 0.1) { // Avoid division by zero and noise
+            accelArrowAngle = Math.atan2(accel.y, accel.x); // Angle in radians
+        }
+
+        ctx.save();
+        ctx.translate(arrowCenterX, arrowCenterY);
+        ctx.rotate(accelArrowAngle); // Rotate by the calculated angle
+
+        // Draw the arrow body
+        ctx.strokeStyle = 'rgba(255, 200, 0, 0.9)'; // Yellow for acceleration
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-arrowLength * 0.5, 0);
+        ctx.lineTo(arrowLength * 0.5, 0);
+        ctx.stroke();
+
+        // Draw the arrowhead
+        ctx.beginPath();
+        ctx.moveTo(arrowLength * 0.5, 0);
+        ctx.lineTo(arrowLength * 0.5 - 8, -5);
+        ctx.moveTo(arrowLength * 0.5, 0);
+        ctx.lineTo(arrowLength * 0.5 - 8, 5);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // --- Gyro Sphere (Right part of the icon area) ---
+        const gyroCenterX = iconLeft + iconWidth * 0.75 + padding; // Center of the right quarter, with some padding
+        const gyroCenterY = iconTop + iconHeight / 2;
+        const gyroRadius = iconHeight * 0.3;
+
+        ctx.save();
+        ctx.translate(gyroCenterX, gyroCenterY);
+
+        // Draw the outer sphere/circle
+        ctx.beginPath();
+        ctx.arc(0, 0, gyroRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Draw an inner indicator for angular velocity (yaw rate)
+        // A small line that rotates based on gyro.z
+        const yawRate = gyro.z;
+        const rotationIndicatorLength = gyroRadius * 0.6;
+
+        // Rotate the inner indicator based on yaw rate
+        // A positive yaw rate (gyro.z) means rotating counter-clockwise around Z axis (looking down).
+        // So, a positive yaw rate should rotate the arrow counter-clockwise on screen.
+        // Scale factor 0.1 is arbitrary for visual effect, adjust as needed.
+        ctx.rotate(-yawRate * 0.1); 
+
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.9)'; // Green for gyro
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -rotationIndicatorLength * 0.5);
+        ctx.lineTo(0, rotationIndicatorLength * 0.5);
+        ctx.stroke();
+
+        // Draw arrowhead for yaw indicator
+        ctx.beginPath();
+        ctx.moveTo(0, -rotationIndicatorLength * 0.5);
+        ctx.lineTo(-4, -rotationIndicatorLength * 0.5 + 8);
+        ctx.moveTo(0, -rotationIndicatorLength * 0.5);
+        ctx.lineTo(4, -rotationIndicatorLength * 0.5 + 8);
+        ctx.stroke();
+
+        ctx.restore();
     }
     // --- Joystick Setup ---
     const joystickOptions = {
@@ -431,6 +533,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- IMU Visualization ---
     function initIMUVis() {
+        if (!imuVisContainer) {
+            console.warn("IMU visualization container (id='imu-visualization') not found. Skipping IMU visualization.");
+            return;
+        }
         imuScene = new THREE.Scene();
         imuScene.background = new THREE.Color(0x2c2c2c);
 
@@ -474,68 +580,90 @@ document.addEventListener('DOMContentLoaded', function () {
         imuRenderer.render(imuScene, imuCamera);
     }
 
-    // --- Data Polling ---
-    function pollSensorData() {
-        fetch('/sensor_data')
-            .then(response => response.json())
-            .then(data => {
-                const { imu, gps, locomotion_enabled, ai_vision_enabled, joint_angles } = data;
+    // --- Sensor WebSocket ---
+    function setupSensorWebSocket() {
+        let ws;
 
-                // Update IMU visualization
-                if (imu) {
-                    if (imu.gyro && imuArrow) {
-                    // The server sends raw gyro data, not processed Euler angles.
-                    // We'll use the raw gyro values for a basic visualization.
-                    // A proper implementation would involve a filter (e.g., Kalman) on the server.
-                        // Scale down the raw gyro values to make them usable as angles for visualization
-                        const scale = 0.001;
-                        // Set rotation using Euler angles. Order is important (YXZ for aerospace).
-                        imuArrow.rotation.set(imu.gyro.y * scale, imu.gyro.z * scale, -imu.gyro.x * scale, 'YXZ');
-                    }
-                    // Update text readouts regardless of the 3D arrow
-                    imuGyroElem.textContent = imu.gyro ? `${imu.gyro.x}, ${imu.gyro.y}, ${imu.gyro.z}` : '--';
-                    imuAccelElem.textContent = imu.accel ? `${imu.accel.x}, ${imu.accel.y}, ${imu.accel.z}` : '--';
-                } else {
-                    imuGyroElem.textContent = '--';
-                    imuAccelElem.textContent = '--';
-                }
+        function connect() {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${wsProtocol}//${window.location.host}/ws/sensors`);
 
-                // Update GPS status
-                if (gps && gps.lat && gps.lon) {
-                    gpsStatusElem.textContent = `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`;
-                } else {
-                    gpsStatusElem.textContent = 'No Fix';
-                }
+            ws.onopen = () => {
+                console.log('Sensor WebSocket connected.');
+            };
 
-                // Update locomotion status and button appearance
-                updateLocomotionStatusUI(locomotion_enabled);
-                updateAIVisionStatusUI(ai_vision_enabled);
-                if (locomotion_enabled) { // This part only updates joystick labels
-                    rightJoystickLabel.textContent = 'Rotation (omega)';
-                    omegaLabel.textContent = 'Turn (Omega):';
-                } else { // This part only updates joystick labels
-                    rightJoystickLabel.textContent = 'Tilt (roll/pitch)';
-                    // In body IK mode, the omega value is repurposed as roll.
-                    // We'll just relabel it for clarity.
-                    omegaLabel.textContent = 'Roll:';
-                }
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleSensorData(data);
+            };
 
-                // Update 3D model
-                update3DModel(joint_angles);
-            })
-            .catch(err => {
-                console.error('Sensor poll error:', err);
-            });
+            ws.onclose = () => {
+                console.log('Sensor WebSocket disconnected. Reconnecting...');
+                setTimeout(connect, 3000); // Attempt to reconnect after 3 seconds
+            };
+
+            ws.onerror = (err) => {
+                console.error('Sensor WebSocket error:', err);
+                ws.close(); // This will trigger the onclose handler for reconnection
+            };
+        }
+
+        connect();
+    }
+
+    function handleSensorData(data) {
+        // Store sensor data in the shared state
+        sensorData = data;
+        const { imu, gps, locomotion_enabled, ai_vision_enabled, joint_angles } = sensorData;
+
+        // Update IMU visualization
+        if (imu) {
+            if (imu.gyro && imuArrow && imu.dt) {
+                // The server sends raw gyro data (rad/s). We need to integrate it over time
+                // to get orientation. This is a simple client-side integration and will drift.
+                const dt = imu.dt; 
+                const deltaRotation = new THREE.Quaternion();
+                deltaRotation.setFromEuler(new THREE.Euler(imu.gyro.x * dt, imu.gyro.y * dt, imu.gyro.z * dt, 'XYZ'));
+                imuArrow.quaternion.premultiply(deltaRotation);
+            }
+            // Update text readouts
+            imuGyroElem.textContent = imu.gyro ? `${imu.gyro.x.toFixed(3)}, ${imu.gyro.y.toFixed(3)}, ${imu.gyro.z.toFixed(3)}` : '--';
+            imuAccelElem.textContent = imu.accel ? `${imu.accel.x.toFixed(3)}, ${imu.accel.y.toFixed(3)}, ${imu.accel.z.toFixed(3)}` : '--';
+        } else {
+            imuGyroElem.textContent = '--';
+            imuAccelElem.textContent = '--';
+        }
+
+        // Update GPS status
+        if (gps && gps.lat && gps.lon) {
+            gpsStatusElem.textContent = `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`;
+        } else {
+            gpsStatusElem.textContent = 'No Fix';
+        }
+
+        // Update locomotion status and button appearance
+        updateLocomotionStatusUI(locomotion_enabled);
+        updateAIVisionStatusUI(ai_vision_enabled);
+        if (locomotion_enabled) {
+            rightJoystickLabel.textContent = 'Rotation (omega)';
+            omegaLabel.textContent = 'Turn (Omega):';
+        } else {
+            rightJoystickLabel.textContent = 'Tilt (roll/pitch)';
+            omegaLabel.textContent = 'Roll:';
+        }
+
+        // Update 3D model
+        update3DModel(joint_angles);
     }
 
     // --- Initialization ---
     function init() {
+        console.log('Initializing web interface...');
         setupViews();
         setupSliders();
-        init3D();
         initIMUVis();
-        pollSensorData(); // Initial call
-        setInterval(pollSensorData, 200); // Poll more frequently for smoother 3D updates
+        setupSensorWebSocket(); // Connect to the sensor data stream
+        init3D();
     }
 
     init();

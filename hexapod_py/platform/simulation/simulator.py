@@ -30,6 +30,7 @@ class HexapodSimulator(HexapodPlatform):
         self._is_running = False
         self._simulation_thread = None
         self._latest_imu_data = None
+        self._last_sensor_update_time = 0
 
         self.leg_joint_names = [
             ["hip_6", "ties_6", "foot_6"], # RL
@@ -99,9 +100,20 @@ class HexapodSimulator(HexapodPlatform):
             while self._is_running:
                 # Block and wait for a command
                 message = joint_socket.recv()
-                joint_angles = msgpack.unpackb(message, raw=False)
-                self.set_joint_angles(joint_angles)
-                joint_socket.send(b"OK")
+                command_message = msgpack.unpackb(message, raw=False)
+
+                # Process the command
+                if command_message.get('command') == 'set_joint_angles':
+                    # The client now sends angles in degrees. The simulation needs radians.
+                    angles_deg = command_message.get('angles')
+                    if angles_deg:
+                        angles_rad = [[np.deg2rad(angle) for angle in leg] for leg in angles_deg]
+                        self.set_joint_angles(angles_rad)
+                    joint_socket.send(b"OK")
+                else:
+                    # Respond with an error if the command is unknown
+                    joint_socket.send(b"Unknown command")
+
         except zmq.error.ContextTerminated:
             print("Command server context terminated.")
         finally:
@@ -139,10 +151,15 @@ class HexapodSimulator(HexapodPlatform):
     def _update_sensors(self):
         if self.robot_id is None: return
         try:
+            current_time = time.time()
+            dt = current_time - self._last_sensor_update_time if self._last_sensor_update_time > 0 else 0.0
+            self._last_sensor_update_time = current_time
+
             linear_velocity, angular_velocity = p.getBaseVelocity(self.robot_id)
             self._latest_imu_data = {
                 'accel': {'x': linear_velocity[0], 'y': linear_velocity[1], 'z': linear_velocity[2]},
-                'gyro':  {'x': angular_velocity[0], 'y': angular_velocity[1], 'z': angular_velocity[2]}
+                'gyro':  {'x': angular_velocity[0], 'y': angular_velocity[1], 'z': angular_velocity[2]},
+                'dt': dt
             }
         except p.error:
             self._latest_imu_data = None
