@@ -6,14 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const vyValue = document.getElementById('vy-value');
     const omegaValue = document.getElementById('omega-value');
     const pitchValue = document.getElementById('pitch-value');
-    const imuVisContainer = document.getElementById('imu-visualization');
     const locomotionToggleBtn = document.getElementById('locomotion-toggle-btn');
     const rightJoystickLabel = document.getElementById('right-joystick-label');
-    const omegaLabel = document.getElementById('omega-label');
+    const omegaLabel = document.getElementById('omega-label'); // This is now the <strong> tag
     const locomotionStatusElem = document.getElementById('locomotion-status');
-    const gpsStatusElem = document.getElementById('gps-status');
-    const imuAccelElem = document.getElementById('imu-accel-data');
-    const imuGyroElem = document.getElementById('imu-gyro-data');
 
     // Settings Panel
     const settingsBtn = document.getElementById('settings-btn');
@@ -462,8 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- 3D Renderer ---
     let scene, camera, renderer, controls, hexapodModel;
-    let imuScene, imuCamera, imuRenderer, imuArrow;
-
+    
     function init3D() {
         const canvas = views['3d-view'].el;
         scene = new THREE.Scene();
@@ -531,55 +526,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // --- IMU Visualization ---
-    function initIMUVis() {
-        if (!imuVisContainer) {
-            console.warn("IMU visualization container (id='imu-visualization') not found. Skipping IMU visualization.");
-            return;
-        }
-        imuScene = new THREE.Scene();
-        imuScene.background = new THREE.Color(0x2c2c2c);
-
-        const { clientWidth, clientHeight } = imuVisContainer;
-        imuCamera = new THREE.PerspectiveCamera(50, clientWidth / clientHeight, 0.1, 1000);
-        imuCamera.position.z = 5;
-
-        imuRenderer = new THREE.WebGLRenderer({ antialias: true });
-        imuRenderer.setSize(clientWidth, clientHeight);
-        imuVisContainer.appendChild(imuRenderer.domElement);
-
-        // Lighting
-        const imuLight = new THREE.AmbientLight(0xffffff, 1.0);
-        imuScene.add(imuLight);
-
-        // Arrow Helper
-        const dir = new THREE.Vector3(0, 1, 0); // Pointing up initially
-        const origin = new THREE.Vector3(0, 0, 0);
-        const length = 2;
-        const hex = 0x007bff; // Primary color
-        imuArrow = new THREE.ArrowHelper(dir, origin, length, hex, 0.5, 0.3);
-        imuScene.add(imuArrow);
-
-        // Ground grid
-        const gridHelper = new THREE.GridHelper(4, 4);
-        gridHelper.rotation.x = Math.PI / 2;
-        imuScene.add(gridHelper);
-
-        new ResizeObserver(() => {
-            const { clientWidth, clientHeight } = imuVisContainer;
-            imuCamera.aspect = clientWidth / clientHeight;
-            imuCamera.updateProjectionMatrix();
-            imuRenderer.setSize(clientWidth, clientHeight);
-        }).observe(imuVisContainer);
-
-        animateIMU();
-    }
-
-    function animateIMU() {
-        requestAnimationFrame(animateIMU);
-        imuRenderer.render(imuScene, imuCamera);
-    }
-
     // --- Sensor WebSocket ---
     function setupSensorWebSocket() {
         let ws;
@@ -614,42 +560,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleSensorData(data) {
         // Store sensor data in the shared state
         sensorData = data;
-        const { imu, gps, locomotion_enabled, ai_vision_enabled, joint_angles } = sensorData;
-
-        // Update IMU visualization
-        if (imu) {
-            if (imu.gyro && imuArrow && imu.dt) {
-                // The server sends raw gyro data (rad/s). We need to integrate it over time
-                // to get orientation. This is a simple client-side integration and will drift.
-                const dt = imu.dt; 
-                const deltaRotation = new THREE.Quaternion();
-                deltaRotation.setFromEuler(new THREE.Euler(imu.gyro.x * dt, imu.gyro.y * dt, imu.gyro.z * dt, 'XYZ'));
-                imuArrow.quaternion.premultiply(deltaRotation);
-            }
-            // Update text readouts
-            imuGyroElem.textContent = imu.gyro ? `${imu.gyro.x.toFixed(3)}, ${imu.gyro.y.toFixed(3)}, ${imu.gyro.z.toFixed(3)}` : '--';
-            imuAccelElem.textContent = imu.accel ? `${imu.accel.x.toFixed(3)}, ${imu.accel.y.toFixed(3)}, ${imu.accel.z.toFixed(3)}` : '--';
-        } else {
-            imuGyroElem.textContent = '--';
-            imuAccelElem.textContent = '--';
-        }
-
-        // Update GPS status
-        if (gps && gps.lat && gps.lon) {
-            gpsStatusElem.textContent = `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`;
-        } else {
-            gpsStatusElem.textContent = 'No Fix';
-        }
+        const { locomotion_enabled, ai_vision_enabled, joint_angles } = sensorData;
 
         // Update locomotion status and button appearance
         updateLocomotionStatusUI(locomotion_enabled);
         updateAIVisionStatusUI(ai_vision_enabled);
+
+        // Update joystick labels based on locomotion mode
         if (locomotion_enabled) {
             rightJoystickLabel.textContent = 'Rotation (omega)';
-            omegaLabel.textContent = 'Turn (Omega):';
+            omegaLabel.textContent = 'Omega';
         } else {
             rightJoystickLabel.textContent = 'Tilt (roll/pitch)';
-            omegaLabel.textContent = 'Roll:';
+            omegaLabel.textContent = 'Roll';
         }
 
         // Update 3D model
@@ -661,7 +584,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Initializing web interface...');
         setupViews();
         setupSliders();
-        initIMUVis();
         setupSensorWebSocket(); // Connect to the sensor data stream
         init3D();
     }

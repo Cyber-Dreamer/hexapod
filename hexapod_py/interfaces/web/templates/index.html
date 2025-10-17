@@ -34,33 +34,23 @@
                 <div class="controls-container">
                     <div class="joystick-area">
                         <div id="joystick-zone-left" class="joystick-zone"></div>
-                        <p>Movement (vx, vy)</p>
+                        <p>Movement</p>
+                        <div class="joystick-data-local">
+                            <span>Vy (Fwd/Bwd): <span id="vy-value">0.00</span></span>
+                            <span>Vx (Strafe): <span id="vx-value">0.00</span></span>
+                        </div>
                     </div>
                     <div class="joystick-area">
                         <div id="joystick-zone-right" class="joystick-zone"></div>
                         <p id="right-joystick-label">Rotation (omega)</p>
-                    </div>
-                </div>
-                <!-- This container is for the data readout, which is positioned independently -->
-                <div class="buttons-container">
-                    <div class="joystick-data">
-                        <p><strong>Forward/Backward (Vx):</strong> <span id="vx-value">0.00</span></p>
-                        <p><strong>Strafe (Vy):</strong> <span id="vy-value">0.00</span></p>
-                        <p><strong id="omega-label">Turn (Omega):</strong> <span id="omega-value">0.00</span></p>
-                        <p><strong>Pitch:</strong> <span id="pitch-value">0.00</span></p>
+                        <div class="joystick-data-local">
+                            <span id="omega-label-container"><strong id="omega-label">Omega</strong>: <span id="omega-value">0.00</span></span>
+                            <span><strong>Pitch</strong>: <span id="pitch-value">0.00</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
-
-        <div class="sensor-data">
-            <h2>IMU Orientation</h2>
-            <div id="imu-visualization"></div>
-            <div class="imu-readout">
-                <p><strong>Accel (x,y,z):</strong> <span id="imu-accel-data">--</span></p>
-                <p><strong>Gyro (x,y,z):</strong> <span id="imu-gyro-data">--</span></p>
-            </div>
-        </div>
 
     </div>
 
