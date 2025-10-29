@@ -32,6 +32,7 @@ control_values: Dict[str, float] = {
     'pitch': 0.0,
     'roll': 0.0
 }
+power_on: bool = False
 locomotion_enabled: bool = False # Gait movement vs. body posing
 ai_vision_enabled: bool = False  # AI object detection toggle
 object_detector: Optional['ObjectDetector'] = None
@@ -134,6 +135,7 @@ class SensorDataStreamer:
                     data_packet = {
                         "imu": imu_data if imu_data else {}, 
                         "gps": gps_data if gps_data else {},
+                        "power_on": power_on,
                         "locomotion_enabled": locomotion_enabled,
                         "ai_vision_enabled": ai_vision_enabled,
                         "joint_angles": last_joint_angles
@@ -154,7 +156,10 @@ class SensorDataStreamer:
                         await connection.send_text(message)
                 else:
                     # If platform is not ready, send a minimal status update
-                    message = json.dumps({"locomotion_enabled": locomotion_enabled})
+                    message = json.dumps({
+                        "power_on": power_on,
+                        "locomotion_enabled": locomotion_enabled
+                    })
                     await _broadcast_to_all_sensor_clients(message)
                 
                 await asyncio.sleep(1.0 / 50) # Broadcast at 50Hz
@@ -223,9 +228,9 @@ async def control_loop():
     The main control loop that runs in the background.
     It reads control values, runs the gait logic, and updates the platform.
     """
-    while True:
+    while True: # Loop forever, but only act if powered on
         global last_joint_angles, locomotion_enabled
-        if platform and locomotion:
+        if platform and locomotion and power_on:
             # Update locomotion parameters that can be changed live from the UI
             new_body_height = control_values.get('body_height', locomotion.body_height)
             new_standoff = control_values.get('standoff', locomotion.standoff_distance)
@@ -293,19 +298,30 @@ async def control_loop():
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
 
-async def initialization_sequence():
+async def power_on_sequence():
     """
-    Runs a graceful startup sequence for the robot.
+    Runs a graceful power-on and startup sequence for the robot.
+    0. Re-initialize servos if they were de-energized.
     1. Go to home position (all joints at 0 degrees).
     2. Go to a "sitting" position with legs tucked under.
-    3. Stand up to the default body height.
+    3. Stand up to the default body height and enable controls.
     """
     if not platform or not locomotion:
         print("Cannot run initialization sequence: platform or locomotion not available.")
         return
 
-    print("--- Starting Robot Initialization Sequence ---")
-    global last_joint_angles
+    # Wait a moment to ensure the locomotion object has finished its own init,
+    # especially the recalculate_stance() which calculates default_joint_angles.
+    while not hasattr(locomotion, 'default_joint_angles') or len(locomotion.default_joint_angles) != 6:
+        await asyncio.sleep(0.1)
+
+
+    print("--- Starting Robot Power-On Sequence ---")
+    global last_joint_angles, power_on
+
+    # Step 0: Ensure servos are energized.
+    # The `set_joint_angles` command will implicitly re-energize them if they were off.
+    print("Energizing servos...")
 
     # Define the sequence steps
     # Each step is (description, target_angles_function, delay_after)
@@ -339,15 +355,54 @@ async def initialization_sequence():
         }))
         await asyncio.sleep(delay)
 
-    print("--- Initialization Sequence Complete ---")
+    power_on = True
+    print("--- Power-On Sequence Complete. Robot is active. ---")
+
+async def power_off_sequence():
+    """
+    Runs a graceful shutdown sequence for the robot.
+    1. Go to a "sitting" position.
+    2. Go to home position (all joints at 0 degrees).
+    3. De-energize servos to release them.
+    """
+    if not platform or not locomotion:
+        return
+
+    print("--- Starting Robot Power-Off Sequence ---")
+    global last_joint_angles, power_on, locomotion_enabled
+
+    # Disable locomotion and reset controls first
+    power_on = False
+    locomotion_enabled = False
+    control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'pitch': 0.0, 'roll': 0.0})
+
+    # Sequence: Sit -> Home -> De-energize
+    sequence = [
+        ("Sitting down...", lambda: locomotion.calculate_sit_angles(), 2.0),
+        ("Homing legs...", lambda: [[0, 0, 0]] * 6, 1.0)
+    ]
+
+    for description, get_angles_func, delay in sequence:
+        print(description)
+        target_angles = get_angles_func()
+        platform.set_joint_angles(target_angles)
+        last_joint_angles = platform.angles_to_dict(target_angles)
+        await _broadcast_to_all_sensor_clients(json.dumps({"joint_angles": last_joint_angles}))
+        await asyncio.sleep(delay)
+
+    print("De-energizing servos to release legs...")
+    platform.deinit()
+    last_joint_angles = platform.angles_to_dict([[0, 0, 0]] * 6)
+    await _broadcast_to_all_sensor_clients(json.dumps({"joint_angles": last_joint_angles}))
+
+    print("--- Power-Off Sequence Complete. Robot is safe. ---")
 
 @app.on_event("startup")
 async def startup_event():
     """Starts the background control loop when the server starts."""
-    # Run the initialization sequence first, and only start the control loop
-    # after it has finished to prevent a race condition.
-    await initialization_sequence()
-    # Now, start the main control loop as a background task.
+    # The control loop now starts immediately, but it will be idle
+    # until the robot is powered on via the UI.
+    # The old initialization_sequence is replaced by the power_on_sequence.
     asyncio.create_task(control_loop()) 
 
 @app.on_event("shutdown")
@@ -374,6 +429,16 @@ async def move(request: Request):
     control_values['roll'] = data.get('roll', 0.0)
     return {"status": "success", "received": control_values}
 
+@app.post("/power")
+async def power_toggle():
+    """Toggles the robot's power state and runs the appropriate sequence."""
+    if power_on:
+        asyncio.create_task(power_off_sequence())
+        return {"status": "powering_off"}
+    else:
+        asyncio.create_task(power_on_sequence())
+        return {"status": "powering_on"}
+
 @app.post("/toggle_locomotion")
 async def toggle_locomotion():
     """Toggles the locomotion system between enabled and disabled (emergency stop)."""
@@ -381,7 +446,7 @@ async def toggle_locomotion():
     locomotion_enabled = not locomotion_enabled
     status = "enabled" if locomotion_enabled else "disabled"
     print(f"Locomotion has been {status}.")
-    # When disabling, reset movement values to prevent sudden lurching
+    # When disabling, or if robot is not powered on, reset movement values
     if not locomotion_enabled:
         control_values.update({
             'vx': 0.0, 
@@ -395,7 +460,7 @@ async def toggle_locomotion():
 @app.post("/reinit")
 async def reinit_sequence():
     """Triggers the robot's initialization sequence again."""
-    asyncio.create_task(initialization_sequence())
+    asyncio.create_task(power_on_sequence())
     return {"status": "success", "message": "Initialization sequence triggered."}
 
 @app.post("/toggle_ai_vision")

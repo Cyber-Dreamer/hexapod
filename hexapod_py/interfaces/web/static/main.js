@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const vyValue = document.getElementById('vy-value');
     const omegaValue = document.getElementById('omega-value');
     const pitchValue = document.getElementById('pitch-value');
+    const powerBtn = document.getElementById('power-btn');
     const locomotionToggleBtn = document.getElementById('locomotion-toggle-btn');
     const rightJoystickLabel = document.getElementById('right-joystick-label');
     const omegaLabel = document.getElementById('omega-label'); // This is now the <strong> tag
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const stepHeightValue = document.getElementById('step-height-value');
 
     // --- State ---
-    let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 200, standoff: 200, step_height: 40 };
+    let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 200, standoff: 200, step_height: 40, power: false };
     let sendInterval = null;
     let sensorData = { imu: {} }; // Shared state for sensor data
     let views = {}; // To hold our view elements
@@ -424,6 +425,17 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(err => console.error('Toggle locomotion failed:', err));
     });
 
+    powerBtn.addEventListener('click', () => {
+        // Immediately update the button to give user feedback
+        const isPoweringOn = !controlData.power;
+        powerBtn.textContent = isPoweringOn ? 'POWERING ON...' : 'POWERING OFF...';
+        powerBtn.disabled = true;
+
+        fetch('/power', { method: 'POST' })
+            .then(response => response.json())
+            .catch(err => console.error('Power toggle failed:', err));
+    });
+
     aiVisionToggle.addEventListener('change', () => {
         fetch('/toggle_ai_vision', { method: 'POST' })
             .then(response => response.json())
@@ -432,6 +444,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateAIVisionStatusUI(isEnabled);
             });
     });
+
+    function updatePowerStatusUI(isPoweredOn) {
+        controlData.power = isPoweredOn;
+        powerBtn.disabled = false;
+        if (isPoweredOn) {
+            powerBtn.textContent = 'POWER OFF';
+            powerBtn.className = 'control-btn stop';
+            document.body.classList.remove('powered-off');
+        } else {
+            powerBtn.textContent = 'POWER ON';
+            powerBtn.className = 'control-btn start';
+            document.body.classList.add('powered-off');
+            // When powered off, also ensure locomotion is shown as disabled
+            updateLocomotionStatusUI(false);
+        }
+    }
 
     function updateLocomotionStatusUI(isEnabled) {
         if (isEnabled) {
@@ -559,10 +587,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleSensorData(data) {
         // Store sensor data in the shared state
-        sensorData = data;
-        const { locomotion_enabled, ai_vision_enabled, joint_angles } = sensorData;
+        const { power_on, locomotion_enabled, ai_vision_enabled, joint_angles } = data;
+        sensorData = data; // Store the whole packet
 
         // Update locomotion status and button appearance
+        updatePowerStatusUI(power_on);
         updateLocomotionStatusUI(locomotion_enabled);
         updateAIVisionStatusUI(ai_vision_enabled);
 

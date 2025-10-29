@@ -23,10 +23,10 @@ class Gait:
         self.step_height = step_height
         self.gait_phase = 0.0
 
-    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, default_joint_angles, body_height, step_height, rotation_scale_factor=1.0):
+    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, last_known_angles, body_height, step_height, rotation_scale_factor=1.0):
         raise NotImplementedError("The 'run' method must be implemented by the gait subclass.")
 
-    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, default_joint_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
+    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
         # vx, vy are now target linear velocities (mm/s)
         # omega is now target angular velocity (rad/s)
 
@@ -51,13 +51,21 @@ class Gait:
         if phase < 0.5:
             swing_phase = phase * 2
             # Parabolic trajectory for the foot lift (0 -> 1 -> 0)
-            z_swing = step_height * (1 - (2 * swing_phase - 1)**2)
+            z_lift = step_height * (1 - (2 * swing_phase - 1)**2)
 
             # Foot moves from its rearmost point to its foremost point
             swing_offset = total_step * (swing_phase - 0.5)
             
-            target_pos = default_foot_positions[leg_idx] + swing_offset
-            target_pos[2] += z_swing
+            # To prevent IK failures at the edge of the workspace, the swing motion
+            # is performed closer to the body. We define a "swing center" that is
+            # horizontally retracted from the default foot position.
+            swing_retraction_factor = 0.7 # 0.0 = no retraction, 1.0 = retracts to hip. 0.7 is a good start.
+            swing_center = default_foot_positions[leg_idx].copy()
+            swing_center[0] *= (1.0 - swing_retraction_factor)
+            swing_center[1] *= (1.0 - swing_retraction_factor)
+
+            target_pos = swing_center + swing_offset
+            target_pos[2] += z_lift
         # Stance phase (leg is on the ground, pushing the body)
         else:
             stance_phase = (phase - 0.5) * 2
@@ -92,8 +100,7 @@ class Gait:
         angles = self.kinematics.leg_ik(v_foot_local, knee_direction=self.knee_direction)
 
         if angles is None:
-            # If the target is unreachable, instantly fall back to the pre-calculated neutral angles for this leg.
-            # This is extremely fast and avoids expensive real-time calculations.
-            return default_joint_angles[leg_idx]
+            # If the target is unreachable, fall back to the last known good angles for this leg.
+            return last_known_angles[leg_idx]
 
         return angles

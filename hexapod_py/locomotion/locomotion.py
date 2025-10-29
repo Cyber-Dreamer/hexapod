@@ -67,6 +67,10 @@ class HexapodLocomotion:
         self.standoff_distance = standoff_distance
         self.recalculate_stance()
 
+        # Initialize a cache for the last known valid joint angles for each leg.
+        # This is crucial for handling unreachable IK targets gracefully.
+        self.last_known_angles = list(self.default_joint_angles)
+
     def set_gait(self, gait_type):
         self.gait_type = gait_type
         self.current_gait = self.available_gaits.get(gait_type)
@@ -89,7 +93,12 @@ class HexapodLocomotion:
         all_angles = []
         for i in range(6):
             angles = self.kinematics.leg_ik(new_foot_targets_local[i], knee_direction=self.knee_direction)
-            all_angles.append(angles if angles is not None else self.default_joint_angles[i])
+            if angles is not None:
+                self.last_known_angles[i] = angles
+                all_angles.append(angles)
+            else:
+                # If target is unreachable, use the last known good angles for this leg.
+                all_angles.append(self.last_known_angles[i])
 
         return all_angles
     
@@ -119,7 +128,11 @@ class HexapodLocomotion:
 
             # Note: recalculate_stance() is intentionally not called here for performance.
             # It's only called when standoff or body_height are changed.
-            return self.current_gait.run(target_vx, target_vy, target_omega, roll, pitch, speed, self.default_foot_positions, self.default_joint_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
+            new_angles = self.current_gait.run(target_vx, target_vy, target_omega, roll, pitch, speed, self.default_foot_positions, self.last_known_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
+            # Update the last known angles with the new valid ones.
+            for i in range(6):
+                self.last_known_angles[i] = new_angles[i]
+            return new_angles
         else:
             return [None] * 6
 
@@ -143,9 +156,10 @@ class HexapodLocomotion:
         self.default_joint_angles = []
         new_foot_targets_local = self.kinematics.body_ik(np.zeros(3), np.zeros(3), self.kinematics.hip_positions, self.foot_positions)
         for i in range(6):
-            angles = self.kinematics.leg_ik(new_foot_targets_local[i], knee_direction=self.knee_direction)
+            angles = self.kinematics.leg_ik(new_foot_targets_local[i], knee_direction=self.knee_direction) 
             if angles is None:
-                angles = np.zeros(3) # Should not happen with a valid stance
+                print(f"WARNING: Default stance for leg {i} is unreachable! Check body_height and standoff. Defaulting to home.")
+                angles = np.zeros(3) # Fallback to a safe home position if stance is invalid
             self.default_joint_angles.append(angles)
 
     def calculate_sit_angles(self):
@@ -157,11 +171,12 @@ class HexapodLocomotion:
         sit_angles = []
         # Define a target position in the local frame for each leg
         # This is forward of the hip and significantly raised up
-        l_coxa, l_femur, l_tibia = self.kinematics.segment_lengths
-        target_pos_local = np.array([l_coxa, 0, -l_femur])
+        l_coxa, l_femur, _ = self.kinematics.segment_lengths
+        # A more conservative sitting pose: coxa length forward, half femur length down.
+        target_pos_local = np.array([l_coxa, 0, -l_femur * 0.5])
 
         for i in range(6):
             angles = self.kinematics.leg_ik(target_pos_local, knee_direction=self.knee_direction)
-            sit_angles.append(angles if angles is not None else [0, 0, 0])
+            sit_angles.append(angles if angles is not None else self.last_known_angles[i])
 
         return sit_angles
