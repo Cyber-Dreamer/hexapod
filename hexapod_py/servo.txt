@@ -1,0 +1,10 @@
+
+0x40
+Leg 1: Coxa 2 Femur 1  Tibia 9
+Leg 2: Coxa 5 Femur 8 Tibia 0 
+Leg 3: Coxa 4 Femur 10 Tibia 6
+
+0x41
+Leg 4: Coxa 5  Femur 6  Tibia 10
+Leg 5: Coxa 15 Femur 13  Tibia  14
+Leg 6: Coxa 7 Femur 9 Tibia 11

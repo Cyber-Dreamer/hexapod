@@ -10,7 +10,7 @@ from adafruit_seesaw import seesaw, neopixel
 i2c = busio.I2C(board.SCL, board.SDA)
 ss = seesaw.Seesaw(i2c, addr=0x60)
 neo_pin = 15
-num_pixels = 5
+num_pixels = 29
 
 pixels = neopixel.NeoPixel(ss, neo_pin, num_pixels, brightness = 0.1)
 
