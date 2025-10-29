@@ -34,34 +34,57 @@ PCA9685_ADDRESSES = [0x40, 0x41]
 KINEMATIC_JOINT_LIMITS = [90, 110, 120]
 
 # --- Servo Centering/Calibration ---
-# The angle (in degrees) for each servo that corresponds to the kinematic "zero"
-# position. This is used to calibrate for mechanical misalignments.
-# A value of 135 assumes a 270-degree servo where 135 is the midpoint.
-# Adjust these values to physically center each joint when a 0-degree command is sent.
+#
+# !!! CRITICAL HARDWARE CONFIGURATION !!!
+#
+# This is the most important calibration step for your robot.
+#
+# `SERVO_CENTER_DEGREES` defines the raw angle (0-270) for each servo that
+# corresponds to its kinematic "zero" position. A value of 135 is a theoretical
+# midpoint for a 270-degree servo, but you MUST adjust these values for each
+# individual servo to correct for mechanical misalignments during assembly.
+#
+# HOW TO CALIBRATE:
+# 1. Run the `test_servo_calibration_ui.py` script on your Raspberry Pi.
+# 2. For each joint, use the UI to find the angle value that makes the joint
+#    physically centered in its neutral kinematic pose.
+# 3. Update the corresponding value in the array below with the value you found.
+#
+# Example: If you find that the Rear-Left coxa servo is centered at an angle of
+# 138.5 degrees, you would change `SERVO_CENTER_DEGREES[0][0]` to `138.5`.
+#
 # Structure: [leg][joint] -> center_angle
 # joint_index: 0=coxa, 1=femur, 2=tibia
+# Leg Numbering (matches locomotion logic):
+# 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
 SERVO_CENTER_DEGREES = [
-    [135, 135, 135],    # Leg 0 (Right Front)
-    [135, 135, 135],    # Leg 1 (Right Middle)
-    [135, 135, 135],    # Leg 2 (Right Rear)
-    [135, 135, 135],    # Leg 3 (Left Rear)
-    [135, 135, 135],    # Leg 4 (Left Middle)
-    [135, 135, 135],    # Leg 5 (Left Front)
+    [135, 135, 135],    # Leg 0 (Rear-Left)
+    [135, 135, 135],    # Leg 1 (Middle-Left)
+    [135, 135, 135],    # Leg 2 (Front-Left)
+    [135, 135, 135],    # Leg 3 (Front-Right)
+    [135, 135, 135],    # Leg 4 (Middle-Right)
+    [135, 135, 135],    # Leg 5 (Rear-Right)
 ]
 # Mapping of leg and joint to a (board_index, channel_index) tuple.
-# This configuration splits the legs across two boards.
-# Board 0 (at address 0x40) controls legs 0, 1, 2.
-# Board 1 (at address 0x41) controls legs 3, 4, 5.
+# The board_index corresponds to the order in PCA9685_ADDRESSES.
+# board_index 0 -> 0x40
+# board_index 1 -> 0x41
 # joint_index: 0=coxa, 1=femur, 2=tibia
+# Leg Numbering (matches locomotion logic):
+#
+# !!! CRITICAL HARDWARE CONFIGURATION !!!
+#
+# This map defines your physical wiring. Double-check that each leg joint
+# is connected to the correct channel on the correct PCA9685 board.
+# An incorrect mapping will cause the wrong leg to move.
+# 0:RL, 1:ML, 2:FL, 3:FR, 4:MR, 5:RR
 LEG_CHANNEL_MAP = [
-    # Board 0
-    [(0, 0), (0, 1), (0, 2)],    # Leg 0 (Right Front)
-    [(0, 3), (0, 4), (0, 5)],    # Leg 1 (Right Middle)
-    [(0, 6), (0, 7), (0, 8)],    # Leg 2 (Right Rear)
-    # Board 1
-    [(1, 0), (1, 1), (1, 2)],    # Leg 3 (Left Rear)
-    [(1, 3), (1, 4), (1, 5)],    # Leg 4 (Left Middle)
-    [(1, 6), (1, 7), (1, 8)],    # Leg 5 (Left Front)
+    [(0, 4), (0, 10), (0, 6)],   # Leg 0 (Rear-Left) -> Board 0 (0x40)
+    [(1, 7), (1, 9), (1, 11)],   # Leg 1 (Middle-Left) -> Board 1 (0x41)
+    [(1, 15), (1, 13), (1, 14)], # Leg 2 (Front-Left) -> Board 1 (0x41)
+    [(1, 5), (1, 6), (1, 10)],   # Leg 3 (Front-Right) -> Board 1 (0x41)
+    [(0, 2), (0, 1), (0, 9)],    # Leg 4 (Middle-Right) -> Board 0 (0x40)
+    [(0, 5), (0, 8), (0, 0)],    # Leg 5 (Rear-Right) -> Board 0 (0x40)
 ]
 
 class ServoController:

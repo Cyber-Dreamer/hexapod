@@ -101,6 +101,20 @@ class PlatformClient:
         except zmq.error.ZMQError as e:
             print(f"Error communicating with platform server: {e}")
 
+    def angles_to_dict(self, joint_angles_list: list) -> dict:
+        """
+        Converts a list of joint angles into a dictionary format suitable for the UI.
+        """
+        joint_names = [
+            'coxa', 'femur', 'tibia'
+        ]
+        joint_angles_dict = {}
+        if joint_angles_list:
+            for i, leg_angles in enumerate(joint_angles_list):
+                for j, angle in enumerate(leg_angles):
+                    joint_angles_dict[f'leg_{i}_{joint_names[j]}_joint'] = angle
+        return joint_angles_dict
+
     def get_imu_data(self):
         """Performs a non-blocking read for the latest IMU data."""
         with self._sensor_data_lock:

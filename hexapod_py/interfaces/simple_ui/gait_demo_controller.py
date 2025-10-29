@@ -47,9 +47,9 @@ class GaitDemoController:
         self.debug_param_ids['vx'] = p.addUserDebugParameter("Vx (fwd/bwd)", -1.0, 1.0, 0)
         self.debug_param_ids['vy'] = p.addUserDebugParameter("Vy (strafe)", -1.0, 1.0, 0)
         self.debug_param_ids['omega'] = p.addUserDebugParameter("Omega (turn)", -1.0, 1.0, 0)
-        self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.15, 0.3, 0.20)
+        self.debug_param_ids['body_height'] = p.addUserDebugParameter("Body Height (m)", 0.05, 0.35, 0.20)
         self.debug_param_ids['step_height'] = p.addUserDebugParameter("Step Height (m)", 0.01, 0.08, 0.04)
-        self.debug_param_ids['standoff'] = p.addUserDebugParameter("Standoff (m)", 0.2, 0.5, 0.28)
+        self.debug_param_ids['standoff'] = p.addUserDebugParameter("Standoff (m)", 0.15, 0.4, 0.2)
         self.debug_param_ids['roll'] = p.addUserDebugParameter("Roll (rad)", -0.5, 0.5, 0.0)
         self.debug_param_ids['pitch'] = p.addUserDebugParameter("Pitch (rad)", -0.5, 0.5, 0.0)
 
@@ -59,7 +59,7 @@ class GaitDemoController:
         Returns a dictionary of default values if not in GUI mode.
         """
         if not self.sim or not self.sim.gui or not self.debug_param_ids:
-            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.28}
+            return {'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'body_height': 0.20, 'pitch': 0.0, 'roll': 0.0, 'step_height': 0.04, 'standoff': 0.2}
 
         return {key: p.readUserDebugParameter(self.debug_param_ids[key]) for key in self.debug_param_ids}
 

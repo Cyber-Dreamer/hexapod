@@ -26,8 +26,8 @@ platform: Optional[HexapodPlatform] = None
 locomotion: Optional[HexapodLocomotion] = None 
 control_values: Dict[str, float] = {
     'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 
-    'body_height': 150.0, 
-    'standoff': 400.0,
+    'body_height': 200.0, 
+    'standoff': 200.0,
     'step_height': 40.0,
     'pitch': 0.0,
     'roll': 0.0
@@ -152,6 +152,10 @@ class SensorDataStreamer:
                     
                     for connection in connections_to_send:
                         await connection.send_text(message)
+                else:
+                    # If platform is not ready, send a minimal status update
+                    message = json.dumps({"locomotion_enabled": locomotion_enabled})
+                    await _broadcast_to_all_sensor_clients(message)
                 
                 await asyncio.sleep(1.0 / 50) # Broadcast at 50Hz
         except asyncio.CancelledError:
@@ -159,6 +163,14 @@ class SensorDataStreamer:
 
 camera_streamer = CameraStreamer()
 sensor_streamer = SensorDataStreamer()
+
+async def _broadcast_to_all_sensor_clients(message: str):
+    """Helper to broadcast a message to all connected sensor clients."""
+    async with sensor_streamer.lock:
+        connections_to_send = sensor_streamer.connections[:]
+    for connection in connections_to_send:
+        await connection.send_text(message)
+
 app = FastAPI()
 
 def _calculate_pitch_roll_from_accel(accel_data: Dict[str, float]) -> Dict[str, float]:
@@ -281,10 +293,62 @@ async def control_loop():
         # Run the loop at a consistent rate (e.g., 100Hz)
         await asyncio.sleep(1/100.)
 
+async def initialization_sequence():
+    """
+    Runs a graceful startup sequence for the robot.
+    1. Go to home position (all joints at 0 degrees).
+    2. Go to a "sitting" position with legs tucked under.
+    3. Stand up to the default body height.
+    """
+    if not platform or not locomotion:
+        print("Cannot run initialization sequence: platform or locomotion not available.")
+        return
+
+    print("--- Starting Robot Initialization Sequence ---")
+    global last_joint_angles
+
+    # Define the sequence steps
+    # Each step is (description, target_angles_function, delay_after)
+    sequence = [
+        (
+            "Homing: Moving to zero-angle position...",
+            lambda: [[0, 0, 0]] * 6,
+            2.0
+        ),
+        (
+            "Sitting: Tucking legs for standing...",
+            lambda: locomotion.calculate_sit_angles(),
+            2.0
+        ),
+        (
+            "Standing: Moving to default ride height...",
+            lambda: locomotion.default_joint_angles,
+            1.0
+        )
+    ]
+
+    for description, get_angles_func, delay in sequence:
+        print(description)
+        target_angles = get_angles_func()
+        platform.set_joint_angles(target_angles)
+        # This is a simple way to update the UI during init.
+        # We'll broadcast the angles over the sensor websocket.
+        last_joint_angles = platform.angles_to_dict(target_angles)
+        await _broadcast_to_all_sensor_clients(json.dumps({
+            "joint_angles": last_joint_angles
+        }))
+        await asyncio.sleep(delay)
+
+    print("--- Initialization Sequence Complete ---")
+
 @app.on_event("startup")
 async def startup_event():
     """Starts the background control loop when the server starts."""
-    asyncio.create_task(control_loop())
+    # Run the initialization sequence first, and only start the control loop
+    # after it has finished to prevent a race condition.
+    await initialization_sequence()
+    # Now, start the main control loop as a background task.
+    asyncio.create_task(control_loop()) 
 
 @app.on_event("shutdown")
 def shutdown_event():
@@ -327,6 +391,12 @@ async def toggle_locomotion():
             'roll': 0.0
         })
     return {"status": f"locomotion_{status}"}
+
+@app.post("/reinit")
+async def reinit_sequence():
+    """Triggers the robot's initialization sequence again."""
+    asyncio.create_task(initialization_sequence())
+    return {"status": "success", "message": "Initialization sequence triggered."}
 
 @app.post("/toggle_ai_vision")
 async def toggle_ai_vision():

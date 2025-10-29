@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=150, standoff_distance=400, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
+    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=200, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -147,3 +147,21 @@ class HexapodLocomotion:
             if angles is None:
                 angles = np.zeros(3) # Should not happen with a valid stance
             self.default_joint_angles.append(angles)
+
+    def calculate_sit_angles(self):
+        """
+        Calculates the joint angles for a "sitting" position.
+        Legs are tucked underneath the body. This is a good intermediate
+        pose before standing up.
+        """
+        sit_angles = []
+        # Define a target position in the local frame for each leg
+        # This is forward of the hip and significantly raised up
+        l_coxa, l_femur, l_tibia = self.kinematics.segment_lengths
+        target_pos_local = np.array([l_coxa, 0, -l_femur])
+
+        for i in range(6):
+            angles = self.kinematics.leg_ik(target_pos_local, knee_direction=self.knee_direction)
+            sit_angles.append(angles if angles is not None else [0, 0, 0])
+
+        return sit_angles
