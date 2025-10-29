@@ -26,6 +26,28 @@ ACTUATION_RANGE = 270   # Degrees
 # to set a unique address (e.g., 0x41).
 PCA9685_ADDRESSES = [0x40, 0x41]
 
+# --- Kinematic Joint Limits (in degrees) ---
+# This defines the safe travel range for each joint type relative to its
+# calibrated center position (kinematic zero).
+# Format: [coxa_limit, femur_limit, tibia_limit]
+# e.g., a coxa_limit of 90 means the coxa can move from -90 to +90 degrees.
+KINEMATIC_JOINT_LIMITS = [90, 110, 120]
+
+# --- Servo Centering/Calibration ---
+# The angle (in degrees) for each servo that corresponds to the kinematic "zero"
+# position. This is used to calibrate for mechanical misalignments.
+# A value of 135 assumes a 270-degree servo where 135 is the midpoint.
+# Adjust these values to physically center each joint when a 0-degree command is sent.
+# Structure: [leg][joint] -> center_angle
+# joint_index: 0=coxa, 1=femur, 2=tibia
+SERVO_CENTER_DEGREES = [
+    [135, 135, 135],    # Leg 0 (Right Front)
+    [135, 135, 135],    # Leg 1 (Right Middle)
+    [135, 135, 135],    # Leg 2 (Right Rear)
+    [135, 135, 135],    # Leg 3 (Left Rear)
+    [135, 135, 135],    # Leg 4 (Left Middle)
+    [135, 135, 135],    # Leg 5 (Left Front)
+]
 # Mapping of leg and joint to a (board_index, channel_index) tuple.
 # This configuration splits the legs across two boards.
 # Board 0 (at address 0x40) controls legs 0, 1, 2.
@@ -69,13 +91,22 @@ class ServoController:
 
     def set_leg_angle(self, leg_index, joint_index, angle_deg):
         """Sets the angle of a single joint on a specific leg."""
+        # 1. Apply kinematic limits to the requested angle.
+        # This ensures we don't command the joint beyond its safe mechanical range.
+        limit = KINEMATIC_JOINT_LIMITS[joint_index]
+        limited_angle_deg = max(-limit, min(limit, angle_deg))
+
+        # 2. Get the mapping and calibration values for the specific servo.
         board_idx, channel_idx = LEG_CHANNEL_MAP[leg_index][joint_index]
+        center_angle = SERVO_CENTER_DEGREES[leg_index][joint_index]
+
+        # 3. The final angle sent to the servo is the limited kinematic angle
+        # plus the calibrated center position.
+        servo_angle = center_angle + limited_angle_deg
 
         if board_idx < len(self.servos) and channel_idx < len(self.servos[board_idx]):
-            # Clamp angle to a safe range (e.g., 0-180) to prevent servo damage
-            # The actuation range is 270, but it's good practice to have a clamp.
-            # Let's use the full actuation range.
-            safe_angle = max(0, min(ACTUATION_RANGE, angle_deg))
+            # 4. Clamp the final angle to the servo's absolute actuation range (e.g., 0-270).
+            safe_angle = max(0, min(ACTUATION_RANGE, servo_angle))
             self.servos[board_idx][channel_idx].angle = safe_angle
         else:
             print(f"Warning: Board/Channel ({board_idx}, {channel_idx}) is out of range.")
