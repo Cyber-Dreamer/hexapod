@@ -20,7 +20,6 @@ def test_gait_interactive():
     """
     # --- Initialization ---
     locomotion = HexapodLocomotion(gait_type='tripod', body_height=200)
-    locomotion = HexapodLocomotion(gait_type='tripod', body_height=250)
     kinematics = locomotion.kinematics
     
     fk_calculator = HexapodForwardKinematics(
@@ -45,12 +44,6 @@ def test_gait_interactive():
     
     # Add text annotations for leg numbers
     leg_texts = [ax.text(0, 0, 0, str(i), color=leg_colors[i], fontsize=10, ha='center', va='center') for i in range(6)]
-    
-    # Draw the body outline
-    body_outline_points = np.array(kinematics.hip_positions)
-    # Connect hips in order to draw the body chassis
-    body_plot_points = np.vstack([body_outline_points[[0,1,2,3,4,5,0]]])
-    body_line, = ax.plot(body_plot_points[:, 0], body_plot_points[:, 1], body_plot_points[:, 2], '-', color='gray')
 
     ax.set_xlabel('World X (mm)')
     ax.set_ylabel('World Y (mm)')
@@ -62,6 +55,9 @@ def test_gait_interactive():
     ax.set_zlim([-350, 150])
     ax.view_init(elev=20., azim=-75)
     ax.set_aspect('equal')
+
+    # Draw the body outline
+    body_line, = ax.plot([], [], [], '-', color='gray', label='Body')
 
     # --- Text for displaying gait info ---
     info_text = fig.text(0.82, 0.95, "", verticalalignment='top', fontfamily='monospace')
@@ -90,8 +86,7 @@ def test_gait_interactive():
         'pitch': Slider(slider_axes['pitch'], 'Pitch', -np.pi/8, np.pi/8, valinit=0),
         'step_h': Slider(slider_axes['step_h'], 'Step Height', 10, 80, valinit=40),
         'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
-        'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 250, valinit=locomotion.body_height),
-        'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 300, valinit=locomotion.body_height),
+        'body_h': Slider(slider_axes['body_h'], 'Body Height', 100, 300, valinit=locomotion.body_height),
     }
 
     # --- Radio Buttons for Gait Selection ---
@@ -151,6 +146,9 @@ def test_gait_interactive():
     def select_knee_direction(label):
         """Callback to set knee direction."""
         locomotion.knee_direction = knee_direction_map[label]
+        # Also update the knee direction on all available gait objects
+        for gait in locomotion.available_gaits.values():
+            gait.knee_direction = locomotion.knee_direction
 
     knee_radio.on_clicked(select_knee_direction)
     
@@ -175,13 +173,15 @@ def test_gait_interactive():
             dir_vec = dir_vec / np.linalg.norm(dir_vec)
             vx, vy = dir_vec
 
-        # 2. Run the gait logic to get joint angles
+        # 2. Get joint angles by running the locomotion controller.
+        # The controller's internal state machine will handle transitions between walking and standing.
         all_angles = locomotion.run_gait(vx, vy, omega, roll=roll, pitch=pitch, step_height=step_height)
 
         # 3. Use body_fk to get world coordinates for all legs
-        # For gait, the body itself is considered static at the origin.
-        # The legs move relative to this origin to create motion.
-        all_leg_points = fk_calculator.body_fk(all_angles)
+        # The body rotation is applied to visualize roll and pitch.
+        # Body translation is kept at zero as the world frame moves with the robot.
+        body_rotation = np.array([roll, pitch, 0.0])
+        all_leg_points = fk_calculator.body_fk(all_angles, body_rotation=body_rotation)
 
         # 4. Update the plot
         for i in range(6):
@@ -197,6 +197,13 @@ def test_gait_interactive():
                 lines[i].set_data([], [])
                 lines[i].set_3d_properties([])
 
+        # Update the body line to reflect the new orientation
+        # We get the hip positions from the FK calculation for the body rotation
+        rotated_hips_list = fk_calculator.body_fk([], body_rotation=body_rotation)
+        rotated_hips = np.array([p[0] for p in rotated_hips_list])
+        body_plot_points = np.vstack([rotated_hips[[0,1,2,3,4,5,0]]])
+        body_line.set_data(body_plot_points[:, 0], body_plot_points[:, 1])
+        body_line.set_3d_properties(body_plot_points[:, 2])
         # Update angle text display
         angle_strings = []
         for i, angles in enumerate(all_angles):
@@ -210,7 +217,7 @@ def test_gait_interactive():
         # Update info text
         info_text.set_text(
             f"Gait: {locomotion.gait_type.capitalize()}\n"
-            f"Phase: {locomotion.current_gait.gait_phase:.2f}\n"
+            f"State: {locomotion.locomotion_state}\n"
             f"Vx: {vx:.2f}\n"
             f"Vy: {vy:.2f}\n"
             f"Omega: {omega:.2f}\n"
@@ -218,7 +225,7 @@ def test_gait_interactive():
             f"Pitch: {np.rad2deg(pitch):.1f}°"
         )
 
-        return lines + leg_texts + [body_line, info_text, angle_text]
+        return lines + leg_texts + [body_line, info_text, angle_text] # Add body_line to returned artists
 
     # Create and start the animation
     ani = FuncAnimation(fig, update, frames=None, blit=False, interval=30, repeat=True)

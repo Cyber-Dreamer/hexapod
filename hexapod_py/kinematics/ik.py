@@ -4,9 +4,9 @@ from typing import List, Optional
 class HexapodKinematics:
 
     def __init__(self, segment_lengths, hip_positions, joint_limits):
-        self.segment_lengths = segment_lengths
-        self.hip_positions = hip_positions
-        self.joint_limits = joint_limits
+        self.segment_lengths = np.array(segment_lengths)
+        self.hip_positions = np.array(hip_positions)
+        self.joint_limits = np.array(joint_limits)
         self.optimal_stance = np.deg2rad([0.0, 0.0, -120.0])
         self.hip_base_angles = np.arctan2(np.array(self.hip_positions)[:, 1], np.array(self.hip_positions)[:, 0])
         
@@ -22,7 +22,8 @@ class HexapodKinematics:
 
         Returns:
             A list of 3 joint angles [gamma, alpha, beta] in radians,
-            or None if the position is unreachable.
+            or None if the joint limits are violated. If the coordinate is
+            unreachable, it computes angles for the nearest valid point.
         """
         x, y, z = coordinate
         l_coxa, l_femur, l_tibia = self.segment_lengths
@@ -36,11 +37,23 @@ class HexapodKinematics:
         
         dist_femur_to_foot = np.sqrt(x_prime**2 + z_prime**2)
 
-        # 3. Reachability Check
+        # 3. Reachability Check and Clamping
         epsilon = 1e-6
-        if (dist_femur_to_foot > l_femur + l_tibia + epsilon) or \
-           (dist_femur_to_foot < abs(l_femur - l_tibia) - epsilon):
-            return None
+        max_reach = l_femur + l_tibia
+        min_reach = abs(l_femur - l_tibia)
+
+        if not (min_reach - epsilon <= dist_femur_to_foot <= max_reach + epsilon):
+            # Clamp the distance to the nearest boundary (max or min reach)
+            clamped_dist = np.clip(dist_femur_to_foot, min_reach, max_reach)
+            
+            # Scale the vector from the femur joint to the foot to find the new,
+            # reachable coordinate on the workspace boundary.
+            scale = clamped_dist / dist_femur_to_foot
+            
+            # Update the local variables for the IK calculation
+            x_prime *= scale
+            z_prime *= scale
+            dist_femur_to_foot = clamped_dist
 
         # 4. Law of Cosines to find internal angles
         cos_beta_arg = (l_femur**2 + l_tibia**2 - dist_femur_to_foot**2) / (2 * l_femur * l_tibia)
@@ -58,11 +71,12 @@ class HexapodKinematics:
 
         # 6. Joint Limit Check
         angles = np.array([gamma, alpha, beta])
-        limits = np.array(self.joint_limits)
-        if np.any(np.abs(angles) > limits):
-            return None
+        # Clamp the final angles to their respective limits. This ensures we always
+        # return a valid command for the servos, providing a "best effort" pose
+        # even if it doesn't perfectly match the target.
+        clamped_angles = np.clip(angles, -self.joint_limits, self.joint_limits)
 
-        return angles.tolist()
+        return clamped_angles.tolist()
 
     # The body_ik function remains unchanged as its job is only to calculate coordinates.
     def body_ik(self, translation, rotation, coxa_positions, default_foot_positions):

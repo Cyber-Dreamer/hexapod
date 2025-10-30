@@ -29,66 +29,74 @@ class Gait:
     def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
         # vx, vy are now target linear velocities (mm/s)
         # omega is now target angular velocity (rad/s)
-
-        # For a simple gait (e.g., tripod), stance phase is 50% of the cycle.
-        # The step length needs to be twice the displacement that occurs during the stance phase.
-        # However, the phase calculation is normalized. The `speed` parameter in `run_gait`
-        # controls the cycle frequency. A simpler approach is to scale the velocity by a factor
-        # to get a reasonable step length. Let's use a factor that makes `max_step_length`
-        # correspond to the max velocity.
-        step_translation_factor = 0.5 # This factor can be tuned.
         
-        # Linear velocity component
-        # This is calculated in the BODY frame.
-        linear_step = np.array([vx, vy, 0]) * step_translation_factor
-        # Rotational velocity component
+        # --- Dynamic Step Length Calculation ---
+        # 1. Determine the maximum possible step length based on geometry.
+        # The standoff distance is the radius from the body center to the default foot position.
+        # A safe maximum step length is a fraction of this standoff distance to avoid collisions.
+        standoff_distance = np.linalg.norm(default_foot_positions[leg_idx][:2])
+        
+        # Use a factor to keep a safety margin, as real legs have thickness.
+        # 0.5 means the step length can be up to 50% of the standoff distance.
+        step_range_factor = 0.5 
+        max_dynamic_step = standoff_distance * step_range_factor
+        
+        # 2. Calculate the commanded step based on velocity inputs.
+        # The input vx, vy, omega are physical velocities (mm/s, rad/s). We need to
+        # normalize them to a [-1, 1] range to determine the step size.
+        # We assume a nominal max velocity for this normalization. A better approach
+        # would be to pass the max velocities from the locomotion controller.
+        # For now, let's assume max_linear_velocity=300 and max_angular_velocity=pi/2.
+        vx_norm = np.clip(vx / 300.0, -1.0, 1.0)
+        vy_norm = np.clip(vy / 300.0, -1.0, 1.0)
+        omega_norm = np.clip(omega / (np.pi / 2.0), -1.0, 1.0) # Assuming max_angular_velocity is pi/2
+
+        # Create normalized direction vectors for linear and rotational movement
+        linear_dir = np.array([vx_norm, vy_norm, 0])
         hip_pos = self.kinematics.hip_positions[leg_idx]
-        rotational_step = np.array([-hip_pos[1], hip_pos[0], 0]) * omega * rotation_scale_factor
-        # Total step vector is the sum of linear and rotational parts
-        total_step = linear_step + rotational_step
+        # The rotational vector needs to be normalized by the hip distance to be on the same scale as linear_dir
+        hip_radius = np.linalg.norm(hip_pos[:2])
+        if hip_radius < 1e-6: hip_radius = 1.0 # Avoid division by zero for a theoretical center leg
+        rotational_dir = np.array([-hip_pos[1], hip_pos[0], 0]) / hip_radius * omega_norm * rotation_scale_factor
+        
+        # Combine the vectors and clip the total magnitude to 1.0.
+        # This ensures that moving and turning at the same time doesn't create an impossibly large step.
+        command_vec = linear_dir + rotational_dir
+        if np.linalg.norm(command_vec) > 1.0:
+            command_vec = command_vec / np.linalg.norm(command_vec)
+        
+        total_step = command_vec * max_dynamic_step
         
         # Swing phase (leg is in the air, moving to the start of the next step)
         if phase < 0.5:
             swing_phase = phase * 2
             # Parabolic trajectory for the foot lift (0 -> 1 -> 0)
-            z_lift = step_height * (1 - (2 * swing_phase - 1)**2)
+            z_lift = step_height * (1 - (2 * swing_phase - 1)**2) - body_height
 
-            # Foot moves from its rearmost point to its foremost point
+            # Foot moves from its rearmost point to its foremost point.
             swing_offset = total_step * (swing_phase - 0.5)
-            
-            # To prevent IK failures at the edge of the workspace, the swing motion
-            # is performed closer to the body. We define a "swing center" that is
-            # horizontally retracted from the default foot position.
-            swing_retraction_factor = 0.7 # 0.0 = no retraction, 1.0 = retracts to hip. 0.7 is a good start.
-            swing_center = default_foot_positions[leg_idx].copy()
-            swing_center[0] *= (1.0 - swing_retraction_factor)
-            swing_center[1] *= (1.0 - swing_retraction_factor)
-
-            target_pos = swing_center + swing_offset
-            target_pos[2] += z_lift
+            target_pos = default_foot_positions[leg_idx] + swing_offset
+            target_pos[2] = z_lift
         # Stance phase (leg is on the ground, pushing the body)
         else:
             stance_phase = (phase - 0.5) * 2
             # Foot moves from its foremost point to its rearmost point
             stance_offset = total_step * (0.5 - stance_phase)
-
+ 
             target_pos = default_foot_positions[leg_idx] + stance_offset
 
         # Apply body roll and pitch rotation
+        # This adjusts the target foot position to induce body tilt.
         if abs(roll) > 0.001 or abs(pitch) > 0.001:
-            # Rotation matrix for roll (around X-axis)
-            Rx = np.array([[1, 0, 0], [0, np.cos(roll), -np.sin(roll)], [0, np.sin(roll), np.cos(roll)]])
-            # Rotation matrix for pitch (around Y-axis)
-            Ry = np.array([[np.cos(pitch), 0, np.sin(pitch)], [0, 1, 0], [-np.sin(pitch), 0, np.cos(pitch)]])
-            
-            # Combine rotations (Roll first, then Pitch)
-            R_body = Ry @ Rx
-            # Calculate the new hip position after body rotation
-            hip_pos_rotated = R_body @ self.kinematics.hip_positions[leg_idx]
-            # The vector to the foot is from the new hip position to the original target
-            v_foot_body = target_pos - hip_pos_rotated 
-        else:
-            v_foot_body = target_pos - self.kinematics.hip_positions[leg_idx]
+            hip_pos = self.kinematics.hip_positions[leg_idx]
+            # Simplified rotation effect on Z height of the foot target
+            # Positive roll (right side up) should lower the right legs (y<0) and raise left legs (y>0)
+            roll_offset = -hip_pos[1] * np.tan(roll)
+            # Positive pitch (nose up) should lower the front legs (x>0) and raise rear legs (x<0)
+            pitch_offset = hip_pos[0] * np.tan(pitch)
+            target_pos[2] += roll_offset + pitch_offset
+
+        v_foot_body = target_pos - self.kinematics.hip_positions[leg_idx]
         # Rotate the vector from the body frame into the leg's local coordinate frame.
         # This is the same crucial step that was needed for body_ik to work correctly.
         hip_base_angle = self.kinematics.hip_base_angles[leg_idx]

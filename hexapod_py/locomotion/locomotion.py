@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=200, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
+    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=350, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -70,6 +70,12 @@ class HexapodLocomotion:
         # Initialize a cache for the last known valid joint angles for each leg.
         # This is crucial for handling unreachable IK targets gracefully.
         self.last_known_angles = list(self.default_joint_angles)
+        
+        # State management for smooth transitions
+        self.locomotion_state = 'STANDING' # Can be 'STANDING', 'WALKING', 'SETTLING'
+        self.settling_counter = 0
+        self.settling_duration = 20 # Number of frames/ticks for the settling interpolation
+        self.settling_start_angles = None
 
     def set_gait(self, gait_type):
         self.gait_type = gait_type
@@ -103,6 +109,52 @@ class HexapodLocomotion:
         return all_angles
     
     def run_gait(self, vx, vy, omega, roll=0.0, pitch=0.0, step_height=None):
+        is_moving = any(abs(v) > 0.001 for v in [vx, vy, omega, roll, pitch])
+
+        # --- State Machine for Locomotion ---
+        if self.locomotion_state == 'STANDING':
+            if is_moving:
+                self.locomotion_state = 'WALKING'
+            else:
+                return self.default_joint_angles
+
+        elif self.locomotion_state == 'WALKING':
+            if not is_moving:
+                # Check if gait is close to a stable point (phase 0 or 0.5)
+                phase = self.current_gait.gait_phase
+                if phase < 0.05 or abs(phase - 0.5) < 0.05:
+                    self.locomotion_state = 'SETTLING'
+                    self.settling_counter = 0
+                    # Store the current leg angles to interpolate from
+                    self.settling_start_angles = np.array(self.last_known_angles)
+                # else, continue walking for a moment to reach a stable stop point
+            # Continue walking if moving or if not at a good stopping point
+
+        elif self.locomotion_state == 'SETTLING':
+            if is_moving:
+                self.locomotion_state = 'WALKING'
+            else:
+                if self.settling_counter >= self.settling_duration:
+                    self.locomotion_state = 'STANDING'
+                    self.current_gait.gait_phase = 0.0 # Reset phase for next walk
+                    return self.default_joint_angles
+                
+                # Interpolate from the start of settling to the default stance
+                t = self.settling_counter / self.settling_duration
+                interpolated_angles = (1 - t) * self.settling_start_angles + t * np.array(self.default_joint_angles)
+                
+                self.settling_counter += 1
+                
+                # Update last known angles and return the interpolated ones
+                self.last_known_angles = interpolated_angles.tolist()
+                return self.last_known_angles
+
+        # If we are in a state that needs to stop but hasn't returned yet, force zero velocity.
+        if self.locomotion_state == 'WALKING' and not is_moving:
+            vx, vy, omega, roll, pitch = 0, 0, 0, 0, 0
+        elif self.locomotion_state == 'STANDING':
+            return self.default_joint_angles
+
         if self.current_gait:
             # Update gait parameters if new values are provided from the UI
             if step_height is not None:
