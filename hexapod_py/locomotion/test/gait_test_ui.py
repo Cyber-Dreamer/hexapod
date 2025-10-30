@@ -20,6 +20,7 @@ def test_gait_interactive():
     """
     # --- Initialization ---
     locomotion = HexapodLocomotion(gait_type='tripod', body_height=200)
+    locomotion = HexapodLocomotion(gait_type='tripod', body_height=250)
     kinematics = locomotion.kinematics
     
     fk_calculator = HexapodForwardKinematics(
@@ -90,6 +91,7 @@ def test_gait_interactive():
         'step_h': Slider(slider_axes['step_h'], 'Step Height', 10, 80, valinit=40),
         'standoff': Slider(slider_axes['standoff'], 'Standoff', 200, 500, valinit=locomotion.standoff_distance),
         'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 250, valinit=locomotion.body_height),
+        'body_h': Slider(slider_axes['body_h'], 'Body Height', 150, 300, valinit=locomotion.body_height),
     }
 
     # --- Radio Buttons for Gait Selection ---

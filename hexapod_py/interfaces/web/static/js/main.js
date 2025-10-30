@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const omegaValue = document.getElementById('omega-value');
     const pitchValue = document.getElementById('pitch-value');
     const powerBtn = document.getElementById('power-btn');
-    const locomotionToggleBtn = document.getElementById('locomotion-toggle-btn');
+    const modeToggleBtn = document.getElementById('mode-toggle-btn');
     const rightJoystickLabel = document.getElementById('right-joystick-label');
     const omegaLabel = document.getElementById('omega-label'); // This is now the <strong> tag
     const locomotionStatusElem = document.getElementById('locomotion-status');
@@ -44,13 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
         frontCamCanvas.id = 'front-cam-canvas';
         const rearCamCanvas = document.createElement('canvas');
         rearCamCanvas.id = 'rear-cam-canvas';
-        const robot3D = document.createElement('canvas');
-        robot3D.id = '3d-view-canvas';
 
         views = {
             'front-cam': { id: 'front-cam', el: frontCamCanvas, label: 'Front Cam' },
             'rear-cam': { id: 'rear-cam', el: rearCamCanvas, label: 'Rear Cam' },
-            '3d-view': { id: '3d-view', el: robot3D, label: '3D View' }
         };
         
         // Initialize all views and their websockets at low FPS
@@ -133,20 +130,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     let renderWidth = canvas.width;
                     let renderHeight = canvas.height;
 
-                    // Adjust dimensions to maintain aspect ratio (like 'object-fit: contain')
-                    if (videoAspectRatio > canvasAspectRatio) {
-                        renderHeight = canvas.width / videoAspectRatio;
-                    } else {
+                    // Adjust dimensions to maintain aspect ratio (like 'object-fit: cover')
+                    if (videoAspectRatio < canvasAspectRatio) {
+                        // Video is TALLER than canvas, so we fill the width and crop the height.
                         renderWidth = canvas.height * videoAspectRatio;
+                    } else {
+                        // Video is WIDER than canvas, so we fill the height and crop the width.
+                        renderHeight = canvas.width / videoAspectRatio;
                     }
 
-                    // Center the image on the canvas
-                    const x = (canvas.width - renderWidth) / 2;
-                    const y = (canvas.height - renderHeight) / 2;
-
-                    // Clear the canvas and draw the new frame scaled correctly
+                    // Clear the canvas before drawing
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(imageBitmap, x, y, renderWidth, renderHeight);
+
+                    // --- Rotate the image 180 degrees ---
+                    ctx.save(); // Save the current state
+                    ctx.translate(canvas.width / 2, canvas.height / 2); // Move origin to the center of the canvas
+                    ctx.rotate(Math.PI); // Rotate by 180 degrees
+                    // Draw the image centered on the new, rotated origin
+                    ctx.drawImage(imageBitmap, -renderWidth / 2, -renderHeight / 2, renderWidth, renderHeight);
+                    ctx.restore(); // Restore the original state (unrotated)
+
 
                     // Only draw the overlay if this canvas is the current main view
                     if (canvas.parentElement === mainViewContainer) {
@@ -413,16 +416,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }).catch(err => console.error('Move command failed:', err));
     }
 
-    locomotionToggleBtn.addEventListener('click', () => {
+    modeToggleBtn.addEventListener('click', () => {
         fetch('/toggle_locomotion', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 // The server responds with the new status, e.g., "locomotion_enabled".
-                // We can use this to update the UI immediately instead of waiting for the next poll.
+                // We can use this to update the UI immediately instead of waiting for the next sensor data packet.
                 const isEnabled = data.status === 'locomotion_enabled';
                 updateLocomotionStatusUI(isEnabled);
             })
-            .catch(err => console.error('Toggle locomotion failed:', err));
+            .catch(err => console.error('Mode toggle failed:', err));
     });
 
     powerBtn.addEventListener('click', () => {
@@ -451,10 +454,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isPoweredOn) {
             powerBtn.textContent = 'POWER OFF';
             powerBtn.className = 'control-btn stop';
+            modeToggleBtn.disabled = false; // Enable mode switching
             document.body.classList.remove('powered-off');
         } else {
             powerBtn.textContent = 'POWER ON';
             powerBtn.className = 'control-btn start';
+            modeToggleBtn.disabled = true; // Disable mode switching
             document.body.classList.add('powered-off');
             // When powered off, also ensure locomotion is shown as disabled
             updateLocomotionStatusUI(false);
@@ -462,16 +467,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateLocomotionStatusUI(isEnabled) {
+        // This function now updates the text on the mode-toggle-btn
         if (isEnabled) {
             locomotionStatusElem.textContent = 'ENABLED';
             locomotionStatusElem.className = 'enabled';
-            locomotionToggleBtn.textContent = 'STOP';
-            locomotionToggleBtn.className = 'control-btn stop';
+            modeToggleBtn.textContent = 'WALKING';
+            modeToggleBtn.classList.add('active');
         } else {
             locomotionStatusElem.textContent = 'DISABLED';
             locomotionStatusElem.className = 'disabled';
-            locomotionToggleBtn.textContent = 'START';
-            locomotionToggleBtn.className = 'control-btn start';
+            modeToggleBtn.textContent = 'BODY';
+            modeToggleBtn.classList.remove('active');
         }
     }
 
@@ -481,76 +487,6 @@ document.addEventListener('DOMContentLoaded', function () {
             aiVisionLabel.textContent = 'AI Vision (ON)';
         } else {
             aiVisionLabel.textContent = 'AI Vision (OFF)';
-        }
-    }
-
-    // --- 3D Renderer ---
-    let scene, camera, renderer, controls, hexapodModel;
-    
-    function init3D() {
-        const canvas = views['3d-view'].el;
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x2c2c2c);
-
-        camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Initial aspect ratio, will be updated
-        camera.position.set(0, -400, 250);
-        camera.lookAt(0, 0, 0);
-
-        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-
-        // OrbitControls for mouse interaction
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(50, -100, 100);
-        scene.add(directionalLight);
-
-        // Ground grid
-        const gridHelper = new THREE.GridHelper(1000, 20);
-        scene.add(gridHelper);
-
-        // Load the URDF model
-        const loader = new THREE.URDFLoader();
-        loader.load('/static/urdf/hexapod_description.urdf', robot => {
-            hexapodModel = robot;
-            // The URDF is scaled in meters, so we scale it up to millimeters
-            hexapodModel.scale.set(1000, 1000, 1000); 
-            scene.add(hexapodModel);
-        });
-        
-        // Resize handler
-        new ResizeObserver(() => {
-            // This will trigger whenever the main-view container (and our canvas) changes size
-            const { width, height } = mainViewContainer.getBoundingClientRect();
-            if (width > 0 && height > 0) {
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(width, height);
-            }
-        }).observe(mainViewContainer);
-
-        animate3D();
-    }
-
-    function animate3D() {
-        requestAnimationFrame(animate3D);
-        if (controls) controls.update();
-        renderer.render(scene, camera);
-    }
-
-    function update3DModel(joint_angles) {
-        if (!joint_angles || !hexapodModel) return;
-
-        for (const jointName in joint_angles) {
-            const joint = hexapodModel.joints[jointName];
-            if (joint) {
-                // Set the joint angle. The axis is defined in the URDF.
-                joint.setJointValue(joint_angles[jointName]);
-            }
         }
     }
 
@@ -604,8 +540,6 @@ document.addEventListener('DOMContentLoaded', function () {
             omegaLabel.textContent = 'Roll';
         }
 
-        // Update 3D model
-        update3DModel(joint_angles);
     }
 
     // --- Initialization ---
@@ -614,7 +548,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setupViews();
         setupSliders();
         setupSensorWebSocket(); // Connect to the sensor data stream
-        init3D();
     }
 
     init();

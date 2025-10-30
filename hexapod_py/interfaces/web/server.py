@@ -200,10 +200,6 @@ templates_dir = os.path.join(server_dir, "templates")
 # Mount static files
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# Also mount the simulation's meshes directory so the URDF loader can find the STL files
-simulation_dir = os.path.join(project_root, "hexapod_py", "platform", "simulation")
-app.mount("/simulation_assets", StaticFiles(directory=simulation_dir), name="simulation_assets")
-
 # Templates
 templates = Jinja2Templates(directory=templates_dir)
 
@@ -355,7 +351,7 @@ async def power_on_sequence():
         }))
         await asyncio.sleep(delay)
 
-    power_on = True
+    globals()['power_on'] = True
     print("--- Power-On Sequence Complete. Robot is active. ---")
 
 async def power_off_sequence():

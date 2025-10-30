@@ -1,0 +1,390 @@
+/* --- General --- */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  user-select: none; /* Prevent text selection on mobile */
+}
+
+/* --- Main View (Video/3D) --- */
+#main-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 1;
+}
+
+#main-view canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* --- UI Overlay --- */
+.ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none; /* Allow clicks to pass through to video/3D view */
+  z-index: 10;
+}
+
+.ui-overlay > * {
+  pointer-events: auto; /* Re-enable pointer events for UI elements */
+}
+
+/* --- Header --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5em;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.status-indicators .control-btn {
+    padding: 8px 12px;
+    font-size: 1em;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 20px;
+  background-color: rgba(0,0,0,0.5);
+  padding: 5px 15px;
+  border-radius: 8px;
+}
+.status-indicators .status-item { margin: auto 0; }
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #d4d4d4;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+/* --- Footer --- */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 10px 20px 20px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+}
+
+.joystick-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.actions-area {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* --- Joysticks --- */
+.joystick-container {
+  text-align: center;
+}
+
+.joystick-zone {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+.joystick-label {
+  font-weight: bold;
+  margin-top: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+
+.joystick-data {
+  font-size: 0.9em;
+  color: #ccc;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 5px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+
+/* --- Status Panel --- */
+.status-item {
+  font-size: 0.9em;
+}
+
+.status-label {
+  font-weight: bold;
+  color: #aaa;
+}
+
+.status-value {
+  color: #e0e0e0;
+}
+
+.enabled {
+  color: #4CAF50; /* Green */
+  font-weight: bold;
+}
+
+.disabled {
+  color: #F44336; /* Red */
+  font-weight: bold;
+}
+
+/* --- IMU Readout Overlay --- */
+.sensor-readouts {
+  background-color: rgba(0,0,0,0.5);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8em;
+  font-family: 'Courier New', Courier, monospace;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.imu-data-line {
+  white-space: nowrap;
+}
+
+.control-btn {
+  width: 120px;
+  padding: 15px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.control-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+}
+
+.start {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+.start:hover {
+  background-color: #45a049;
+}
+
+.stop {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+.stop:hover {
+  background-color: #da190b;
+}
+
+.mode-toggle.active {
+    background-color: #007acc; /* Blue when active */
+}
+.mode-toggle.active:hover { background-color: #005a9e; }
+
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: -350px; /* Start off-screen */
+  width: 330px;
+  height: 100%;
+  background-color: #252526;
+  padding: 10px 20px;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  transition: right 0.3s ease-in-out;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.settings-panel.visible {
+  right: 0;
+}
+
+.settings-panel h3 {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  color: #d4d4d4;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.slider-group, .toggle-group {
+  margin: 20px 0;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #444;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  border-radius: 5px;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #007acc;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #007acc;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* Toggle Switch CSS */
+.toggle-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-round {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider-round:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider-round {
+  background-color: #2196F3;
+}
+
+input:focus + .slider-round {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider-round:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* --- Preview Views --- */
+#preview-container {
+  position: absolute;
+  top: 80px; /* Position below the header */
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 20;
+  pointer-events: auto; /* Allow clicks on previews */
+}
+
+.preview-view {
+  width: 240px;
+  height: 180px;
+  background-color: #1a1a1a;
+  border: 2px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.preview-view:hover {
+  border-color: #007acc;
+}
+
+.preview-view canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.preview-label {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.8em;
+}

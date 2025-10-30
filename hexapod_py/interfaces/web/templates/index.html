@@ -4,54 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hexapod Control</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- URDFLoader and OrbitControls must be included after three.js -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/urdf-loader@0.10.0/build/URDFLoader.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
+    <!-- Main view for video/3D model, sits in the background -->
+    <div id="main-view">
+        <!-- Main view content will be injected here by JS -->
+    </div>
+
+    <!-- UI Overlay sits on top of the main view -->
+    <div class="ui-overlay">
+        <header class="header">
             <h1>Hexapod Control</h1>
-            <div class="status-bar">
-                <button id="settings-btn" class="control-btn settings">Settings</button>
-                <button id="locomotion-toggle-btn" class="control-btn start">START</button>
-                <p><strong>Mode:</strong> <span id="mode">{{ mode }}</span></p>
-                <p><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></p>
-                <p><strong>GPS:</strong> <span id="gps-status">No Signal</span></p>
+            <div class="status-indicators">
+                <button id="power-btn" class="control-btn power-off">POWER</button>
+                <button id="mode-toggle-btn" class="control-btn mode-toggle" disabled>BODY</button>
+                <div class="status-item"><strong>Mode:</strong> <span id="mode">{{ mode }}</span></div>
+                <div class="status-item"><strong>Locomotion:</strong> <span id="locomotion-status">DISABLED</span></div>
+                <div class="status-item"><strong>GPS:</strong> <span id="gps-status">No Signal</span></div>
             </div>
+            <button id="settings-btn" class="icon-btn">⚙️</button>
         </header>
 
-        <main>
-            <div class="view-container">
-                <div id="main-view" class="main-view">
-                    <!-- Main view content will be injected here by JS -->
-                </div>
-                <div id="preview-container" class="preview-container">
-                    <!-- Preview views will be injected here by JS -->
-                </div>
-                <div class="controls-container">
-                    <div class="joystick-area">
-                        <div id="joystick-zone-left" class="joystick-zone"></div>
-                        <p>Movement</p>
-                        <div class="joystick-data-local">
-                            <span>Vy (Fwd/Bwd): <span id="vy-value">0.00</span></span>
-                            <span>Vx (Strafe): <span id="vx-value">0.00</span></span>
-                        </div>
-                    </div>
-                    <div class="joystick-area">
-                        <div id="joystick-zone-right" class="joystick-zone"></div>
-                        <p id="right-joystick-label">Rotation (omega)</p>
-                        <div class="joystick-data-local">
-                            <span id="omega-label-container"><strong id="omega-label">Omega</strong>: <span id="omega-value">0.00</span></span>
-                            <span><strong>Pitch</strong>: <span id="pitch-value">0.00</span></span>
-                        </div>
+        <!-- Container for preview camera views -->
+        <div id="preview-container"></div>
+
+        <div class="footer">
+            <div class="joystick-area">
+                <div class="joystick-container">
+                    <div id="joystick-zone-left" class="joystick-zone"></div>
+                    <p class="joystick-label">Movement</p>
+                    <div class="joystick-data">
+                        <span>Vy: <span id="vy-value">0.00</span></span>
+                        <span>Vx: <span id="vx-value">0.00</span></span>
                     </div>
                 </div>
             </div>
-        </main>
-
+            <div class="joystick-area">
+                <div class="joystick-container">
+                    <div id="joystick-zone-right" class="joystick-zone"></div>
+                    <p id="right-joystick-label" class="joystick-label">Rotation (omega)</p>
+                    <div class="joystick-data">
+                        <span><strong id="omega-label">Omega</strong>: <span id="omega-value">0.00</span></span>
+                        <span><strong>Pitch</strong>: <span id="pitch-value">0.00</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Settings Panel (initially hidden) -->
@@ -83,6 +82,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
-    <script src="/static/main.js"></script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
