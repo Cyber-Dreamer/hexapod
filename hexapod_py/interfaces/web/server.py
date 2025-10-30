@@ -249,7 +249,7 @@ async def control_loop():
                     omega=control_values['omega'],
                     roll=control_values.get('roll', 0.0),
                     pitch=control_values.get('pitch', 0.0),
-                    step_height=locomotion.step_height
+                    step_height=new_step_height
                 )
             else:
                 # 2. If disabled, switch to stationary body IK mode.

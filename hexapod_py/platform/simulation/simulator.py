@@ -42,8 +42,9 @@ class HexapodSimulator(HexapodPlatform):
         ]
         self.package_path = os.path.dirname(__file__)
 
-        stand_pose = [0.0, np.deg2rad(30), np.deg2rad(-90)]
-        self.target_joint_angles = [stand_pose] * 6
+        # Set the initial pose to be flat (all joints at 0).
+        # The power-on sequence from the UI will handle standing up.
+        self.target_joint_angles = [[0.0, 0.0, 0.0]] * 6
 
     def start(self):
         self.physics_client = p.connect(p.GUI if self.gui else p.DIRECT)

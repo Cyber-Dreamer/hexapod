@@ -14,7 +14,7 @@ class TripodGait(Gait):
         # Tripod 2: Front-Left (2), Rear-Left (0), Middle-Right (4)
         self.tripod_legs_2 = [2, 0, 4]
 
-    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, last_known_angles, body_height, step_height, rotation_scale_factor=1.0):
+    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, last_known_angles, body_height, step_height):
         self.gait_phase = (self.gait_phase + speed) % 1.0
         joint_angles = [None] * 6
 
@@ -24,8 +24,8 @@ class TripodGait(Gait):
         phase_tripod_2 = (self.gait_phase + 0.5) % 1.0
 
         for leg_idx in self.tripod_legs_1:
-            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_tripod_1, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, self.max_step_length, body_height, step_height, rotation_scale_factor)
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_tripod_1, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, self.max_step_length, body_height, step_height)
         for leg_idx in self.tripod_legs_2:
-            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_tripod_2, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, self.max_step_length, body_height, step_height, rotation_scale_factor)
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase_tripod_2, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, self.max_step_length, body_height, step_height)
 
         return joint_angles

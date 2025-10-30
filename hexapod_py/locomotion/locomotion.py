@@ -12,7 +12,7 @@ from .tripod_gait import TripodGait
 from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
-    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=350, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, rotation_scale_factor=0.7, max_linear_velocity=300, max_angular_velocity=np.pi/2):
+    def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=350, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, max_linear_velocity=300, max_angular_velocity=np.pi/2):
         
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
@@ -55,7 +55,6 @@ class HexapodLocomotion:
         self.body_height = body_height
         self.step_height = step_height
         self.gait_speed_factor = gait_speed_factor
-        self.rotation_scale_factor = rotation_scale_factor
         self.max_linear_velocity = max_linear_velocity  # mm/s
         self.max_angular_velocity = max_angular_velocity # rad/s
 
@@ -149,10 +148,7 @@ class HexapodLocomotion:
                 self.last_known_angles = interpolated_angles.tolist()
                 return self.last_known_angles
 
-        # If we are in a state that needs to stop but hasn't returned yet, force zero velocity.
-        if self.locomotion_state == 'WALKING' and not is_moving:
-            vx, vy, omega, roll, pitch = 0, 0, 0, 0, 0
-        elif self.locomotion_state == 'STANDING':
+        if self.locomotion_state == 'STANDING':
             return self.default_joint_angles
 
         if self.current_gait:
@@ -161,8 +157,12 @@ class HexapodLocomotion:
                 self.current_gait.step_height = step_height
     
             # Calculate the magnitude of the movement command
-            command_magnitude = max(np.linalg.norm([vx, vy]), abs(omega))
-            
+            # If we are walking but not moving, we need to continue the gait cycle to reach a stable stop.
+            # We use the last known command magnitude to determine the speed for this final step.
+            if is_moving:
+                command_magnitude = max(np.linalg.norm([vx, vy]), abs(omega))
+            else: # Not moving, but in 'WALKING' state, so we need to finish the step
+                command_magnitude = 1.0 # Use a nominal speed to finish the step
             # Dynamically calculate gait cycle speed. If there's no movement, the gait pauses.
             speed = command_magnitude * self.gait_speed_factor
 
@@ -173,14 +173,21 @@ class HexapodLocomotion:
             # T_cycle = (1 / (speed * sim_rate)) if speed > 0 else float('inf')
             # For simplicity, we'll tie step length directly to velocity input, not cycle time.
             
-            # Convert normalized inputs (-1 to 1) to physical velocities
-            target_vx = vx * self.max_linear_velocity
-            target_vy = vy * self.max_linear_velocity
-            target_omega = omega * self.max_angular_velocity
+            # If we are in the WALKING state but received a stop command, we should
+            # continue using the *last* known velocity to complete the step gracefully,
+            # but set the actual target velocity to zero for the IK calculation.
+            # The `speed` variable will keep the gait phase advancing.
+            if is_moving:
+                target_vx = vx * self.max_linear_velocity
+                target_vy = vy * self.max_linear_velocity
+                target_omega = omega * self.max_angular_velocity
+            else: # In WALKING state, but is_moving is false
+                target_vx, target_vy, target_omega = 0, 0, 0
 
             # Note: recalculate_stance() is intentionally not called here for performance.
             # It's only called when standoff or body_height are changed.
-            new_angles = self.current_gait.run(target_vx, target_vy, target_omega, roll, pitch, speed, self.default_foot_positions, self.last_known_angles, self.body_height, self.current_gait.step_height, self.rotation_scale_factor)
+
+            new_angles = self.current_gait.run(target_vx, target_vy, target_omega, roll, pitch, speed, self.default_foot_positions, self.last_known_angles, self.body_height, self.current_gait.step_height)
             # Update the last known angles with the new valid ones.
             for i in range(6):
                 self.last_known_angles[i] = new_angles[i]

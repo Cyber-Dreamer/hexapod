@@ -82,6 +82,7 @@ def main():
         platform_client = PlatformClient()
         # Start the client's background threads to listen for sensor data
         platform_client.start()
+
         locomotion = HexapodLocomotion(gait_type='tripod')
 
         # --- 3. Launch the web interface ---

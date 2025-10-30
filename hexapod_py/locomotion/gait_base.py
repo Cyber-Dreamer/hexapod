@@ -23,10 +23,10 @@ class Gait:
         self.step_height = step_height
         self.gait_phase = 0.0
 
-    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, last_known_angles, body_height, step_height, rotation_scale_factor=1.0):
+    def run(self, vx, vy, omega, roll, pitch, speed, default_foot_positions, last_known_angles, body_height, step_height):
         raise NotImplementedError("The 'run' method must be implemented by the gait subclass.")
 
-    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, max_step_length, body_height, step_height, rotation_scale_factor=1.0):
+    def _calculate_leg_ik(self, leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, max_step_length, body_height, step_height):
         # vx, vy are now target linear velocities (mm/s)
         # omega is now target angular velocity (rad/s)
         
@@ -57,7 +57,7 @@ class Gait:
         # The rotational vector needs to be normalized by the hip distance to be on the same scale as linear_dir
         hip_radius = np.linalg.norm(hip_pos[:2])
         if hip_radius < 1e-6: hip_radius = 1.0 # Avoid division by zero for a theoretical center leg
-        rotational_dir = np.array([-hip_pos[1], hip_pos[0], 0]) / hip_radius * omega_norm * rotation_scale_factor
+        rotational_dir = np.array([-hip_pos[1], hip_pos[0], 0]) / hip_radius * omega_norm
         
         # Combine the vectors and clip the total magnitude to 1.0.
         # This ensures that moving and turning at the same time doesn't create an impossibly large step.
@@ -71,10 +71,12 @@ class Gait:
         if phase < 0.5:
             swing_phase = phase * 2
             # Parabolic trajectory for the foot lift (0 -> 1 -> 0)
-            z_lift = step_height * (1 - (2 * swing_phase - 1)**2) - body_height
+            parabolic_lift = (1 - (2 * swing_phase - 1)**2)
+            z_lift = step_height * parabolic_lift - body_height
 
             # Foot moves from its rearmost point to its foremost point.
             swing_offset = total_step * (swing_phase - 0.5)
+
             target_pos = default_foot_positions[leg_idx] + swing_offset
             target_pos[2] = z_lift
         # Stance phase (leg is on the ground, pushing the body)
