@@ -354,6 +354,34 @@ async def power_on_sequence():
     globals()['power_on'] = True
     print("--- Power-On Sequence Complete. Robot is active. ---")
 
+async def _smooth_lower_body(duration=2.0, steps=50):
+    """
+    Helper function to smoothly lower the robot's body to a safe minimum height.
+    """
+    if not platform or not locomotion:
+        return
+
+    print("Lowering body to minimum height...")
+    start_height = locomotion.body_height
+    # A safe minimum height, e.g., half the femur length.
+    # This ensures the legs are still bent and can support the body.
+    end_height = locomotion.kinematics.segment_lengths[1] * 0.5 
+    delay = duration / steps
+
+    for i in range(steps + 1):
+        t = i / steps
+        current_height = start_height * (1 - t) + end_height * t
+        
+        # Use set_body_pose to calculate angles for the new height.
+        # We keep translation and rotation at zero.
+        locomotion.body_height = current_height
+        locomotion.recalculate_stance() # This updates foot positions for the new height
+        target_angles = locomotion.set_body_pose(np.zeros(3), np.zeros(3))
+
+        platform.set_joint_angles(target_angles)
+        await asyncio.sleep(delay)
+
+
 async def power_off_sequence():
     """
     Runs a graceful shutdown sequence for the robot.
@@ -371,6 +399,9 @@ async def power_off_sequence():
     power_on = False
     locomotion_enabled = False
     control_values.update({'vx': 0.0, 'vy': 0.0, 'omega': 0.0, 'pitch': 0.0, 'roll': 0.0})
+
+    # New Step: Smoothly lower the body before sitting.
+    await _smooth_lower_body()
 
     # Sequence: Sit -> Home -> De-energize
     sequence = [
