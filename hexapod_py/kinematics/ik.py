@@ -12,74 +12,65 @@ class HexapodKinematics:
         
     def leg_ik(self, coordinate: np.ndarray, knee_direction: int = -1) -> Optional[List[float]]:
         """
-        Calculates the joint angles for a single leg to reach a target coordinate.
-
-        Args:
-            coordinate (np.ndarray): The target (x, y, z) position for the foot.
-            knee_direction (int):    The desired knee bend direction.
-                                     -1 for "knee down" (standard walking).
-                                     +1 for "knee up". Defaults to -1.
-
-        Returns:
-            A list of 3 joint angles [gamma, alpha, beta] in radians,
-            or None if the joint limits are violated. If the coordinate is
-            unreachable, it computes angles for the nearest valid point.
+        Calculates the joint angles for a leg to reach a target coordinate. Coordinates are based on the hip position.
         """
         x, y, z = coordinate
         l_coxa, l_femur, l_tibia = self.segment_lengths
 
-        # 1. Coxa Angle (gamma) - Constrained to forward-facing plane
-        gamma = np.arctan2(y, abs(x))
+        # Calculating the coxa (hip) angle.
+        # The absolute x goal is to prevent the angle to go full 180 when trying to reach under the robot.
+        coxa_angle = np.arctan2(y, abs(x))
 
-        # 2. Reduce to 2D side-view problem
-        x_prime = x - l_coxa
-        z_prime = z
+        # Converting the 3D angles to a 2D view for the femur and tibia calculation.
+        # This is the position of the foot relative to the femur joint in the leg's side plane.
+        femur_to_foot_x = x - l_coxa
+        femur_to_foot_z = z
         
-        dist_femur_to_foot = np.sqrt(x_prime**2 + z_prime**2)
+        dist_femur_to_foot = np.sqrt(femur_to_foot_x**2 + femur_to_foot_z**2)
 
-        # 3. Reachability Check and Clamping
+        # Reachability Check and Clamping
         epsilon = 1e-6
         max_reach = l_femur + l_tibia
         min_reach = abs(l_femur - l_tibia)
 
         if not (min_reach - epsilon <= dist_femur_to_foot <= max_reach + epsilon):
-            # Clamp the distance to the nearest boundary (max or min reach)
+            # Clamping the distance to the nearest boundary (max or min reach)
             clamped_dist = np.clip(dist_femur_to_foot, min_reach, max_reach)
             
-            # Scale the vector from the femur joint to the foot to find the new,
+            # Scaling the vector from the femur joint to the foot to find the new,
             # reachable coordinate on the workspace boundary.
             scale = clamped_dist / dist_femur_to_foot
             
             # Update the local variables for the IK calculation
-            x_prime *= scale
-            z_prime *= scale
+            femur_to_foot_x *= scale
+            femur_to_foot_z *= scale
             dist_femur_to_foot = clamped_dist
 
-        # 4. Law of Cosines to find internal angles
+        # Law of Cosines to find internal angles
         cos_beta_arg = (l_femur**2 + l_tibia**2 - dist_femur_to_foot**2) / (2 * l_femur * l_tibia)
         beta_inner = np.arccos(np.clip(cos_beta_arg, -1.0, 1.0))
         
         cos_alpha_arg = (dist_femur_to_foot**2 + l_femur**2 - l_tibia**2) / (2 * dist_femur_to_foot * l_femur)
         alpha_inner = np.arccos(np.clip(cos_alpha_arg, -1.0, 1.0))
 
-        phi = np.arctan2(z_prime, x_prime)
+        phi = np.arctan2(femur_to_foot_z, femur_to_foot_x)
 
-        # 5. Set final angles using the knee_direction parameter
-        # This replaces the old "if z >= 0" logic with a direct calculation.
-        alpha = phi - (knee_direction * alpha_inner)
-        beta = knee_direction * (np.pi - beta_inner)
+        # Set final angles using the knee_direction parameter
+        femur_angle = phi - (knee_direction * alpha_inner)
+        tibia_angle = knee_direction * (np.pi - beta_inner)
 
-        # 6. Joint Limit Check
-        angles = np.array([gamma, alpha, beta])
-        # Clamp the final angles to their respective limits. This ensures we always
-        # return a valid command for the servos, providing a "best effort" pose
-        # even if it doesn't perfectly match the target.
+        # Joint Limit Check
+        angles = np.array([coxa_angle, femur_angle, tibia_angle])
+
+        # Ensuring always valid output by clamping to joint limits
         clamped_angles = np.clip(angles, -self.joint_limits, self.joint_limits)
 
         return clamped_angles.tolist()
 
-    # The body_ik function remains unchanged as its job is only to calculate coordinates.
     def body_ik(self, translation, rotation, coxa_positions, default_foot_positions):
+        """
+        Calculates the the joint angles in order to have the body at a certain translation and rotation.
+        """
         roll, pitch, yaw = rotation
         Rx = np.array([[1, 0, 0], [0, np.cos(roll), -np.sin(roll)], [0, np.sin(roll), np.cos(roll)]])
         Ry = np.array([[np.cos(pitch), 0, np.sin(pitch)], [0, 1, 0], [-np.sin(pitch), 0, np.cos(pitch)]])

@@ -1,11 +1,3 @@
-"""
-Hexapod Locomotion Module
-=========================
-This module implements the high-level locomotion logic for the hexapod robot.
-It acts as a manager for different gait patterns, loading and running the
-selected gait. The actual gait logic is implemented in separate classes.
-"""
-
 import numpy as np
 from hexapod_py.kinematics.ik import HexapodKinematics
 from .tripod_gait import TripodGait
