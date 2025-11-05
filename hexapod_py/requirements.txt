@@ -6,3 +6,5 @@ opencv-python
 numpy
 pyzmq
 msgpack
+pybullet
+uvicorn[standard]

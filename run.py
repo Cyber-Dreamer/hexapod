@@ -94,7 +94,7 @@ def main():
         # Configure the web server with the platform client and locomotion controller
         setup_server(platform_client, locomotion, mode=mode_name)
         # Run the FastAPI server using uvicorn
-        uvicorn.run("hexapod_py.interfaces.web.server:app", host="0.0.0.0", port=8000, log_level="info")
+        uvicorn.run("hexapod_py.interfaces.web.server:app", host="127.0.0.1", port=8001, log_level="info")
 
     except zmq.error.ZMQError as e:
         print(f"\nError: Could not connect to the platform server. {e}")
