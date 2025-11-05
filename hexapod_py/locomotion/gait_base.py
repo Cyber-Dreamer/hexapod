@@ -1,10 +1,3 @@
-"""
-Gait Base Class
-===============
-
-This module defines the abstract base class for all gait implementations.
-"""
-
 import numpy as np
 
 class Gait:
@@ -72,7 +65,7 @@ class Gait:
             swing_phase = phase * 2
             # Parabolic trajectory for the foot lift (0 -> 1 -> 0)
             parabolic_lift = (1 - (2 * swing_phase - 1)**2)
-            z_lift = step_height * parabolic_lift - body_height
+            z_lift = -body_height + (step_height * parabolic_lift)
 
             # Foot moves from its rearmost point to its foremost point.
             swing_offset = total_step * (swing_phase - 0.5)
