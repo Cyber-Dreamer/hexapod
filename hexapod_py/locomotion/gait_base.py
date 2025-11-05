@@ -1,10 +1,3 @@
-"""
-Gait Base Class
-===============
-
-This module defines the abstract base class for all gait implementations.
-"""
-
 import numpy as np
 
 class Gait:
