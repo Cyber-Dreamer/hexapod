@@ -28,12 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const stepHeightValue = document.getElementById('step-height-value');
 
     // --- State ---
-<<<<<<< HEAD
-    let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 200, standoff: 200, step_height: 40, power: false };
-    let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 275, standoff: 200, step_height: 40, power: false };
-=======
     let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 350, standoff: 200, step_height: 40, power: false };
->>>>>>> d0482f28a3a193583a5ff590a912fe19f103692f
     let sendInterval = null;
     let sensorData = { imu: {} }; // Shared state for sensor data
     let views = {}; // To hold our view elements
