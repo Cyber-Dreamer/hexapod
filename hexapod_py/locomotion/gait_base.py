@@ -38,19 +38,24 @@ class Gait:
 
         total_step = command_vec * max_dynamic_step
 
-        # Swing phase: leg is in the air.
+        # Swing phase: leg is in the air, moving from its starting point to the target landing point.
         if phase < 0.5:
             swing_phase = phase * 2
-            # Use a parabolic trajectory for a smooth foot lift.
-            parabolic_lift = (1 - (2 * swing_phase - 1)**2)
-            z_lift = -body_height + (step_height * parabolic_lift)
-            logging.info(f"Leg {leg_idx}: step_height={step_height}, parabolic_lift={parabolic_lift}, z_lift={z_lift}")
-
-            # The foot swings from its rearmost point to its foremost point.
-            swing_offset = total_step * (swing_phase - 0.5)
-            target_pos = default_foot_positions[leg_idx] + swing_offset
+            
+            # Use a half-sine wave for a smooth vertical lift and touchdown.
+            # This ensures zero vertical velocity at the start and end of the swing.
+            z_lift = -body_height + (step_height * np.sin(swing_phase * np.pi))
+            
+            # Use a cosine interpolation for the horizontal (X/Y) movement of the foot.
+            # This moves the foot from its rearmost point to its foremost point smoothly.
+            # At swing_phase=0, cos_interp=1. At swing_phase=1, cos_interp=-1.
+            cos_interp = np.cos(swing_phase * np.pi)
+            swing_offset = total_step * (-cos_interp / 2.0)
+            
+            target_pos = default_foot_positions[leg_idx] + swing_offset 
             target_pos[2] = z_lift
-        # Stance phase: leg is on the ground, pushing the body.
+            
+        # Stance phase: leg is on the ground, pushing the body forward.
         else:
             stance_phase = (phase - 0.5) * 2
             # The foot pushes from its foremost point to its rearmost point.

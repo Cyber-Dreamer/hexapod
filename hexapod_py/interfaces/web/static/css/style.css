@@ -10,8 +10,6 @@ body, html {
   color: #e0e0e0;
   user-select: none; /* Prevent text selection on mobile */
 }
-
-/* --- Main View (Video/3D) --- */
 #main-view {
   position: absolute;
   top: 0;
@@ -59,11 +57,6 @@ body, html {
   margin: 0;
   font-size: 1.5em;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-}
-
-.status-indicators .control-btn {
-    padding: 8px 12px;
-    font-size: 1em;
 }
 
 .status-indicators {
@@ -387,4 +380,32 @@ input:checked + .slider-round:before {
   padding: 2px 8px;
   border-radius: 5px;
   font-size: 0.8em;
+}
+
+/* --- Gait Selector Styles --- */
+.gait-selector-group {
+    padding: 10px 20px;
+}
+
+.gait-selector-group h3 {
+    margin: 0 0 10px 0;
+    font-size: 1em;
+    color: #ccc;
+    font-weight: normal;
+}
+
+#gait-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.gait-btn {
+    padding: 8px 15px;
+}
+
+.gait-btn.active {
+    background-color: dodgerblue;
+    border-color: dodgerblue;
+    color: white;
+    font-weight: bold;
 }

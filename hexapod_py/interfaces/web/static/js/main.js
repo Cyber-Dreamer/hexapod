@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const aiVisionLabel = document.getElementById('ai-vision-label');
     const standoffValue = document.getElementById('standoff-value');
     const stepHeightValue = document.getElementById('step-height-value');
+    const gaitSelectorContainer = document.getElementById('gait-selector');
 
     // --- State ---
     let controlData = { vx: 0, vy: 0, omega: 0, pitch: 0, roll: 0, body_height: 350, standoff: 200, step_height: 40, power: false };
@@ -490,6 +491,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function setupGaitSelector() {
+        // These gaits match the `available_gaits` in locomotion.py
+        const availableGaits = ['tripod', 'ripple'];
+
+        availableGaits.forEach(gaitName => {
+            const button = document.createElement('button');
+            button.textContent = gaitName.charAt(0).toUpperCase() + gaitName.slice(1);
+            button.className = 'gait-btn';
+            button.dataset.gait = gaitName;
+            button.addEventListener('click', () => {
+                fetch('/set_gait', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gait: gaitName }),
+                })
+                .catch(err => console.error('Set gait failed:', err));
+            });
+            gaitSelectorContainer.appendChild(button);
+        });
+    }
+
+    function updateGaitSelectorUI(activeGait) {
+        const buttons = gaitSelectorContainer.querySelectorAll('.gait-btn');
+        buttons.forEach(button => {
+            button.classList.toggle('active', button.dataset.gait === activeGait);
+        });
+    }
+
     // --- Sensor WebSocket ---
     function setupSensorWebSocket() {
         let ws;
@@ -523,13 +552,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleSensorData(data) {
         // Store sensor data in the shared state
-        const { power_on, locomotion_enabled, ai_vision_enabled, joint_angles } = data;
+        const { power_on, locomotion_enabled, ai_vision_enabled, joint_angles, gait } = data;
         sensorData = data; // Store the whole packet
 
         // Update locomotion status and button appearance
         updatePowerStatusUI(power_on);
         updateLocomotionStatusUI(locomotion_enabled);
         updateAIVisionStatusUI(ai_vision_enabled);
+        updateGaitSelectorUI(gait);
 
         // Update joystick labels based on locomotion mode
         if (locomotion_enabled) {
@@ -547,6 +577,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Initializing web interface...');
         setupViews();
         setupSliders();
+        setupGaitSelector();
         setupSensorWebSocket(); // Connect to the sensor data stream
     }
 

@@ -32,6 +32,7 @@ control_values: Dict[str, float] = {
     'pitch': 0.0,
     'roll': 0.0
 }
+current_gait: str = "tripod"
 power_on: bool = False
 locomotion_enabled: bool = False # Gait movement vs. body posing
 ai_vision_enabled: bool = False  # AI object detection toggle
@@ -138,7 +139,8 @@ class SensorDataStreamer:
                         "power_on": power_on,
                         "locomotion_enabled": locomotion_enabled,
                         "ai_vision_enabled": ai_vision_enabled,
-                        "joint_angles": last_joint_angles
+                        "joint_angles": last_joint_angles,
+                        "gait": current_gait
                     }
                     message = json.dumps(data_packet)
                     
@@ -208,9 +210,10 @@ def setup_server(p: HexapodPlatform, l: HexapodLocomotion, mode: str):
     Initializes the web server with the necessary platform and locomotion objects.
     This function is called by the main runner script before starting the server.
     """
-    global platform, locomotion, server_mode, object_detector
+    global platform, locomotion, server_mode, object_detector, current_gait
     platform = p
     locomotion = l
+    current_gait = l.gait_type
     server_mode = mode
     print("Web server configured with platform and locomotion instances.")
     # Initialize the object detector only if on the physical robot
@@ -483,6 +486,19 @@ async def toggle_locomotion():
             'roll': 0.0
         })
     return {"status": f"locomotion_{status}"}
+
+@app.post("/set_gait")
+async def set_gait(request: Request):
+    """Sets the locomotion gait."""
+    global current_gait
+    data = await request.json()
+    gait_name = data.get('gait')
+    if locomotion and gait_name in locomotion.available_gaits:
+        locomotion.set_gait(gait_name)
+        current_gait = gait_name
+        print(f"Gait changed to: {gait_name}")
+        return {"status": "success", "gait": gait_name}
+    return {"status": "error", "message": "Invalid gait name or locomotion not ready."}
 
 @app.post("/reinit")
 async def reinit_sequence():
