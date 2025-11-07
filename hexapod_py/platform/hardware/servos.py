@@ -8,6 +8,9 @@ is used for the first 16 servos and provides a structure to add more boards.
 
 import board
 import busio
+import threading
+import time
+import numpy as np
 from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 
@@ -16,6 +19,7 @@ I2C_BUS = busio.I2C(board.SCL, board.SDA)
 FREQUENCY = 50  # Standard for most analog servos
 
 # These values are based on your test script. Fine-tune them for your specific servos.
+UPDATE_RATE_HZ = 200    # How many times per second to update servo positions
 SERVO_MIN_PULSE = 500   # Microseconds
 SERVO_MAX_PULSE = 2500  # Microseconds
 ACTUATION_RANGE = 270   # Degrees
@@ -112,10 +116,24 @@ class ServoController:
                     )
                 )
 
-    def set_leg_angle(self, leg_index, joint_index, angle_deg):
-        """Sets the angle of a single joint on a specific leg."""
+        # --- Threading for non-blocking updates ---
+        # Target angles are stored in a thread-safe way.
+        # The `set_all_leg_angles` method will update this array, and a background
+        # thread will read from it to command the physical servos.
+        self._target_angles_deg = np.zeros((6, 3))
+        self._lock = threading.Lock()
+        self._is_running = True
+        self._update_thread = threading.Thread(target=self._update_loop, daemon=True)
+        self._update_thread.start()
+        print(f"Servo update thread started (rate: {UPDATE_RATE_HZ} Hz).")
+
+    def _set_physical_leg_angle(self, leg_index, joint_index, angle_deg):
+        """
+        PRIVATE: Directly sets the angle of a single physical servo.
+        This is called by the internal update loop.
+        """
         # 1. Apply kinematic limits to the requested angle.
-        # This ensures we don't command the joint beyond its safe mechanical range.
+        #    This ensures we don't command the joint beyond its safe mechanical range.
         limit = KINEMATIC_JOINT_LIMITS[joint_index]
         limited_angle_deg = max(-limit, min(limit, angle_deg))
 
@@ -123,8 +141,8 @@ class ServoController:
         board_idx, channel_idx = LEG_CHANNEL_MAP[leg_index][joint_index]
         center_angle = SERVO_CENTER_DEGREES[leg_index][joint_index]
 
-        # 3. The final angle sent to the servo is the limited kinematic angle
-        # plus the calibrated center position.
+        # 3. The final angle sent to the servo is the limited kinematic angle plus
+        #    the calibrated center position.
         servo_angle = center_angle + limited_angle_deg
 
         if board_idx < len(self.servos) and channel_idx < len(self.servos[board_idx]):
@@ -136,15 +154,34 @@ class ServoController:
 
     def set_all_leg_angles(self, angles_deg):
         """
-        Sets the angles for all joints of all legs.
+        Updates the target angles for all joints of all legs.
+        This method is now very fast as it only updates an array and does not
+        wait for I2C communication.
+
         :param angles_deg: A list of 6 lists, where each inner list contains
                            the [coxa, femur, tibia] angles in degrees for a leg.
         """
-        for leg_idx, joint_angles in enumerate(angles_deg):
-            for joint_idx, angle in enumerate(joint_angles):
-                self.set_leg_angle(leg_idx, joint_idx, angle)
+        with self._lock:
+            # np.asarray is used to handle both lists and numpy arrays gracefully
+            self._target_angles_deg = np.asarray(angles_deg)
+
+    def _update_loop(self):
+        """The main loop for the background update thread."""
+        while self._is_running:
+            with self._lock:
+                # Make a local copy of the target angles to avoid holding the lock
+                # during I2C communication.
+                current_targets = self._target_angles_deg.copy()
+
+            for leg_idx in range(6):
+                for joint_idx in range(3):
+                    self._set_physical_leg_angle(leg_idx, joint_idx, current_targets[leg_idx, joint_idx])
+            
+            time.sleep(1.0 / UPDATE_RATE_HZ)
 
     def deinit(self):
-        """De-energizes all servos."""
+        """Stops the update thread and de-energizes all servos."""
+        self._is_running = False
+        self._update_thread.join() # Wait for the thread to finish
         for board in self.boards:
             board.deinit()

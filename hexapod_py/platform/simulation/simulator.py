@@ -31,6 +31,7 @@ class HexapodSimulator(HexapodPlatform):
         self._simulation_thread = None
         self._latest_imu_data = None
         self._last_sensor_update_time = 0
+        self._ordered_joint_ids = []
 
         self.leg_joint_names = [
             ["hip_6", "ties_6", "foot_6"], # RL
@@ -56,6 +57,7 @@ class HexapodSimulator(HexapodPlatform):
         self.robot_id = p.loadURDF("robot.urdf", basePosition=[0, 0, 0.4])
         self._map_joint_names_to_ids()
         self._set_foot_friction()
+        self._prepare_joint_id_list()
 
         self._is_running = True
         self._simulation_thread = threading.Thread(target=self._simulation_and_sensor_loop)
@@ -141,6 +143,14 @@ class HexapodSimulator(HexapodPlatform):
             link_name = joint_info[12].decode('UTF-8')
             self.link_name_to_id[link_name] = joint_info[0]
 
+    def _prepare_joint_id_list(self):
+        """Creates a flat, ordered list of joint IDs for batch commands."""
+        self._ordered_joint_ids = []
+        for leg_idx in range(6):
+            for joint_idx in range(3):
+                joint_name = self.leg_joint_names[leg_idx][joint_idx]
+                self._ordered_joint_ids.append(self.joint_name_to_id[joint_name])
+
     def get_imu_data(self):
         """
         Returns the latest IMU data.
@@ -174,21 +184,28 @@ class HexapodSimulator(HexapodPlatform):
                              spinningFriction=spinning_friction, rollingFriction=rolling_friction)
 
     def _apply_joint_angles(self):
+        """Applies the target joint angles to the simulation using an efficient batch command."""
         STALL_TORQUE_NM = 7.85
         MAX_VELOCITY_RAD_S = 10.0
         KP = 0.2
         KD = 0.8
-        for leg_idx, leg_angles in enumerate(self.target_joint_angles):
-            if leg_angles is not None:
-                for joint_idx, angle in enumerate(leg_angles):
-                    joint_name = self.leg_joint_names[leg_idx][joint_idx]
-                    if joint_name in self.joint_name_to_id:
-                        p.setJointMotorControl2(
-                            bodyIndex=self.robot_id,
-                            jointIndex=self.joint_name_to_id[joint_name],
-                            controlMode=p.POSITION_CONTROL, targetPosition=angle,
-                            force=STALL_TORQUE_NM, maxVelocity=MAX_VELOCITY_RAD_S,
-                            positionGain=KP, velocityGain=KD)
+
+        # Flatten the target angles list to match the ordered joint IDs
+        target_positions = [angle for leg_angles in self.target_joint_angles for angle in leg_angles]
+
+        # Ensure we have the correct number of angles before proceeding
+        if len(target_positions) != len(self._ordered_joint_ids):
+            return
+
+        p.setJointMotorControlArray(
+            bodyUniqueId=self.robot_id,
+            jointIndices=self._ordered_joint_ids,
+            controlMode=p.POSITION_CONTROL,
+            targetPositions=target_positions,
+            forces=[STALL_TORQUE_NM] * len(self._ordered_joint_ids),
+            positionGains=[KP] * len(self._ordered_joint_ids),
+            velocityGains=[KD] * len(self._ordered_joint_ids)
+        )
 
     def get_camera_image(self, camera_id, width=640, height=480):
         return self._capture_camera_image(camera_id, width, height)
