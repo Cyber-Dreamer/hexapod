@@ -110,8 +110,8 @@ class HexapodSimulator(HexapodPlatform):
                     # The client now sends angles in degrees. The simulation needs radians.
                     angles_deg = command_message.get('angles')
                     if angles_deg:
-                        angles_rad = [[np.deg2rad(angle) for angle in leg] for leg in angles_deg]
-                        self.set_joint_angles(angles_rad)
+                        # The base set_joint_angles expects radians.
+                        self.set_joint_angles([[np.deg2rad(angle) for angle in leg] for leg in angles_deg])
                     joint_socket.send(b"OK")
                 else:
                     # Respond with an error if the command is unknown

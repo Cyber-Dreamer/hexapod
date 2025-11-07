@@ -19,5 +19,5 @@ class RippleGait(Gait):
         num_legs = len(self.ripple_sequence)
         for i, leg_idx in enumerate(self.ripple_sequence):
             phase = (self.gait_phase + (i / num_legs)) % 1.0
-            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, self.max_step_length, body_height, step_height)
+            joint_angles[leg_idx] = self._calculate_leg_ik(leg_idx, phase, vx, vy, omega, roll, pitch, default_foot_positions, last_known_angles, body_height, step_height)
         return joint_angles

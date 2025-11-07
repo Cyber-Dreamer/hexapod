@@ -1,0 +1,11 @@
+asyncio
+fastapi
+uvicorn
+flask
+opencv-python
+numpy
+pyzmq
+msgpack
+pybullet
+uvicorn[standard]
+matplotlib

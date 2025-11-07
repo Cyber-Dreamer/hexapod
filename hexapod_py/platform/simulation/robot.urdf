@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
 <!-- Generated using onshape-to-robot -->
 <!-- Onshape https://cad.onshape.com/documents/026f9a33ba6a25a983a9d639/w/b83e0182bd0a887a03df3198/e/e49783848224d44e064e4a49 -->
-<robot name="C:\Users\gata2\OneDrive\Documents\hexapod\hexapod_py\simulation">
+<robot name="C:\Users\gata2\OneDrive\Documents\hexapod\hexapod_py\platform\simulation">
   <!-- Link base_link -->
   <link name="base_link">
     <inertial>
-      <origin xyz="0.000110218 0.00373922 -0.0151302" rpy="0 0 0"/>
-      <mass value="2.53298"/>
-      <inertia ixx="0.0181121" ixy="0.000710932" ixz="-2.18499e-05" iyy="0.0168006" iyz="2.07304e-05" izz="0.0247691"/>
+      <origin xyz="0.00470178 -0.0163199 -0.0259802" rpy="0 0 0"/>
+      <mass value="2.35252"/>
+      <inertia ixx="0.0190385" ixy="0.000445297" ixz="-2.34169e-05" iyy="0.0182501" iyz="-2.1661e-05" izz="0.0246171"/>
     </inertial>
     <!-- Part mobile_bracket -->
     <visual>
-      <origin xyz="0.1066 0.053231 -0.0168925" rpy="1.13446 1.5708 0"/>
+      <origin xyz="0.111152 0.033155 -0.0136886" rpy="1.13446 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -20,46 +20,30 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1066 0.053231 -0.0168925" rpy="1.13446 1.5708 0"/>
+      <origin xyz="0.111152 0.033155 -0.0136886" rpy="1.13446 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
-    <!-- Part ultrasound_sensor -->
+    <!-- Part top_cover -->
     <visual>
-      <origin xyz="0.0624927 0.0922459 0.00310749" rpy="8.71922e-15 -3.34841e-14 -0.610865"/>
+      <origin xyz="0.0050986 -0.0162986 0.0213114" rpy="-2.42931e-14 2.46385e-14 2.00713"/>
       <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
+        <mesh filename="package://meshes\top_cover.stl"/>
       </geometry>
-      <material name="ultrasound_sensor_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
+      <material name="top_cover_material">
+        <color rgba="0.282353 0.54902 0.160784 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0624927 0.0922459 0.00310749" rpy="8.71922e-15 -3.34841e-14 -0.610865"/>
+      <origin xyz="0.0050986 -0.0162986 0.0213114" rpy="-2.42931e-14 2.46385e-14 2.00713"/>
       <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part ultrasound_sensor_2 -->
-    <visual>
-      <origin xyz="-0.0450964 0.101659 0.00310749" rpy="-3.14159 2.42931e-14 -2.70526"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-      <material name="ultrasound_sensor_2_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="-0.0450964 0.101659 0.00310749" rpy="-3.14159 2.42931e-14 -2.70526"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
+        <mesh filename="package://meshes\top_cover.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_2 -->
     <visual>
-      <origin xyz="0.0964012 -0.0633408 -0.0168925" rpy="2.18166 1.5708 0"/>
+      <origin xyz="0.100953 -0.0834168 -0.0136886" rpy="2.18166 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -68,14 +52,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0964012 -0.0633408 -0.0168925" rpy="2.18166 1.5708 0"/>
+      <origin xyz="0.100953 -0.0834168 -0.0136886" rpy="2.18166 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part camera -->
     <visual>
-      <origin xyz="-0.042772 0.096674 -0.0288925" rpy="3.14159 -2.43206e-14 0.436332"/>
+      <origin xyz="-0.0382198 0.076598 -0.0256886" rpy="3.14159 -6.80112e-15 0.436332"/>
       <geometry>
         <mesh filename="package://meshes\camera.stl"/>
       </geometry>
@@ -84,30 +68,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.042772 0.096674 -0.0288925" rpy="3.14159 -2.43206e-14 0.436332"/>
+      <origin xyz="-0.0382198 0.076598 -0.0256886" rpy="3.14159 -6.80112e-15 0.436332"/>
       <geometry>
         <mesh filename="package://meshes\camera.stl"/>
       </geometry>
     </collision>
-    <!-- Part u_sensor_holder -->
-    <visual>
-      <origin xyz="-0.0450964 0.101659 0.00310749" rpy="-2.46385e-14 -2.42931e-14 0.436332"/>
-      <geometry>
-        <mesh filename="package://meshes\u_sensor_holder.stl"/>
-      </geometry>
-      <material name="u_sensor_holder_material">
-        <color rgba="0.282353 0.54902 0.160784 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="-0.0450964 0.101659 0.00310749" rpy="-2.46385e-14 -2.42931e-14 0.436332"/>
-      <geometry>
-        <mesh filename="package://meshes\u_sensor_holder.stl"/>
-      </geometry>
-    </collision>
     <!-- Part camera_2 -->
     <visual>
-      <origin xyz="0.0438648 -0.0891191 -0.0288925" rpy="-3.14159 2.42931e-14 -2.70526"/>
+      <origin xyz="0.048417 -0.109195 -0.0256886" rpy="-3.14159 6.80112e-15 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\camera.stl"/>
       </geometry>
@@ -116,14 +84,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0438648 -0.0891191 -0.0288925" rpy="-3.14159 2.42931e-14 -2.70526"/>
+      <origin xyz="0.048417 -0.109195 -0.0256886" rpy="-3.14159 6.80112e-15 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\camera.stl"/>
       </geometry>
     </collision>
     <!-- Part bottom_cover -->
     <visual>
-      <origin xyz="0.000546408 0.00377743 -0.0518925" rpy="-3.14159 -2.46385e-14 -1.13446"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0486886" rpy="-3.14159 -2.1605e-14 -1.13446"/>
       <geometry>
         <mesh filename="package://meshes\bottom_cover.stl"/>
       </geometry>
@@ -132,14 +100,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.000546408 0.00377743 -0.0518925" rpy="-3.14159 -2.46385e-14 -1.13446"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0486886" rpy="-3.14159 -2.1605e-14 -1.13446"/>
       <geometry>
         <mesh filename="package://meshes\bottom_cover.stl"/>
       </geometry>
     </collision>
     <!-- Part left_speaker -->
     <visual>
-      <origin xyz="-0.0398634 -0.0539337 0.0185598" rpy="1.5708 0.523599 -0.610865"/>
+      <origin xyz="-0.0234341 -0.0570474 0.00105654" rpy="1.5708 0.523599 -0.610865"/>
       <geometry>
         <mesh filename="package://meshes\left_speaker.stl"/>
       </geometry>
@@ -148,14 +116,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0398634 -0.0539337 0.0185598" rpy="1.5708 0.523599 -0.610865"/>
+      <origin xyz="-0.0234341 -0.0570474 0.00105654" rpy="1.5708 0.523599 -0.610865"/>
       <geometry>
         <mesh filename="package://meshes\left_speaker.stl"/>
       </geometry>
     </collision>
     <!-- Part body_power -->
     <visual>
-      <origin xyz="0.000546408 0.00377743 -0.0168925" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0136886" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\body_power.stl"/>
       </geometry>
@@ -164,14 +132,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.000546408 0.00377743 -0.0168925" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0136886" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\body_power.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_3 -->
     <visual>
-      <origin xyz="-0.0096523 -0.112794 -0.0168925" rpy="3.05433 -1.5708 0"/>
+      <origin xyz="-0.00510011 -0.13287 -0.0136886" rpy="3.05433 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -180,30 +148,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0096523 -0.112794 -0.0168925" rpy="3.05433 -1.5708 0"/>
+      <origin xyz="-0.00510011 -0.13287 -0.0136886" rpy="3.05433 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
-    <!-- Part cover -->
-    <visual>
-      <origin xyz="0.000546408 0.00377743 0.0181075" rpy="3.34841e-14 8.71922e-15 -2.18166"/>
-      <geometry>
-        <mesh filename="package://meshes\cover.stl"/>
-      </geometry>
-      <material name="cover_material">
-        <color rgba="0.282353 0.54902 0.160784 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0.000546408 0.00377743 0.0181075" rpy="3.34841e-14 8.71922e-15 -2.18166"/>
-      <geometry>
-        <mesh filename="package://meshes\cover.stl"/>
-      </geometry>
-    </collision>
     <!-- Part mobile_bracket_4 -->
     <visual>
-      <origin xyz="0.0107451 0.120349 -0.0168925" rpy="0.0872665 1.5708 0"/>
+      <origin xyz="0.0152973 0.100273 -0.0136886" rpy="0.0872665 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -212,30 +164,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0107451 0.120349 -0.0168925" rpy="0.0872665 1.5708 0"/>
+      <origin xyz="0.0152973 0.100273 -0.0136886" rpy="0.0872665 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
-    <!-- Part ultrasound_sensor_3 -->
-    <visual>
-      <origin xyz="-0.0613998 -0.084691 0.00310749" rpy="-8.71922e-15 3.34841e-14 2.53073"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-      <material name="ultrasound_sensor_3_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="-0.0613998 -0.084691 0.00310749" rpy="-8.71922e-15 3.34841e-14 2.53073"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-    </collision>
     <!-- Part mobile_bracket_5 -->
     <visual>
-      <origin xyz="-0.105507 -0.0456761 -0.0168925" rpy="2.00713 -1.5708 0"/>
+      <origin xyz="-0.100955 -0.0657521 -0.0136886" rpy="2.00713 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -244,14 +180,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.105507 -0.0456761 -0.0168925" rpy="2.00713 -1.5708 0"/>
+      <origin xyz="-0.100955 -0.0657521 -0.0136886" rpy="2.00713 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_6 -->
     <visual>
-      <origin xyz="-0.0953084 0.0708957 -0.0168925" rpy="0.959931 -1.5708 0"/>
+      <origin xyz="-0.0907562 0.0508196 -0.0136886" rpy="0.959931 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -260,14 +196,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0953084 0.0708957 -0.0168925" rpy="0.959931 -1.5708 0"/>
+      <origin xyz="-0.0907562 0.0508196 -0.0136886" rpy="0.959931 -1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part body_brain -->
     <visual>
-      <origin xyz="0.000546408 0.00377743 -0.0168925" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0136886" rpy="2.1605e-14 6.80112e-15 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\body_brain.stl"/>
       </geometry>
@@ -276,46 +212,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.000546408 0.00377743 -0.0168925" rpy="2.46385e-14 2.42931e-14 -2.70526"/>
+      <origin xyz="0.0050986 -0.0162986 -0.0136886" rpy="2.1605e-14 6.80112e-15 -2.70526"/>
       <geometry>
         <mesh filename="package://meshes\body_brain.stl"/>
       </geometry>
     </collision>
-    <!-- Part ultrasound_sensor_4 -->
-    <visual>
-      <origin xyz="0.108135 -0.00563539 0.00310749" rpy="3.14159 9.19098e-15 1.48353"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-      <material name="ultrasound_sensor_4_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0.108135 -0.00563539 0.00310749" rpy="3.14159 9.19098e-15 1.48353"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part ultrasound_sensor_5 -->
-    <visual>
-      <origin xyz="0.0461892 -0.0941038 0.00310749" rpy="3.14159 -2.42931e-14 0.436332"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-      <material name="ultrasound_sensor_5_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0.0461892 -0.0941038 0.00310749" rpy="3.14159 -2.42931e-14 0.436332"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-    </collision>
     <!-- Part left_speaker_2 -->
     <visual>
-      <origin xyz="0.0707306 -0.00236289 0.0185598" rpy="1.5708 0.523599 1.48353"/>
+      <origin xyz="0.0546545 -0.0206342 0.00105654" rpy="1.5708 0.523599 1.48353"/>
       <geometry>
         <mesh filename="package://meshes\left_speaker.stl"/>
       </geometry>
@@ -324,38 +228,22 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0707306 -0.00236289 0.0185598" rpy="1.5708 0.523599 1.48353"/>
+      <origin xyz="0.0546545 -0.0206342 0.00105654" rpy="1.5708 0.523599 1.48353"/>
       <geometry>
         <mesh filename="package://meshes\left_speaker.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part ultrasound_sensor_6 -->
-    <visual>
-      <origin xyz="-0.107043 0.0131903 0.00310749" rpy="-3.14159 -9.19098e-15 -1.65806"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
-      </geometry>
-      <material name="ultrasound_sensor_6_material">
-        <color rgba="0.701961 0.701961 0.701961 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="-0.107043 0.0131903 0.00310749" rpy="-3.14159 -9.19098e-15 -1.65806"/>
-      <geometry>
-        <mesh filename="package://meshes\ultrasound_sensor.stl"/>
       </geometry>
     </collision>
   </link>
   <!-- Link hip_assembly -->
   <link name="hip_assembly">
     <inertial>
-      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+      <origin xyz="0.0271153 0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="7.85466e-06" iyy="0.000328441" iyz="1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.25181e-15 -4.80771e-15 -3.14159"/>
+      <origin xyz="0.0575 -4.64906e-16 -0.0045" rpy="1.16453e-15 -4.14381e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -364,14 +252,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.25181e-15 -4.80771e-15 -3.14159"/>
+      <origin xyz="0.0575 -4.64906e-16 -0.0045" rpy="1.16453e-15 -4.14381e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_7 -->
     <visual>
-      <origin xyz="0.0575 1.42984e-13 -0.0305" rpy="-4.45935e-15 -5.30804e-15 -1.5708"/>
+      <origin xyz="0.0575 3.81639e-17 -0.0305" rpy="-3.75284e-15 -9.18037e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -380,14 +268,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.42984e-13 -0.0305" rpy="-4.45935e-15 -5.30804e-15 -1.5708"/>
+      <origin xyz="0.0575 3.81639e-17 -0.0305" rpy="-3.75284e-15 -9.18037e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel -->
     <visual>
-      <origin xyz="-2.77556e-17 2.12504e-17 -0.0025" rpy="-3.14159 -4.73604e-15 -3.14159"/>
+      <origin xyz="1.38778e-16 -3.46945e-17 -0.0025" rpy="-3.14159 -4.26305e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -396,14 +284,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.77556e-17 2.12504e-17 -0.0025" rpy="-3.14159 -4.73604e-15 -3.14159"/>
+      <origin xyz="1.38778e-16 -3.46945e-17 -0.0025" rpy="-3.14159 -4.26305e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.86696e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -4.05481e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -412,14 +300,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -2.86696e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -4.05481e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket -->
     <visual>
-      <origin xyz="0.0575 1.42984e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 1.45717e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -428,14 +316,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.42984e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 1.45717e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_2 -->
     <visual>
-      <origin xyz="-2.77556e-17 3.20924e-17 -0.0585" rpy="-3.14159 -4.94581e-15 -3.14159"/>
+      <origin xyz="-1.38778e-16 -1.38778e-17 -0.0585" rpy="-3.14159 -1.97331e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -444,7 +332,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.77556e-17 3.20924e-17 -0.0585" rpy="-3.14159 -4.94581e-15 -3.14159"/>
+      <origin xyz="-1.38778e-16 -1.38778e-17 -0.0585" rpy="-3.14159 -1.97331e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -453,13 +341,13 @@
   <!-- Link ties_assembly -->
   <link name="ties_assembly">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_8 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -468,14 +356,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.90781e-16 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="1.50389e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -484,14 +372,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.90781e-16 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="1.50389e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie -->
     <visual>
-      <origin xyz="0.0275 1.38778e-17 -0.0305" rpy="-1.90781e-16 1.5708 0"/>
+      <origin xyz="0.0275 -1.38778e-17 -0.0305" rpy="1.50389e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -500,14 +388,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 1.38778e-17 -0.0305" rpy="-1.90781e-16 1.5708 0"/>
+      <origin xyz="0.0275 -1.38778e-17 -0.0305" rpy="1.50389e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_3 -->
     <visual>
-      <origin xyz="-5.55112e-17 3.46945e-18 -0.0025" rpy="3.14159 -3.02861e-16 -3.14159"/>
+      <origin xyz="1.11022e-16 3.46945e-17 -0.0025" rpy="-3.14159 -1.50856e-16 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -516,14 +404,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 3.46945e-18 -0.0025" rpy="3.14159 -3.02861e-16 -3.14159"/>
+      <origin xyz="1.11022e-16 3.46945e-17 -0.0025" rpy="-3.14159 -1.50856e-16 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_2 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -2.09141e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 1.73711e-14 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -532,14 +420,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -2.09141e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 1.73711e-14 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_2 -->
     <visual>
-      <origin xyz="0.0575 2.08167e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -5.72459e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -548,14 +436,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 2.08167e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -5.72459e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_4 -->
     <visual>
-      <origin xyz="-8.32667e-17 -1.04083e-17 -0.0585" rpy="-3.14159 -5.66514e-16 -3.14159"/>
+      <origin xyz="1.11022e-16 3.46945e-17 -0.0585" rpy="3.14159 -3.68117e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -564,7 +452,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-8.32667e-17 -1.04083e-17 -0.0585" rpy="-3.14159 -5.66514e-16 -3.14159"/>
+      <origin xyz="1.11022e-16 3.46945e-17 -0.0585" rpy="3.14159 -3.68117e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -573,13 +461,13 @@
   <!-- Link foot_assembly -->
   <link name="foot_assembly">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot -->
     <visual>
-      <origin xyz="-0.04425 -2.08167e-17 -0.0305" rpy="-4.71681e-16 1.5708 0"/>
+      <origin xyz="-0.04425 2.08167e-17 -0.0305" rpy="-2.22045e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -588,14 +476,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -2.08167e-17 -0.0305" rpy="-4.71681e-16 1.5708 0"/>
+      <origin xyz="-0.04425 2.08167e-17 -0.0305" rpy="-2.22045e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap -->
     <visual>
-      <origin xyz="-0.04425 -1.2039e-15 -0.0305" rpy="6.67378e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="3.33067e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -604,14 +492,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -1.2039e-15 -0.0305" rpy="6.67378e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="3.33067e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot -->
     <visual>
-      <origin xyz="-0.04375 -1.73125e-15 -0.03" rpy="7.37908e-15 1.5708 0"/>
+      <origin xyz="-0.04375 3.88231e-15 -0.03" rpy="-1.83225e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -620,14 +508,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 -1.73125e-15 -0.03" rpy="7.37908e-15 1.5708 0"/>
+      <origin xyz="-0.04375 3.88231e-15 -0.03" rpy="-1.83225e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_5 -->
     <visual>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -5.84205e-18 -4.99413e-30"/>
+      <origin xyz="5.55112e-17 1.73472e-18 -0.0025" rpy="-3.14159 -6.35086e-17 5.73157e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -636,14 +524,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 -5.84205e-18 -4.99413e-30"/>
+      <origin xyz="5.55112e-17 1.73472e-18 -0.0025" rpy="-3.14159 -6.35086e-17 5.73157e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_3 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -7.5462e-17 4.71681e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.94279e-16 -2.22045e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -652,14 +540,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -7.5462e-17 4.71681e-16"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 3.94279e-16 -2.22045e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_3 -->
     <visual>
-      <origin xyz="-0.0575 -2.77556e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.9082e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -668,14 +556,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -2.77556e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 1.9082e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_6 -->
     <visual>
-      <origin xyz="-5.55112e-17 -1.73472e-17 -0.0585" rpy="-3.14159 -2.69494e-16 1.25356e-15"/>
+      <origin xyz="5.55112e-17 8.1532e-17 -0.0585" rpy="3.14159 -9.79955e-18 1.11022e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -684,7 +572,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 -1.73472e-17 -0.0585" rpy="-3.14159 -2.69494e-16 1.25356e-15"/>
+      <origin xyz="5.55112e-17 8.1532e-17 -0.0585" rpy="3.14159 -9.79955e-18 1.11022e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -692,7 +580,7 @@
   </link>
   <!-- Joint from ties_assembly to foot_assembly -->
   <joint name="foot_1" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-1.66622e-14 -3.69666e-15 3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="-1.83367e-15 -1.8597e-15 3.14159"/>
     <parent link="ties_assembly"/>
     <child link="foot_assembly"/>
     <axis xyz="0 0 1"/>
@@ -700,7 +588,7 @@
   </joint>
   <!-- Joint from hip_assembly to ties_assembly -->
   <joint name="ties_1" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 4.45935e-15 2.48483e-12"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 3.75284e-15 1.25724e-15"/>
     <parent link="hip_assembly"/>
     <child link="ties_assembly"/>
     <axis xyz="0 0 1"/>
@@ -708,7 +596,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly -->
   <joint name="hip_1" type="revolute">
-    <origin xyz="0.138321 0.0680226 0.0134908" rpy="-2.3989e-14 -2.8749e-14 0.436332"/>
+    <origin xyz="0.142873 0.0479466 0.0166947" rpy="-2.41992e-14 -2.85159e-14 0.436332"/>
     <parent link="base_link"/>
     <child link="hip_assembly"/>
     <axis xyz="0 0 1"/>
@@ -717,13 +605,13 @@
   <!-- Link hip_assembly_2 -->
   <link name="hip_assembly_2">
     <inertial>
-      <origin xyz="-0.0268487 -0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="3.2467e-06" iyy="0.000312332" iyz="-9.42575e-07" izz="0.000312341"/>
+      <origin xyz="-0.0271153 -0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="-7.85466e-06" iyy="0.000328441" iyz="-1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip_2 -->
     <visual>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-9.81323e-15 4.86997e-15 -1.57814e-16"/>
+      <origin xyz="-0.0575 3.64292e-17 -0.0045" rpy="6.66109e-15 2.55513e-15 -1.09316e-16"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -732,14 +620,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -0.0005 -0.0045" rpy="-9.81323e-15 4.86997e-15 -1.57814e-16"/>
+      <origin xyz="-0.0575 3.64292e-17 -0.0045" rpy="6.66109e-15 2.55513e-15 -1.09316e-16"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_9 -->
     <visual>
-      <origin xyz="-0.0575 -7.80626e-18 -0.0305" rpy="8.55001e-16 -9.52702e-16 1.5708"/>
+      <origin xyz="-0.0575 2.25514e-17 -0.0305" rpy="2.48572e-15 -7.17397e-15 1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -748,14 +636,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -7.80626e-18 -0.0305" rpy="8.55001e-16 -9.52702e-16 1.5708"/>
+      <origin xyz="-0.0575 2.25514e-17 -0.0305" rpy="2.48572e-15 -7.17397e-15 1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_7 -->
     <visual>
-      <origin xyz="2.77556e-17 -6.07153e-18 -0.0025" rpy="3.14159 3.8867e-30 -4.55901e-17"/>
+      <origin xyz="0 -3.46945e-18 -0.0025" rpy="3.14159 -4.9326e-31 3.23512e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -764,14 +652,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 -6.07153e-18 -0.0025" rpy="3.14159 3.8867e-30 -4.55901e-17"/>
+      <origin xyz="0 -3.46945e-18 -0.0025" rpy="3.14159 -4.9326e-31 3.23512e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_4 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.56343e-16 -2.07886e-17"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.31536e-15 -2.90032e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -780,14 +668,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.56343e-16 -2.07886e-17"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 2.31536e-15 -2.90032e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_4 -->
     <visual>
-      <origin xyz="-0.0575 -7.80626e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 3.1225e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -796,14 +684,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 -7.80626e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 3.1225e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_8 -->
     <visual>
-      <origin xyz="0 -1.12757e-17 -0.0585" rpy="-3.14159 6.32414e-17 -2.66968e-17"/>
+      <origin xyz="0 1.56125e-17 -0.0585" rpy="-3.14159 2.31536e-15 -8.92377e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -812,7 +700,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -1.12757e-17 -0.0585" rpy="-3.14159 6.32414e-17 -2.66968e-17"/>
+      <origin xyz="0 1.56125e-17 -0.0585" rpy="-3.14159 2.31536e-15 -8.92377e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -821,13 +709,13 @@
   <!-- Link ties_assembly_2 -->
   <link name="ties_assembly_2">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_10 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -836,14 +724,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie_2 -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-3.71491e-14 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="5.55857e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -852,14 +740,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-3.71491e-14 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="5.55857e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie_2 -->
     <visual>
-      <origin xyz="0.0275 1.02002e-15 -0.0305" rpy="-3.71491e-14 1.5708 0"/>
+      <origin xyz="0.0275 -1.68268e-16 -0.0305" rpy="5.55857e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -868,14 +756,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 1.02002e-15 -0.0305" rpy="-3.71491e-14 1.5708 0"/>
+      <origin xyz="0.0275 -1.68268e-16 -0.0305" rpy="5.55857e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_9 -->
     <visual>
-      <origin xyz="0 3.46945e-18 -0.0025" rpy="-3.14159 -6.07909e-15 -3.14159"/>
+      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 7.62056e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -884,14 +772,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 3.46945e-18 -0.0025" rpy="-3.14159 -6.07909e-15 -3.14159"/>
+      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 7.62056e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_5 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -7.09719e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.19866e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -900,14 +788,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -7.09719e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.19866e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_5 -->
     <visual>
-      <origin xyz="0.0575 2.13371e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -3.36536e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -916,14 +804,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 2.13371e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -3.36536e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_10 -->
     <visual>
-      <origin xyz="2.77556e-17 3.46945e-18 -0.0585" rpy="-3.14159 -6.23027e-15 -3.14159"/>
+      <origin xyz="5.55112e-17 -1.73472e-18 -0.0585" rpy="-3.14159 -1.48331e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -932,7 +820,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 3.46945e-18 -0.0585" rpy="-3.14159 -6.23027e-15 -3.14159"/>
+      <origin xyz="5.55112e-17 -1.73472e-18 -0.0585" rpy="-3.14159 -1.48331e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -941,13 +829,13 @@
   <!-- Link foot_assembly_2 -->
   <link name="foot_assembly_2">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot_2 -->
     <visual>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="-2.43594e-27 1.5708 0"/>
+      <origin xyz="-0.04425 8.67362e-18 -0.0305" rpy="1.52211e-27 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -956,14 +844,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="-2.43594e-27 1.5708 0"/>
+      <origin xyz="-0.04425 8.67362e-18 -0.0305" rpy="1.52211e-27 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_2 -->
     <visual>
-      <origin xyz="-0.04425 1.25247e-15 -0.0305" rpy="-6.5509e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="2.33863e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -972,14 +860,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 1.25247e-15 -0.0305" rpy="-6.5509e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="2.33863e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_2 -->
     <visual>
-      <origin xyz="-0.04375 1.66533e-15 -0.03" rpy="-7.87954e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.59595e-16 -0.03" rpy="-7.21645e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -988,14 +876,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 1.66533e-15 -0.03" rpy="-7.87954e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.59595e-16 -0.03" rpy="-7.21645e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_11 -->
     <visual>
-      <origin xyz="1.11022e-16 0 -0.0025" rpy="-3.14159 4.41096e-17 -6.37252e-30"/>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 6.46282e-17 5.1276e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1004,14 +892,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 0 -0.0025" rpy="-3.14159 4.41096e-17 -6.37252e-30"/>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 6.46282e-17 5.1276e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_6 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 8.66357e-17 1.1927e-27"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.76144e-14 -1.18329e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1020,14 +908,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 8.66357e-17 1.1927e-27"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.76144e-14 -1.18329e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_6 -->
     <visual>
-      <origin xyz="-0.0575 1.04083e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 8.67362e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1036,14 +924,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.04083e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 8.67362e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_12 -->
     <visual>
-      <origin xyz="0 0 -0.0585" rpy="3.14159 -7.49596e-15 1.1927e-27"/>
+      <origin xyz="5.55112e-17 0 -0.0585" rpy="-3.14159 1.53408e-14 -1.18329e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1052,7 +940,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.0585" rpy="3.14159 -7.49596e-15 1.1927e-27"/>
+      <origin xyz="5.55112e-17 0 -0.0585" rpy="-3.14159 1.53408e-14 -1.18329e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1060,7 +948,7 @@
   </link>
   <!-- Joint from ties_assembly_2 to foot_assembly_2 -->
   <joint name="foot_2" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="2.57504e-15 -5.91728e-15 3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="-6.33457e-15 -1.83953e-14 3.14159"/>
     <parent link="ties_assembly_2"/>
     <child link="foot_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -1068,7 +956,7 @@
   </joint>
   <!-- Joint from hip_assembly_2 to ties_assembly_2 -->
   <joint name="ties_2" type="revolute">
-    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -8.55001e-16 3.14159"/>
+    <origin xyz="-0.0925 0.0311167 -0.0305" rpy="1.5708 -2.48572e-15 3.14159"/>
     <parent link="hip_assembly_2"/>
     <child link="ties_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -1076,7 +964,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_2 -->
   <joint name="hip_2" type="revolute">
-    <origin xyz="0.125071 -0.083416 0.0134908" rpy="-7.92838e-15 3.38805e-14 2.53073"/>
+    <origin xyz="0.129624 -0.103492 0.0166947" rpy="-1.34586e-14 3.21607e-14 2.53073"/>
     <parent link="base_link"/>
     <child link="hip_assembly_2"/>
     <axis xyz="0 0 1"/>
@@ -1085,13 +973,13 @@
   <!-- Link hip_assembly_3 -->
   <link name="hip_assembly_3">
     <inertial>
-      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+      <origin xyz="0.0271153 0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="7.85466e-06" iyy="0.000328441" iyz="1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip_3 -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-1.99788e-14 -9.22412e-17 -3.14159"/>
+      <origin xyz="0.0575 3.81639e-16 -0.0045" rpy="-2.65273e-14 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -1100,14 +988,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-1.99788e-14 -9.22412e-17 -3.14159"/>
+      <origin xyz="0.0575 3.81639e-16 -0.0045" rpy="-2.65273e-14 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_11 -->
     <visual>
-      <origin xyz="0.0575 1.43814e-13 -0.0305" rpy="-9.22412e-17 2.91099e-14 -1.5708"/>
+      <origin xyz="0.0575 6.75675e-16 -0.0305" rpy="2.74219e-14 5.37076e-14 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1116,14 +1004,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43814e-13 -0.0305" rpy="-9.22412e-17 2.91099e-14 -1.5708"/>
+      <origin xyz="0.0575 6.75675e-16 -0.0305" rpy="2.74219e-14 5.37076e-14 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_13 -->
     <visual>
-      <origin xyz="0 -2.43945e-19 -0.0025" rpy="3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="2.498e-16 1.5439e-16 -0.0025" rpy="3.14159 2.70114e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1132,14 +1020,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -2.43945e-19 -0.0025" rpy="3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="2.498e-16 1.5439e-16 -0.0025" rpy="3.14159 2.70114e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_7 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1148,14 +1036,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_7 -->
     <visual>
-      <origin xyz="0.0575 1.43814e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 6.75675e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1164,14 +1052,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43814e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 6.75675e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_14 -->
     <visual>
-      <origin xyz="-1.9984e-15 1.71846e-17 -0.0585" rpy="3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="2.498e-16 1.7087e-16 -0.0585" rpy="3.14159 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1180,7 +1068,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.9984e-15 1.71846e-17 -0.0585" rpy="3.14159 -9.22412e-17 -3.14159"/>
+      <origin xyz="2.498e-16 1.7087e-16 -0.0585" rpy="3.14159 2.74219e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1189,13 +1077,13 @@
   <!-- Link ties_assembly_3 -->
   <link name="ties_assembly_3">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_12 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1204,14 +1092,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie_3 -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="8.14959e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-4.35426e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -1220,14 +1108,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="8.14959e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-4.35426e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie_3 -->
     <visual>
-      <origin xyz="0.0275 -2.498e-16 -0.0305" rpy="8.14959e-15 1.5708 0"/>
+      <origin xyz="0.0275 4.28477e-16 -0.0305" rpy="-3.79915e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -1236,14 +1124,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 -2.498e-16 -0.0305" rpy="8.14959e-15 1.5708 0"/>
+      <origin xyz="0.0275 4.28477e-16 -0.0305" rpy="-3.79915e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_15 -->
     <visual>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0025" rpy="-3.14159 7.2886e-17 3.14159"/>
+      <origin xyz="1.11022e-16 3.10516e-16 -0.0025" rpy="-3.14159 2.4762e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1252,14 +1140,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0025" rpy="-3.14159 7.2886e-17 3.14159"/>
+      <origin xyz="1.11022e-16 3.10516e-16 -0.0025" rpy="-3.14159 2.4762e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_8 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.01519e-17 3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.09451e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1268,14 +1156,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.01519e-17 3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.09451e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_8 -->
     <visual>
-      <origin xyz="0.0575 -4.96131e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 4.80518e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1284,14 +1172,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 -4.96131e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 4.80518e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_16 -->
     <visual>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0585" rpy="-3.14159 -1.20361e-17 3.14159"/>
+      <origin xyz="-5.55112e-17 1.45717e-16 -0.0585" rpy="3.14159 -3.16517e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1300,7 +1188,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0585" rpy="-3.14159 -1.20361e-17 3.14159"/>
+      <origin xyz="-5.55112e-17 1.45717e-16 -0.0585" rpy="3.14159 -3.16517e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1309,13 +1197,13 @@
   <!-- Link foot_assembly_3 -->
   <link name="foot_assembly_3">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot_3 -->
     <visual>
-      <origin xyz="-0.04425 1.04083e-17 -0.0305" rpy="1.55031e-16 1.5708 0"/>
+      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="1.66533e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -1324,14 +1212,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 1.04083e-17 -0.0305" rpy="1.55031e-16 1.5708 0"/>
+      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="1.66533e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_3 -->
     <visual>
-      <origin xyz="-0.04425 2.84842e-15 -0.0305" rpy="-1.49841e-14 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="-3.01108e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -1340,14 +1228,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 2.84842e-15 -0.0305" rpy="-1.49841e-14 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="-3.01108e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_3 -->
     <visual>
-      <origin xyz="-0.04375 3.81639e-16 -0.03" rpy="-1.62907e-15 1.5708 0"/>
+      <origin xyz="-0.04375 5.93275e-16 -0.03" rpy="-2.61596e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -1356,14 +1244,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 3.81639e-16 -0.03" rpy="-1.62907e-15 1.5708 0"/>
+      <origin xyz="-0.04375 5.93275e-16 -0.03" rpy="-2.61596e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_17 -->
     <visual>
-      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 1.35612e-17 1.21394e-30"/>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 1.61186e-18 8.08582e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1372,14 +1260,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 1.35612e-17 1.21394e-30"/>
+      <origin xyz="-5.55112e-17 0 -0.0025" rpy="3.14159 1.61186e-18 8.08582e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_9 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.5433e-15 -2.82897e-30"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 5.27312e-16 5.55112e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1388,14 +1276,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 1.5433e-15 -2.82897e-30"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 5.27312e-16 5.55112e-17"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_9 -->
     <visual>
-      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -2.94903e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1404,14 +1292,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 -2.94903e-16 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_18 -->
     <visual>
-      <origin xyz="0 6.93889e-18 -0.0585" rpy="-3.14159 -2.80722e-17 -2.07665e-17"/>
+      <origin xyz="-3.33067e-16 1.5439e-16 -0.0585" rpy="-3.14159 6.25977e-17 1.11022e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1420,7 +1308,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 6.93889e-18 -0.0585" rpy="-3.14159 -2.80722e-17 -2.07665e-17"/>
+      <origin xyz="-3.33067e-16 1.5439e-16 -0.0585" rpy="-3.14159 6.25977e-17 1.11022e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1428,7 +1316,7 @@
   </link>
   <!-- Joint from ties_assembly_3 to foot_assembly_3 -->
   <joint name="foot_3" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="1.68416e-15 -9.61937e-17 3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="1.26193e-15 -1.75295e-15 -3.14159"/>
     <parent link="ties_assembly_3"/>
     <child link="foot_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1436,7 +1324,7 @@
   </joint>
   <!-- Joint from hip_assembly_3 to ties_assembly_3 -->
   <joint name="ties_3" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 9.22412e-17 2.50162e-12"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 -2.74219e-14 9.4696e-15"/>
     <parent link="hip_assembly_3"/>
     <child link="ties_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1444,7 +1332,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_3 -->
   <joint name="hip_3" type="revolute">
-    <origin xyz="-0.0127028 -0.147661 0.0142242" rpy="3.23352e-14 -8.74693e-15 -1.65806"/>
+    <origin xyz="-0.00815056 -0.167737 0.0174281" rpy="7.71669e-15 -8.74693e-15 -1.65806"/>
     <parent link="base_link"/>
     <child link="hip_assembly_3"/>
     <axis xyz="0 0 1"/>
@@ -1453,13 +1341,13 @@
   <!-- Link hip_assembly_4 -->
   <link name="hip_assembly_4">
     <inertial>
-      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+      <origin xyz="0.0271153 0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="7.85466e-06" iyy="0.000328441" iyz="1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip_4 -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-9.16127e-16 -8.9318e-16 -3.14159"/>
+      <origin xyz="0.0575 -5.55112e-17 -0.0045" rpy="-1.00936e-15 -9.85854e-16 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -1468,14 +1356,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="-9.16127e-16 -8.9318e-16 -3.14159"/>
+      <origin xyz="0.0575 -5.55112e-17 -0.0045" rpy="-1.00936e-15 -9.85854e-16 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_13 -->
     <visual>
-      <origin xyz="0.0575 1.43742e-13 -0.0305" rpy="-6.76543e-16 -1.05045e-15 -1.5708"/>
+      <origin xyz="0.0575 3.1225e-17 -0.0305" rpy="-6.85694e-16 -8.32515e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1484,14 +1372,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43742e-13 -0.0305" rpy="-6.76543e-16 -1.05045e-15 -1.5708"/>
+      <origin xyz="0.0575 3.1225e-17 -0.0305" rpy="-6.85694e-16 -8.32515e-16 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_19 -->
     <visual>
-      <origin xyz="0 -4.33681e-19 -0.0025" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="5.55112e-17 -1.73472e-17 -0.0025" rpy="3.14159 -2.71148e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1500,14 +1388,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -4.33681e-19 -0.0025" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="5.55112e-17 -1.73472e-17 -0.0025" rpy="3.14159 -2.71148e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_10 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.37018e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1516,14 +1404,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.37018e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_10 -->
     <visual>
-      <origin xyz="0.0575 1.43742e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 3.1225e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1532,14 +1420,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43742e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 3.1225e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_20 -->
     <visual>
-      <origin xyz="0 -9.1073e-18 -0.0585" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="2.77556e-17 -1.38778e-17 -0.0585" rpy="3.14159 -2.71148e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1548,7 +1436,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -9.1073e-18 -0.0585" rpy="3.14159 -1.78474e-16 -3.14159"/>
+      <origin xyz="2.77556e-17 -1.38778e-17 -0.0585" rpy="3.14159 -2.71148e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1557,13 +1445,13 @@
   <!-- Link ties_assembly_4 -->
   <link name="ties_assembly_4">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_14 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1572,14 +1460,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie_4 -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.07587e-14 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-1.20056e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -1588,14 +1476,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.07587e-14 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-1.20056e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie_4 -->
     <visual>
-      <origin xyz="0.0275 2.91434e-16 -0.0305" rpy="-1.07587e-14 1.5708 0"/>
+      <origin xyz="0.0275 2.25514e-17 -0.0305" rpy="-1.20056e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -1604,14 +1492,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 2.91434e-16 -0.0305" rpy="-1.07587e-14 1.5708 0"/>
+      <origin xyz="0.0275 2.25514e-17 -0.0305" rpy="-1.20056e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_21 -->
     <visual>
-      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 -1.88765e-14 -3.14159"/>
+      <origin xyz="2.77556e-17 -1.73472e-18 -0.0025" rpy="3.14159 -2.29043e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1620,14 +1508,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.77556e-17 0 -0.0025" rpy="3.14159 -1.88765e-14 -3.14159"/>
+      <origin xyz="2.77556e-17 -1.73472e-18 -0.0025" rpy="3.14159 -2.29043e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_11 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.89012e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -2.31474e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1636,14 +1524,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -1.89012e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -2.31474e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_11 -->
     <visual>
-      <origin xyz="0.0575 6.10623e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 5.89806e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1652,14 +1540,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 6.10623e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 5.89806e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_22 -->
     <visual>
-      <origin xyz="-1.05471e-15 0 -0.0585" rpy="3.14159 -1.89304e-14 -3.14159"/>
+      <origin xyz="-1.11022e-16 -5.20417e-18 -0.0585" rpy="3.14159 -6.70105e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1668,7 +1556,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.05471e-15 0 -0.0585" rpy="3.14159 -1.89304e-14 -3.14159"/>
+      <origin xyz="-1.11022e-16 -5.20417e-18 -0.0585" rpy="3.14159 -6.70105e-16 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1677,13 +1565,13 @@
   <!-- Link foot_assembly_4 -->
   <link name="foot_assembly_4">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot_4 -->
     <visual>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="1.8304e-30 1.5708 0"/>
+      <origin xyz="-0.04425 5.20417e-18 -0.0305" rpy="-8.87469e-31 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -1692,14 +1580,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="1.8304e-30 1.5708 0"/>
+      <origin xyz="-0.04425 5.20417e-18 -0.0305" rpy="-8.87469e-31 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_4 -->
     <visual>
-      <origin xyz="-0.04425 1.14492e-16 -0.0305" rpy="-2.3615e-16 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="4.3291e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -1708,14 +1596,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 1.14492e-16 -0.0305" rpy="-2.3615e-16 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="4.3291e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_4 -->
     <visual>
-      <origin xyz="-0.04375 1.49533e-15 -0.03" rpy="-7.03592e-15 1.5708 0"/>
+      <origin xyz="-0.04375 2.7929e-16 -0.03" rpy="-1.30451e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -1724,14 +1612,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 1.49533e-15 -0.03" rpy="-7.03592e-15 1.5708 0"/>
+      <origin xyz="-0.04375 2.7929e-16 -0.03" rpy="-1.30451e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_23 -->
     <visual>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 5.32981e-17 4.48048e-30"/>
+      <origin xyz="5.55112e-17 1.73472e-18 -0.0025" rpy="-3.14159 -6.6826e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1740,14 +1628,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 5.32981e-17 4.48048e-30"/>
+      <origin xyz="5.55112e-17 1.73472e-18 -0.0025" rpy="-3.14159 -6.6826e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_12 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 2.89927e-17 1.32504e-30"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -7.00196e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1756,14 +1644,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 2.89927e-17 1.32504e-30"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="-3.14159 -7.00196e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_12 -->
     <visual>
-      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1772,14 +1660,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.20417e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_24 -->
     <visual>
-      <origin xyz="-5.55112e-17 0 -0.0585" rpy="-3.14159 4.10941e-17 1.32504e-30"/>
+      <origin xyz="8.88178e-16 0 -0.0585" rpy="-3.14159 -6.48186e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1788,7 +1676,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 0 -0.0585" rpy="-3.14159 4.10941e-17 1.32504e-30"/>
+      <origin xyz="8.88178e-16 0 -0.0585" rpy="-3.14159 -6.48186e-17 8.87469e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1796,7 +1684,7 @@
   </link>
   <!-- Joint from ties_assembly_4 to foot_assembly_4 -->
   <joint name="foot_4" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-1.34033e-15 3.08383e-16 -3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="-1.51606e-14 -1.33155e-14 -3.14159"/>
     <parent link="ties_assembly_4"/>
     <child link="foot_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1804,7 +1692,7 @@
   </joint>
   <!-- Joint from hip_assembly_4 to ties_assembly_4 -->
   <joint name="ties_4" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 6.76543e-16 2.49947e-12"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 6.85694e-16 -2.44517e-16"/>
     <parent link="hip_assembly_4"/>
     <child link="ties_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1812,7 +1700,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_4 -->
   <joint name="hip_4" type="revolute">
-    <origin xyz="-0.137228 -0.0604678 0.0142242" rpy="2.50355e-14 2.47371e-14 -2.70526"/>
+    <origin xyz="-0.132676 -0.0805438 0.0174281" rpy="2.48412e-14 2.47371e-14 -2.70526"/>
     <parent link="base_link"/>
     <child link="hip_assembly_4"/>
     <axis xyz="0 0 1"/>
@@ -1821,13 +1709,13 @@
   <!-- Link hip_assembly_5 -->
   <link name="hip_assembly_5">
     <inertial>
-      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+      <origin xyz="0.0271153 0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="7.85466e-06" iyy="0.000328441" iyz="1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip_5 -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.42399e-14 -5.4278e-16 -3.14159"/>
+      <origin xyz="0.0575 -1.5439e-16 -0.0045" rpy="3.68281e-15 -7.55489e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -1836,14 +1724,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.42399e-14 -5.4278e-16 -3.14159"/>
+      <origin xyz="0.0575 -1.5439e-16 -0.0045" rpy="3.68281e-15 -7.55489e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_15 -->
     <visual>
-      <origin xyz="0.0575 1.43449e-13 -0.0305" rpy="-5.4278e-16 -6.10986e-15 -1.5708"/>
+      <origin xyz="0.0575 -2.91434e-16 -0.0305" rpy="-7.61127e-15 -1.9473e-15 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1852,14 +1740,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43449e-13 -0.0305" rpy="-5.4278e-16 -6.10986e-15 -1.5708"/>
+      <origin xyz="0.0575 -2.91434e-16 -0.0305" rpy="-7.61127e-15 -1.9473e-15 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_25 -->
     <visual>
-      <origin xyz="-2.77556e-17 1.73472e-18 -0.0025" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="-1.11022e-16 -1.249e-16 -0.0025" rpy="3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1868,14 +1756,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-2.77556e-17 1.73472e-18 -0.0025" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="-1.11022e-16 -1.249e-16 -0.0025" rpy="3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_13 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -1884,14 +1772,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_13 -->
     <visual>
-      <origin xyz="0.0575 1.43449e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -2.498e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -1900,14 +1788,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43449e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -2.498e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_26 -->
     <visual>
-      <origin xyz="-1.94289e-16 -9.54098e-18 -0.0585" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="-6.93889e-16 -1.2837e-16 -0.0585" rpy="-3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1916,7 +1804,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.94289e-16 -9.54098e-18 -0.0585" rpy="-3.14159 -5.4278e-16 -3.14159"/>
+      <origin xyz="-6.93889e-16 -1.2837e-16 -0.0585" rpy="-3.14159 -7.61127e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1925,13 +1813,13 @@
   <!-- Link ties_assembly_5 -->
   <link name="ties_assembly_5">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_16 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -1940,14 +1828,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie_5 -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.37527e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="3.86877e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -1956,14 +1844,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="-1.37527e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="3.86877e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie_5 -->
     <visual>
-      <origin xyz="0.0275 2.77556e-17 -0.0305" rpy="-1.37527e-15 1.5708 0"/>
+      <origin xyz="0.0275 -9.71445e-17 -0.0305" rpy="3.86877e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -1972,14 +1860,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 2.77556e-17 -0.0305" rpy="-1.37527e-15 1.5708 0"/>
+      <origin xyz="0.0275 -9.71445e-17 -0.0305" rpy="3.86877e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_27 -->
     <visual>
-      <origin xyz="5.55112e-17 -3.46945e-18 -0.0025" rpy="3.14159 8.06031e-14 -3.14159"/>
+      <origin xyz="-8.32667e-17 -7.97973e-17 -0.0025" rpy="3.14159 2.46181e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -1988,14 +1876,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="5.55112e-17 -3.46945e-18 -0.0025" rpy="3.14159 8.06031e-14 -3.14159"/>
+      <origin xyz="-8.32667e-17 -7.97973e-17 -0.0025" rpy="3.14159 2.46181e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_14 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 8.057e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.48189e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -2004,14 +1892,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 8.057e-14 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 2.48189e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_14 -->
     <visual>
-      <origin xyz="0.0575 6.93889e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -1.09288e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -2020,14 +1908,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 6.93889e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -1.09288e-16 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_28 -->
     <visual>
-      <origin xyz="4.27436e-15 -6.93889e-18 -0.0585" rpy="3.14159 8.07177e-14 -3.14159"/>
+      <origin xyz="-1.11022e-16 -8.1532e-17 -0.0585" rpy="-3.14159 2.47248e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2036,7 +1924,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="4.27436e-15 -6.93889e-18 -0.0585" rpy="3.14159 8.07177e-14 -3.14159"/>
+      <origin xyz="-1.11022e-16 -8.1532e-17 -0.0585" rpy="-3.14159 2.47248e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2045,13 +1933,13 @@
   <!-- Link foot_assembly_5 -->
   <link name="foot_assembly_5">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot_5 -->
     <visual>
-      <origin xyz="-0.04425 1.04083e-17 -0.0305" rpy="-4.1271e-30 1.5708 0"/>
+      <origin xyz="-0.04425 1.45717e-16 -0.0305" rpy="-4.44089e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -2060,14 +1948,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 1.04083e-17 -0.0305" rpy="-4.1271e-30 1.5708 0"/>
+      <origin xyz="-0.04425 1.45717e-16 -0.0305" rpy="-4.44089e-16 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_5 -->
     <visual>
-      <origin xyz="-0.04425 -1.97758e-16 -0.0305" rpy="-1.2385e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="1.49265e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -2076,14 +1964,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -1.97758e-16 -0.0305" rpy="-1.2385e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="1.49265e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_5 -->
     <visual>
-      <origin xyz="-0.04375 2.39392e-16 -0.03" rpy="-5.97428e-16 1.5708 0"/>
+      <origin xyz="-0.04375 6.69603e-16 -0.03" rpy="-2.05391e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -2092,14 +1980,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 2.39392e-16 -0.03" rpy="-5.97428e-16 1.5708 0"/>
+      <origin xyz="-0.04375 6.69603e-16 -0.03" rpy="-2.05391e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_29 -->
     <visual>
-      <origin xyz="1.11022e-16 3.46945e-18 -0.0025" rpy="-3.14159 6.72739e-19 4.1271e-30"/>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 4.1793e-18 4.33873e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2108,14 +1996,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.11022e-16 3.46945e-18 -0.0025" rpy="-3.14159 6.72739e-19 4.1271e-30"/>
+      <origin xyz="0 0 -0.0025" rpy="3.14159 4.1793e-18 4.33873e-30"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_15 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.30444e-16 1.0438e-29"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 7.38604e-17 1.69605e-29"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -2124,14 +2012,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 -1.30444e-16 1.0438e-29"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 7.38604e-17 1.69605e-29"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_15 -->
     <visual>
-      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -2140,14 +2028,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 1.38778e-17 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_30 -->
     <visual>
-      <origin xyz="-1.83187e-15 6.93889e-18 -0.0585" rpy="3.14159 -5.48546e-17 1.67489e-29"/>
+      <origin xyz="-1.66533e-16 -1.73472e-18 -0.0585" rpy="3.14159 7.38604e-17 1.69605e-29"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2156,7 +2044,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-1.83187e-15 6.93889e-18 -0.0585" rpy="3.14159 -5.48546e-17 1.67489e-29"/>
+      <origin xyz="-1.66533e-16 -1.73472e-18 -0.0585" rpy="3.14159 7.38604e-17 1.69605e-29"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2164,7 +2052,7 @@
   </link>
   <!-- Joint from ties_assembly_5 to foot_assembly_5 -->
   <joint name="foot_5" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="3.64523e-14 3.95047e-14 3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="3.30023e-17 1.82639e-15 3.14159"/>
     <parent link="ties_assembly_5"/>
     <child link="foot_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -2172,7 +2060,7 @@
   </joint>
   <!-- Joint from hip_assembly_5 to ties_assembly_5 -->
   <joint name="ties_5" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 5.4278e-16 2.49541e-12"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 7.61127e-15 1.9026e-16"/>
     <parent link="hip_assembly_5"/>
     <child link="ties_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -2180,7 +2068,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_5 -->
   <joint name="hip_5" type="revolute">
-    <origin xyz="-0.123979 0.0909708 0.0142242" rpy="7.95355e-15 3.42754e-14 2.53073"/>
+    <origin xyz="-0.119426 0.0708948 0.0174281" rpy="-4.50694e-15 3.38573e-14 2.53073"/>
     <parent link="base_link"/>
     <child link="hip_assembly_5"/>
     <axis xyz="0 0 1"/>
@@ -2189,13 +2077,13 @@
   <!-- Link hip_assembly_6 -->
   <link name="hip_assembly_6">
     <inertial>
-      <origin xyz="0.0268487 0.000325484 -0.0302141" rpy="0 0 0"/>
-      <mass value="0.365356"/>
-      <inertia ixx="0.000168136" ixy="-2.8417e-07" ixz="-3.2467e-06" iyy="0.000312332" iyz="9.42575e-07" izz="0.000312341"/>
+      <origin xyz="0.0271153 0.000490209 -0.0317796" rpy="0 0 0"/>
+      <mass value="0.38056"/>
+      <inertia ixx="0.000187069" ixy="-3.08523e-06" ixz="7.85466e-06" iyy="0.000328441" iyz="1.17914e-06" izz="0.000302664"/>
     </inertial>
     <!-- Part hip_6 -->
     <visual>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.10074e-14 -9.78685e-15 -3.14159"/>
+      <origin xyz="0.0575 -2.71484e-16 -0.0045" rpy="2.66188e-15 -1.96349e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
@@ -2204,14 +2092,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 0.0005 -0.0045" rpy="1.10074e-14 -9.78685e-15 -3.14159"/>
+      <origin xyz="0.0575 -2.71484e-16 -0.0045" rpy="2.66188e-15 -1.96349e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\hip.stl"/>
       </geometry>
     </collision>
     <!-- Part mobile_bracket_17 -->
     <visual>
-      <origin xyz="0.0575 1.43598e-13 -0.0305" rpy="-7.98949e-15 -1.55507e-14 -1.5708"/>
+      <origin xyz="0.0575 -9.71445e-17 -0.0305" rpy="-3.18423e-14 7.47715e-14 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -2220,14 +2108,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43598e-13 -0.0305" rpy="-7.98949e-15 -1.55507e-14 -1.5708"/>
+      <origin xyz="0.0575 -9.71445e-17 -0.0305" rpy="-3.18423e-14 7.47715e-14 -1.5708"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_31 -->
     <visual>
-      <origin xyz="0 -1.92446e-18 -0.0025" rpy="-3.14159 -9.20409e-15 -3.14159"/>
+      <origin xyz="-8.32667e-17 -7.45931e-17 -0.0025" rpy="-3.14159 -1.99104e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2236,14 +2124,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -1.92446e-18 -0.0025" rpy="-3.14159 -9.20409e-15 -3.14159"/>
+      <origin xyz="-8.32667e-17 -7.45931e-17 -0.0025" rpy="-3.14159 -1.99104e-15 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_16 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.00272e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.00037e-14 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -2252,14 +2140,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.00272e-15 -3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="3.14159 -3.00037e-14 3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_16 -->
     <visual>
-      <origin xyz="0.0575 1.43598e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -9.71445e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -2268,14 +2156,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 1.43598e-13 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 -9.71445e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_32 -->
     <visual>
-      <origin xyz="5.55112e-17 6.88468e-18 -0.0585" rpy="-3.14159 -8.80211e-15 -3.14159"/>
+      <origin xyz="1.36002e-15 6.245e-17 -0.0585" rpy="-3.14159 -1.99967e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2284,7 +2172,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="5.55112e-17 6.88468e-18 -0.0585" rpy="-3.14159 -8.80211e-15 -3.14159"/>
+      <origin xyz="1.36002e-15 6.245e-17 -0.0585" rpy="-3.14159 -1.99967e-15 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2293,13 +2181,13 @@
   <!-- Link ties_assembly_6 -->
   <link name="ties_assembly_6">
     <inertial>
-      <origin xyz="0.0643598 0.00153088 -0.0309357" rpy="0 0 0"/>
-      <mass value="0.589115"/>
-      <inertia ixx="0.000320336" ixy="-2.41497e-05" ixz="1.07866e-05" iyy="0.00208685" iyz="2.0947e-07" izz="0.00187002"/>
+      <origin xyz="0.0639313 0.001561 -0.0314406" rpy="0 0 0"/>
+      <mass value="0.581468"/>
+      <inertia ixx="0.000317042" ixy="-2.4027e-05" ixz="2.78889e-05" iyy="0.00207548" iyz="-4.55023e-07" izz="0.00186094"/>
     </inertial>
     <!-- Part mobile_bracket_18 -->
     <visual>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
@@ -2308,14 +2196,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.1568 0.000210323 -0.0311738" rpy="1.5708 1.5708 0"/>
+      <origin xyz="0.1568 0.000117091 -0.0322436" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\mobile_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part low_tie_6 -->
     <visual>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="1.14117e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-3.23374e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
@@ -2324,14 +2212,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0268 0.000210323 -0.0311738" rpy="1.14117e-15 1.5708 0"/>
+      <origin xyz="0.0268 0.000117091 -0.0322436" rpy="-3.23374e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\low_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part top_tie_6 -->
     <visual>
-      <origin xyz="0.0275 -3.81639e-17 -0.0305" rpy="1.14117e-15 1.5708 0"/>
+      <origin xyz="0.0275 8.7777e-16 -0.0305" rpy="-3.23374e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
@@ -2340,14 +2228,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0275 -3.81639e-17 -0.0305" rpy="1.14117e-15 1.5708 0"/>
+      <origin xyz="0.0275 8.7777e-16 -0.0305" rpy="-3.23374e-14 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\top_tie.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_33 -->
     <visual>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0025" rpy="-3.14159 -6.82166e-16 3.14159"/>
+      <origin xyz="0 -1.73472e-18 -0.0025" rpy="3.14159 -7.54497e-17 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2356,14 +2244,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 -3.46945e-18 -0.0025" rpy="-3.14159 -6.82166e-16 3.14159"/>
+      <origin xyz="0 -1.73472e-18 -0.0025" rpy="3.14159 -7.54497e-17 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_17 -->
     <visual>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.03204e-15 3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.9707e-17 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -2372,14 +2260,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -1.03204e-15 3.14159"/>
+      <origin xyz="0.0175 0.00140442 -0.0305" rpy="-3.14159 -8.9707e-17 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_17 -->
     <visual>
-      <origin xyz="0.0575 -7.28584e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 1.84922e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -2388,14 +2276,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0.0575 -7.28584e-17 -0.0305" rpy="-1.5708 1.5708 0"/>
+      <origin xyz="0.0575 1.84922e-15 -0.0305" rpy="-1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_34 -->
     <visual>
-      <origin xyz="2.77556e-17 3.46945e-18 -0.0585" rpy="-3.14159 -6.65742e-16 3.14159"/>
+      <origin xyz="8.88178e-16 0 -0.0585" rpy="-3.14159 3.4583e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2404,7 +2292,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="2.77556e-17 3.46945e-18 -0.0585" rpy="-3.14159 -6.65742e-16 3.14159"/>
+      <origin xyz="8.88178e-16 0 -0.0585" rpy="-3.14159 3.4583e-14 -3.14159"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2413,13 +2301,13 @@
   <!-- Link foot_assembly_6 -->
   <link name="foot_assembly_6">
     <inertial>
-      <origin xyz="-0.0724503 -0.00208415 -0.0306672" rpy="0 0 0"/>
-      <mass value="0.633745"/>
-      <inertia ixx="0.000268495" ixy="-1.4806e-05" ixz="4.28294e-06" iyy="0.00320961" iyz="-2.30165e-07" izz="0.00304658"/>
+      <origin xyz="-0.0719605 -0.00210262 -0.0306706" rpy="0 0 0"/>
+      <mass value="0.628062"/>
+      <inertia ixx="0.000268406" ixy="-1.55227e-05" ixz="4.14924e-06" iyy="0.0031862" iyz="-2.26544e-07" izz="0.00302315"/>
     </inertial>
     <!-- Part foot_6 -->
     <visual>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="-2.65723e-30 1.5708 0"/>
+      <origin xyz="-0.04425 3.1225e-17 -0.0305" rpy="1.77636e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
@@ -2428,14 +2316,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 6.93889e-18 -0.0305" rpy="-2.65723e-30 1.5708 0"/>
+      <origin xyz="-0.04425 3.1225e-17 -0.0305" rpy="1.77636e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\foot.stl"/>
       </geometry>
     </collision>
     <!-- Part ir_sensor_cap_6 -->
     <visual>
-      <origin xyz="-0.04425 -4.16334e-16 -0.0305" rpy="3.16268e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="3.5116e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
@@ -2444,14 +2332,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04425 -4.16334e-16 -0.0305" rpy="3.16268e-15 1.5708 0"/>
+      <origin xyz="-0.0442455 6.98571e-05 -0.0305" rpy="3.5116e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\ir_sensor_cap.stl"/>
       </geometry>
     </collision>
     <!-- Part rubber_foot_6 -->
     <visual>
-      <origin xyz="-0.04375 3.60822e-16 -0.03" rpy="-1.61723e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.70697e-15 -0.03" rpy="-6.33599e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
@@ -2460,14 +2348,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.04375 3.60822e-16 -0.03" rpy="-1.61723e-15 1.5708 0"/>
+      <origin xyz="-0.04375 1.70697e-15 -0.03" rpy="-6.33599e-15 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\rubber_foot.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_35 -->
     <visual>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 1.15799e-17 -4.98218e-31"/>
+      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 1.00961e-18 4.43734e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2476,14 +2364,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-5.55112e-17 0 -0.0025" rpy="-3.14159 1.15799e-17 -4.98218e-31"/>
+      <origin xyz="5.55112e-17 0 -0.0025" rpy="-3.14159 1.00961e-18 4.43734e-31"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_18 -->
     <visual>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.60371e-17 -4.98218e-31"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 5.54848e-16 -3.88578e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
@@ -2492,14 +2380,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 1.60371e-17 -4.98218e-31"/>
+      <origin xyz="-0.0175 -0.00140442 -0.0305" rpy="3.14159 5.54848e-16 -3.88578e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo.stl"/>
       </geometry>
     </collision>
     <!-- Part fixed_bracket_18 -->
     <visual>
-      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.37764e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
@@ -2508,14 +2396,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0575 6.93889e-18 -0.0305" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0575 5.37764e-17 -0.0305" rpy="1.5708 1.5708 0"/>
       <geometry>
         <mesh filename="package://meshes\fixed_bracket.stl"/>
       </geometry>
     </collision>
     <!-- Part servo_wheel_36 -->
     <visual>
-      <origin xyz="1.66533e-16 0 -0.0585" rpy="-3.14159 -7.73986e-15 -2.07594e-30"/>
+      <origin xyz="5.55112e-17 2.77556e-17 -0.0585" rpy="-3.14159 1.82205e-15 -3.88578e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2524,7 +2412,7 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="1.66533e-16 0 -0.0585" rpy="-3.14159 -7.73986e-15 -2.07594e-30"/>
+      <origin xyz="5.55112e-17 2.77556e-17 -0.0585" rpy="-3.14159 1.82205e-15 -3.88578e-16"/>
       <geometry>
         <mesh filename="package://meshes\servo_wheel.stl"/>
       </geometry>
@@ -2532,7 +2420,7 @@
   </link>
   <!-- Joint from ties_assembly_6 to foot_assembly_6 -->
   <joint name="foot_6" type="revolute">
-    <origin xyz="0.1918 0.000210323 -0.000790548" rpy="-1.79782e-15 2.47828e-15 -3.14159"/>
+    <origin xyz="0.1918 0.000117091 -0.00186036" rpy="2.27858e-15 -2.06207e-16 -3.14159"/>
     <parent link="ties_assembly_6"/>
     <child link="foot_assembly_6"/>
     <axis xyz="0 0 1"/>
@@ -2540,7 +2428,7 @@
   </joint>
   <!-- Joint from hip_assembly_6 to ties_assembly_6 -->
   <joint name="ties_6" type="revolute">
-    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 7.98949e-15 2.49698e-12"/>
+    <origin xyz="0.0925 -0.0311167 -0.0305" rpy="1.5708 3.18423e-14 5.08286e-14"/>
     <parent link="hip_assembly_6"/>
     <child link="ties_assembly_6"/>
     <axis xyz="0 0 1"/>
@@ -2548,7 +2436,7 @@
   </joint>
   <!-- Joint from base_link to hip_assembly_6 -->
   <joint name="hip_6" type="revolute">
-    <origin xyz="0.0137956 0.155216 0.0134908" rpy="-1.77288e-14 1.38591e-15 1.48353"/>
+    <origin xyz="0.0183478 0.13514 0.0166947" rpy="-3.01521e-14 7.87813e-15 1.48353"/>
     <parent link="base_link"/>
     <child link="hip_assembly_6"/>
     <axis xyz="0 0 1"/>
