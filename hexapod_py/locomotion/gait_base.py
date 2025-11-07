@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 class Gait:
     """Abstract base class for hexapod gaits."""
@@ -43,6 +44,7 @@ class Gait:
             # Use a parabolic trajectory for a smooth foot lift.
             parabolic_lift = (1 - (2 * swing_phase - 1)**2)
             z_lift = -body_height + (step_height * parabolic_lift)
+            logging.info(f"Leg {leg_idx}: step_height={step_height}, parabolic_lift={parabolic_lift}, z_lift={z_lift}")
 
             # The foot swings from its rearmost point to its foremost point.
             swing_offset = total_step * (swing_phase - 0.5)
