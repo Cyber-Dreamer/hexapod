@@ -26,8 +26,10 @@ class HexapodKinematics:
         coxa_angle = np.arctan2(y, abs(x))
 
         # Converting the 3D angles to a 2D view for the femur and tibia calculation.
-        # This is the position of the foot relative to the femur joint in the leg's side plane.
-        femur_to_foot_x = x - l_coxa
+        # We calculate the horizontal distance from the coxa pivot to the foot target,
+        # then subtract the coxa length to get the horizontal distance from the femur joint.
+        l_horizontal = np.sqrt(x**2 + y**2)
+        femur_to_foot_x = l_horizontal - l_coxa
         femur_to_foot_z = z
         
         dist_femur_to_foot = np.sqrt(femur_to_foot_x**2 + femur_to_foot_z**2)
