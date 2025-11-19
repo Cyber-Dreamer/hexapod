@@ -1,10 +1,3 @@
-"""
-Hardware Camera Sensor Module for Raspberry Pi
-
-This module provides a CameraSensor class that interfaces with the PiCamera2
-library to capture and handle images from the Raspberry Pi's camera modules.
-"""
-
 import cv2
 import time
 from threading import Thread, Lock

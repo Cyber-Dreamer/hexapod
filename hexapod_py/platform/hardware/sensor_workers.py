@@ -1,12 +1,3 @@
-"""
-Sensor Worker Processes for the Hardware Platform
-
-Each function in this module is designed to be run in its own separate process.
-It initializes a specific sensor, reads data from it in a loop, and publishes
-the data to a ZMQ PUB socket. This ensures that slow I/O from one sensor
-does not block others or the main command server.
-"""
-
 import time
 import zmq
 import msgpack

@@ -1,18 +1,9 @@
-"""
-Hexapod Hardware Camera Server
-==============================
-
-This script runs on the Raspberry Pi and is responsible for capturing images
-from the physical PiCamera modules and broadcasting them over a ZMQ PUB socket.
-"""
-
 import zmq
 import time
 import argparse
 import sys
 import os
 
-# Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 try:

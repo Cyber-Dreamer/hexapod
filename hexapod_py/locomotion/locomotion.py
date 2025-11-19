@@ -13,11 +13,8 @@ class HexapodLocomotion:
         tibiaJoint_to_tipFoot = 284.969
         
         # Standard leg numbering:
-        # New Clockwise Numbering:
         # 0: Rear-Left, 1: Middle-Left, 2: Front-Left
         # 3: Front-Right, 4: Middle-Right, 5: Rear-Right
-        # Angles are measured counter-clockwise from the positive X-axis. The
-        # order of angles must match the leg numbering scheme.
         self.hip_angles = np.deg2rad([210, 270, 330, 30, 90, 150])
 
         hip_positions = [
@@ -39,7 +36,6 @@ class HexapodLocomotion:
         self.kinematics = HexapodKinematics(segment_lengths=leg_lengths, hip_positions=hip_positions, joint_limits=np.deg2rad([90, 110, 120]))
         self.knee_direction = knee_direction
         self.available_gaits = {
-            # max_step_length is now a fallback/limit, not the primary driver of step size
             'tripod': TripodGait(self.kinematics, step_height, max_step_length, self.knee_direction),
             'ripple': RippleGait(self.kinematics, step_height, max_step_length, self.knee_direction)
         }
@@ -51,15 +47,11 @@ class HexapodLocomotion:
         self.max_angular_velocity = max_angular_velocity # rad/s
 
         if standoff_distance is None:
-            # To achieve a 90-degree angle at the knee, the horizontal distance
-            # from the femur joint to the foot tip must be equal to the femur length.
-            # The total horizontal distance (standoff) is this plus the coxa length.
             standoff_distance = self.kinematics.segment_lengths[0] + self.kinematics.segment_lengths[1]
         self.standoff_distance = standoff_distance
         self.recalculate_stance()
 
         # Initialize a cache for the last known valid joint angles for each leg.
-        # This is crucial for handling unreachable IK targets gracefully.
         self.last_known_angles = list(self.default_joint_angles)
         
         # State management for smooth transitions
@@ -118,7 +110,6 @@ class HexapodLocomotion:
                     self.settling_counter = 0
                     # Store the current leg angles to interpolate from
                     self.settling_start_angles = np.array(self.last_known_angles)
-                # else, continue walking for a moment to reach a stable stop point
             # Continue walking if moving or if not at a good stopping point
 
         elif self.locomotion_state == 'SETTLING':
@@ -150,7 +141,6 @@ class HexapodLocomotion:
     
             # Calculate the magnitude of the movement command
             # If we are walking but not moving, we need to continue the gait cycle to reach a stable stop.
-            # We use the last known command magnitude to determine the speed for this final step.
             if is_moving:
                 command_magnitude = max(np.linalg.norm([vx, vy]), abs(omega))
             else: # Not moving, but in 'WALKING' state, so we need to finish the step
@@ -158,17 +148,6 @@ class HexapodLocomotion:
             # Dynamically calculate gait cycle speed. If there's no movement, the gait pauses.
             speed = command_magnitude * self.gait_speed_factor
 
-            # Calculate the duration of one full gait cycle (T_cycle) in seconds.
-            # This assumes the simulation runs at a rate that makes `speed` meaningful.
-            # A smaller gait_speed_factor means a longer cycle.
-            # We assume a nominal simulation rate (e.g., 240Hz) and that `speed` advances the phase each step.
-            # T_cycle = (1 / (speed * sim_rate)) if speed > 0 else float('inf')
-            # For simplicity, we'll tie step length directly to velocity input, not cycle time.
-            
-            # If we are in the WALKING state but received a stop command, we should
-            # continue using the *last* known velocity to complete the step gracefully,
-            # but set the actual target velocity to zero for the IK calculation.
-            # The `speed` variable will keep the gait phase advancing.
             if is_moving:
                 target_vx = vx * self.max_linear_velocity
                 target_vy = vy * self.max_linear_velocity
@@ -203,7 +182,6 @@ class HexapodLocomotion:
         self.foot_positions = np.array(self.default_foot_positions)
 
         # Pre-calculate and cache the joint angles for the default neutral stance.
-        # This is much more efficient than recalculating them on-the-fly during gait.
         self.default_joint_angles = []
         new_foot_targets_local = self.kinematics.body_ik(np.zeros(3), np.zeros(3), self.kinematics.hip_positions, self.foot_positions)
         for i in range(6):
@@ -220,8 +198,6 @@ class HexapodLocomotion:
         pose before standing up.
         """
         sit_angles = []
-        # Define a target position in the local frame for each leg
-        # This is forward of the hip and significantly raised up
         l_coxa, l_femur, _ = self.kinematics.segment_lengths
         # A more conservative sitting pose: coxa length forward, half femur length down.
         target_pos_local = np.array([l_coxa, 0, -l_femur * 0.5])

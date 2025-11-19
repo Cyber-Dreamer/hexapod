@@ -1,8 +1,3 @@
-"""
-Ripple Gait Implementation
-==========================
-"""
-
 from .gait_base import Gait
 
 class RippleGait(Gait):

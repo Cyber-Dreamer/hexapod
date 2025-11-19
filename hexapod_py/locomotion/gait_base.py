@@ -2,9 +2,8 @@ import numpy as np
 import logging
 
 class Gait:
-    """Abstract base class for hexapod gaits."""
+    
     def __init__(self, kinematics, step_height, knee_direction=-1):
-        """Initializes the Gait object."""
         self.knee_direction = knee_direction
         self.kinematics = kinematics
         self.step_height = step_height
