@@ -236,9 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Calculate the angle of the apparent gravity vector in the XY plane
         // When the robot is static, the accelerometer measures the negative of the gravity vector.
-        // If accel.x is positive, it means the robot is tilted nose-down (gravity pulling forward).
-        // If accel.y is positive, it means the robot is tilted left-side-down (gravity pulling left).
-        // So, the arrow should point in the direction of (accel.x, accel.y)
         const accelMagnitudeXY = Math.sqrt(accel.x * accel.x + accel.y * accel.y);
         let accelArrowAngle = 0;
         if (accelMagnitudeXY > 0.1) { // Avoid division by zero and noise
@@ -289,8 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Rotate the inner indicator based on yaw rate
         // A positive yaw rate (gyro.z) means rotating counter-clockwise around Z axis (looking down).
-        // So, a positive yaw rate should rotate the arrow counter-clockwise on screen.
-        // Scale factor 0.1 is arbitrary for visual effect, adjust as needed.
         ctx.rotate(-yawRate * 0.1); 
 
         ctx.strokeStyle = 'rgba(0, 255, 0, 0.9)'; // Green for gyro

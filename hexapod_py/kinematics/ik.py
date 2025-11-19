@@ -21,27 +21,24 @@ class HexapodKinematics:
         x, y, z = coordinate
         l_coxa, l_femur, l_tibia = self.segment_lengths
 
-        # Calculating the coxa (hip) angle.
-        # The absolute x goal is to prevent the angle to go full 180 when trying to reach under the robot.
+        # Coxa (hip) angle. Use abs(x) to prevent flipping when reaching under the body.
         coxa_angle = np.arctan2(y, abs(x))
 
-        # Converting the 3D angles to a 2D view for the femur and tibia calculation.
-        # We calculate the horizontal distance from the coxa pivot to the foot target,
-        # then subtract the coxa length to get the horizontal distance from the femur joint.
+        # Convert to a 2D problem for the femur and tibia.
+        # l_horizontal is the distance from the coxa pivot to the foot target in the XY plane.
         l_horizontal = np.sqrt(x**2 + y**2)
         femur_to_foot_x = l_horizontal - l_coxa
         femur_to_foot_z = z
         
         dist_femur_to_foot = np.sqrt(femur_to_foot_x**2 + femur_to_foot_z**2)
 
-        # Reachability Check and Clamping
+        # Reachability check and clamping.
         epsilon = 1e-6
         max_reach = l_femur + l_tibia
         min_reach = abs(l_femur - l_tibia)
 
-        # Making sure the target location is reachable
         if not (min_reach - epsilon <= dist_femur_to_foot <= max_reach + epsilon):
-            # Clamping the distance to the nearest boundary (max or min reach)
+            # If unreachable, clamp the distance to the nearest boundary.
             clamped_dist = np.clip(dist_femur_to_foot, min_reach, max_reach)
             
             # Scaling the vector from the femur joint to the foot to find a reachable coordinate in the boundary.
@@ -52,7 +49,7 @@ class HexapodKinematics:
             femur_to_foot_z *= scale
             dist_femur_to_foot = clamped_dist
 
-        # Law of Cosines to find internal angles
+        # Use the Law of Cosines to find internal angles.
         
         ## Angle at the knee joint, between the femur and tibia.
         cos_arg_knee = (l_femur**2 + l_tibia**2 - dist_femur_to_foot**2) / (2 * l_femur * l_tibia)
@@ -71,7 +68,7 @@ class HexapodKinematics:
         # Joint Limit Check
         angles = np.array([coxa_angle, femur_angle, tibia_angle])
 
-        # Ensuring always valid output by clamping to joint limits
+        # Ensure a valid output by clamping to joint limits.
         clamped_angles = np.clip(angles, -self.joint_limits, self.joint_limits)
 
         return clamped_angles.tolist()

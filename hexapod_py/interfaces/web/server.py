@@ -12,7 +12,6 @@ import logging, json
 import numpy as np
 import cv2
 
-# Add parent directory to path to import hexapod modules
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
@@ -92,14 +91,12 @@ class CameraStreamer:
                 await asyncio.sleep(delay)
         except asyncio.CancelledError:
             logging.info(f"Broadcast task for camera {camera_id} was cancelled.")
-        except Exception as e:
-            logging.error(f"!!! Unhandled exception in broadcast task for camera {camera_id}: {e}", exc_info=True)
 
 class SensorDataStreamer:
     """Manages broadcasting sensor data to multiple WebSocket clients."""
     def __init__(self):
         self.connections: list[WebSocket] = []
-        self.lock = asyncio.Lock()
+        self.lock = asyncio.Lock() # Lock for connections list
         self.broadcast_task: Optional[asyncio.Task] = None
 
     async def add_client(self, websocket: WebSocket):
@@ -172,7 +169,7 @@ camera_streamer = CameraStreamer()
 sensor_streamer = SensorDataStreamer()
 
 async def _broadcast_to_all_sensor_clients(message: str):
-    """Helper to broadcast a message to all connected sensor clients."""
+    """Broadcast a message to all connected sensor clients."""
     async with sensor_streamer.lock:
         connections_to_send = sensor_streamer.connections[:]
     for connection in connections_to_send:
@@ -375,8 +372,6 @@ async def _smooth_lower_body(duration=2.0, steps=50):
         t = i / steps
         current_height = start_height * (1 - t) + end_height * t
         
-        # Use set_body_pose to calculate angles for the new height.
-        # We keep translation and rotation at zero.
         locomotion.body_height = current_height
         locomotion.recalculate_stance() # This updates foot positions for the new height
         target_angles = locomotion.set_body_pose(np.zeros(3), np.zeros(3))

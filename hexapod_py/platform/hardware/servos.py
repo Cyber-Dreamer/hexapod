@@ -130,23 +130,23 @@ class ServoController:
     def _set_physical_leg_angle(self, leg_index, joint_index, angle_deg):
         """
         PRIVATE: Directly sets the angle of a single physical servo.
-        This is called by the internal update loop.
+        This is called by the internal update loop and handles all final calculations
+        before commanding the servo.
         """
-        # 1. Apply kinematic limits to the requested angle.
-        #    This ensures we don't command the joint beyond its safe mechanical range.
+        # Apply kinematic limits to ensure we don't command the joint beyond its
+        # safe mechanical range.
         limit = KINEMATIC_JOINT_LIMITS[joint_index]
         limited_angle_deg = max(-limit, min(limit, angle_deg))
 
-        # 2. Get the mapping and calibration values for the specific servo.
+        # Get the mapping and calibration values for this specific servo.
         board_idx, channel_idx = LEG_CHANNEL_MAP[leg_index][joint_index]
         center_angle = SERVO_CENTER_DEGREES[leg_index][joint_index]
 
-        # 3. The final angle sent to the servo is the limited kinematic angle plus
-        #    the calibrated center position.
+        # The final angle is the limited kinematic angle plus the calibrated center.
         servo_angle = center_angle + limited_angle_deg
 
         if board_idx < len(self.servos) and channel_idx < len(self.servos[board_idx]):
-            # 4. Clamp the final angle to the servo's absolute actuation range (e.g., 0-270).
+            # Clamp the final angle to the servo's absolute actuation range (e.g., 0-270).
             safe_angle = max(0, min(ACTUATION_RANGE, servo_angle))
             self.servos[board_idx][channel_idx].angle = safe_angle
         else:
