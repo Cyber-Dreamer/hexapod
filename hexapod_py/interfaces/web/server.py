@@ -20,7 +20,7 @@ from hexapod_py.platform.hexapod_platform import HexapodPlatform
 from hexapod_py.locomotion.locomotion import HexapodLocomotion
 
 # --- Global Variables ---
-# These will be initialized in the main execution block
+# These will be initialized by the `setup_server` function before the server starts.
 platform: Optional[HexapodPlatform] = None
 locomotion: Optional[HexapodLocomotion] = None 
 control_values: Dict[str, float] = {
@@ -538,7 +538,7 @@ async def websocket_video_feed(websocket: WebSocket, camera_id: int):
 
 async def get_frame_bytes(camera_id: int) -> Optional[bytes]:
     """Helper function to get encoded frame bytes for a camera."""
-    # The platform client now handles all communication (ZMQ) and returns
+    # The platform client handles all communication (ZMQ) and returns
     # the raw JPEG bytes directly from the dedicated camera_server.
     if platform and hasattr(platform, 'get_camera_image'):
         # Run the blocking ZMQ call in a thread to not block the event loop

@@ -5,7 +5,7 @@ from .ripple_gait import RippleGait
 
 class HexapodLocomotion:
     def __init__(self, step_height=40, max_step_length=180, gait_type='tripod', body_height=350, standoff_distance=200, knee_direction=-1, gait_speed_factor=0.03, max_linear_velocity=300, max_angular_velocity=np.pi/2):
-        
+
         # Measure of the joint in mm
         center_to_HipJoint = 152.024
         hipJoint_to_femurJoint = 92.5
@@ -16,7 +16,7 @@ class HexapodLocomotion:
         # 0: Rear-Left, 1: Middle-Left, 2: Front-Left
         # 3: Front-Right, 4: Middle-Right, 5: Rear-Right
         self.hip_angles = np.deg2rad([210, 270, 330, 30, 90, 150])
-
+        
         hip_positions = [
             tuple(coord) 
             for coord in np.column_stack(
@@ -24,14 +24,12 @@ class HexapodLocomotion:
                  center_to_HipJoint * np.sin(self.hip_angles),
                  np.zeros_like(self.hip_angles))).tolist()
         ]
-        
+
         leg_lengths = [
             hipJoint_to_femurJoint,
             femurJoint_to_tibiaJoint,
             tibiaJoint_to_tipFoot
         ]
-        
-
 
         self.kinematics = HexapodKinematics(segment_lengths=leg_lengths, hip_positions=hip_positions, joint_limits=np.deg2rad([90, 110, 120]))
         self.knee_direction = knee_direction
@@ -54,7 +52,7 @@ class HexapodLocomotion:
         # Initialize a cache for the last known valid joint angles for each leg.
         self.last_known_angles = list(self.default_joint_angles)
         
-        # State management for smooth transitions
+        # State machine for smooth transitions between standing and walking.
         self.locomotion_state = 'STANDING' # Can be 'STANDING', 'WALKING', 'SETTLING'
         self.settling_counter = 0
         self.settling_duration = 20 # Number of frames/ticks for the settling interpolation

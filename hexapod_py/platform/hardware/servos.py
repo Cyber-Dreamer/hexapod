@@ -155,8 +155,8 @@ class ServoController:
     def set_all_leg_angles(self, angles_deg):
         """
         Updates the target angles for all joints of all legs.
-        This method is now very fast as it only updates an array and does not
-        wait for I2C communication.
+        This method is non-blocking and thread-safe. It quickly updates a shared
+        array, which the background thread then reads to command the servos.
 
         :param angles_deg: A list of 6 lists, where each inner list contains
                            the [coxa, femur, tibia] angles in degrees for a leg.
